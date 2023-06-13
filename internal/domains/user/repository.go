@@ -49,8 +49,17 @@ func (u *UserRepository) CreateUser(user *User) (*User, error) {
 }
 
 func (u *UserRepository) UpdateUser(user *User, username, password *string) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+	if username != nil {
+		user.Username = username
+	}
+
+	if password != nil {
+		user.Password = *password
+	}
+
+	result := u.db.Save(user)
+
+	return user, result.Error
 }
 
 func (u *UserRepository) DeleteUser(user *User) (*User, error) {
