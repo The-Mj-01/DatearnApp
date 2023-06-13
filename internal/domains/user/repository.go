@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"gorm.io/gorm"
 )
 
@@ -35,8 +36,11 @@ func (u *UserRepository) GetUserByEmail(email string) (*User, error) {
 }
 
 func (u *UserRepository) UserExists(email string) bool {
-	//TODO implement me
-	panic("implement me")
+	user := new(User)
+
+	result := u.db.Where("email = ?", email).First(user)
+
+	return result.Error == nil && !errors.Is(result.Error, gorm.ErrRecordNotFound)
 }
 
 func (u *UserRepository) CreateUser(user *User) (*User, error) {

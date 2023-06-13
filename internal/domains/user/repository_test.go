@@ -59,6 +59,24 @@ func TestUserRepository_GetUserByEmail(t *testing.T) {
 	assert.Error(t, err, "Fetching wrong user from db failed ! it should throw an error")
 }
 
+// TestUserRepository_UserExists functionality
+func TestUserRepository_UserExists(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+	users := mockAndInsertUser(db, 1)
+	defer destructCreatedObjects(db, users)
+
+	exists := repo.UserExists(users[0].Email)
+	assert.True(t, exists, "checking User existence failed")
+
+	randEmail := "ali@gmail.com"
+	exists = repo.UserExists(randEmail)
+
+	assert.False(t, exists, "checking User existence failed")
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
