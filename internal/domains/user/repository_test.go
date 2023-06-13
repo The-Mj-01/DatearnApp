@@ -42,6 +42,23 @@ func TestUserRepository_GetUserByUUID(t *testing.T) {
 	assert.Error(t, err, "Fetching wrong user from db failed ! it should throw an error")
 }
 
+// TestUserRepository_GetUserByEmail functionality
+func TestUserRepository_GetUserByEmail(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+	users := mockAndInsertUser(db, 1)
+	defer destructCreatedObjects(db, users)
+
+	fetchedUser, err := repo.GetUserByEmail(users[0].Email)
+	assertUsersEquality(t, fetchedUser, &users[0])
+
+	randEmail := "ali@gmail.com"
+	_, err = repo.GetUserByEmail(randEmail)
+	assert.Error(t, err, "Fetching wrong user from db failed ! it should throw an error")
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
