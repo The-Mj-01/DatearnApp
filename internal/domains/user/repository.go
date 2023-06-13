@@ -44,8 +44,8 @@ func (u *UserRepository) UserExists(email string) bool {
 }
 
 func (u *UserRepository) CreateUser(user *User) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+	result := u.db.Create(user)
+	return user, result.Error
 }
 
 func (u *UserRepository) UpdateUser(user *User, username, password *string) (*User, error) {

@@ -77,6 +77,21 @@ func TestUserRepository_UserExists(t *testing.T) {
 	assert.False(t, exists, "checking User existence failed")
 }
 
+// TestUserRepository_CreateUser functionality
+func TestUserRepository_CreateUser(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+	mockedUser := mockUser()
+
+	createdUser, err := repo.CreateUser(mockedUser)
+	defer destructCreatedObjects(db, []User{*createdUser})
+
+	assert.NoError(t, err, "User creation in repository failed")
+	assertUsersEquality(t, createdUser, mockedUser)
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
