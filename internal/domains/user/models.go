@@ -6,7 +6,7 @@ import "time"
 type User struct {
 	Id          uint       `json:"-" gorm:"primaryKey"`
 	UUID        string     `json:"uuid" gorm:"uniqueIndex, not null"`
-	Username    string     `json:"username" gorm:"uniqueIndex, not null"`
+	Username    *string    `json:"username" gorm:"uniqueIndex, not null"`
 	Email       string     `json:"email" gorm:"uniqueIndex, not null"`
 	FirstName   string     `json:"first_name,omitempty"`
 	LastName    string     `json:"last_name,omitempty"`
