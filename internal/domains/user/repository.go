@@ -1,6 +1,8 @@
 package user
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 // UserRepository which implements repository interface
 type UserRepository struct {
@@ -14,20 +16,22 @@ func NewRepository(db *gorm.DB) UserRepositoryInterface {
 	}
 }
 
-func (u *UserRepository) GetUserById(id int) (*User, error) {
+func (u *UserRepository) GetUserById(id uint) (*User, error) {
 	var user User
 	result := u.db.Where("id = ?", id).First(&user)
 	return &user, result.Error
 }
 
 func (u *UserRepository) GetUserByUUID(uuid string) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+	var user User
+	result := u.db.Where("UUID = ?", uuid).First(&user)
+	return &user, result.Error
 }
 
 func (u *UserRepository) GetUserByEmail(email string) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+	var user User
+	result := u.db.Where("email = ?", email).First(&user)
+	return &user, result.Error
 }
 
 func (u *UserRepository) UserExists(email string) bool {

@@ -15,12 +15,30 @@ func TestUserRepository_GetUserById(t *testing.T) {
 
 	repo := createRepo(db)
 	users := mockAndInsertUser(db, 1)
+	defer destructCreatedObjects(db, users)
 
 	fetchedUser, err := repo.GetUserById(users[0].Id)
 	assertUsersEquality(t, fetchedUser, &users[0])
 
 	randId := rand.Int()
 	_, err = repo.GetUserById(uint(randId))
+	assert.Error(t, err, "Fetching wrong user from db failed ! it should throw an error")
+}
+
+// TestUserRepository_GetUserByUUID functionality
+func TestUserRepository_GetUserByUUID(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+	users := mockAndInsertUser(db, 1)
+	defer destructCreatedObjects(db, users)
+
+	fetchedUser, err := repo.GetUserByUUID(users[0].UUID)
+	assertUsersEquality(t, fetchedUser, &users[0])
+
+	randUUID := "Test2UUid"
+	_, err = repo.GetUserByUUID(randUUID)
 	assert.Error(t, err, "Fetching wrong user from db failed ! it should throw an error")
 }
 
@@ -79,4 +97,11 @@ func assertUsersEquality(t *testing.T, fetchedUser, mockedUser *User) {
 	assert.Equal(t, fetchedUser.Username, mockedUser.Username)
 	assert.Equal(t, fetchedUser.UUID, mockedUser.UUID)
 	assert.Equal(t, fetchedUser.Email, mockedUser.Email)
+}
+
+// destructCreatedObjects that are created for testing purpose
+func destructCreatedObjects(db *gorm.DB, users []User) {
+	for _, user := range users {
+		db.Unscoped().Delete(user)
+	}
 }
