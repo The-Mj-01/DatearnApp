@@ -40,6 +40,23 @@ func TestUserService_GetUserByUUID(t *testing.T) {
 	assert.Error(t, err, "Fetching wrong user from db failed ! it should throw an error")
 }
 
+func TestUserService_GetUserByEmail(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	service := createService(db)
+	users := mockAndInsertUser(db, 1)
+	defer destructCreatedObjects(db, users)
+
+	fetchUser, err := service.GetUserByEmail(users[0].Email)
+	assertUsersEquality(t, fetchUser, &users[0])
+
+	randEmail := "example2@gmail.com"
+	_, err = service.GetUserByEmail(randEmail)
+	assert.Error(t, err, "Fetching wrong user from db failed ! it should throw an error")
+
+}
+
 func createService(db *gorm.DB) UserServiceInterface {
 	return NewService(NewRepository(db))
 }

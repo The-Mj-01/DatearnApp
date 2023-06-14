@@ -20,8 +20,7 @@ func (u *UserService) GetUserByUUID(uuid string) (*User, error) {
 }
 
 func (u *UserService) GetUserByEmail(email string) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+	return u.repo.GetUserByEmail(email)
 }
 
 func (u *UserService) UserExists(email string) bool {
