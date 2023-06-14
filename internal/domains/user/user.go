@@ -18,7 +18,6 @@ type UserServiceInterface interface {
 	GetUserById(id uint) (*User, error)
 	GetUserByUUID(uuid string) (*User, error)
 	GetUserByEmail(email string) (*User, error)
-	UserExists(email string) bool
 	CreateUser(username *string, email, password string) (*User, error)
 	UpdateUser(userId uint, username, password *string) (*User, error)
 	DeleteUser(userId uint, password *string) (*User, error)

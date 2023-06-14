@@ -57,6 +57,25 @@ func TestUserService_GetUserByEmail(t *testing.T) {
 
 }
 
+func TestUserService_CreateUser(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	service := createService(db)
+	mockedUser := mockUser()
+
+	createdUser, err := service.CreateUser(mockedUser.Username, mockedUser.Email, mockedUser.Password)
+	defer destructCreatedObjects(db, []User{*createdUser})
+
+	assert.NoError(t, err, "User service user creation failed")
+	assert.NotEqual(t, createdUser.Password, mockedUser.Password, "User service user creation failed")
+	assert.NotZero(t, createdUser.Id, "User service user creation failed")
+
+	_, err = service.CreateUser(mockedUser.Username, mockedUser.Email, mockedUser.Password)
+	assert.Error(t, err, "User service user creation failed")
+	assert.ErrorIs(t, err, UserAlreadyExists, "User service user creation failed")
+}
+
 func createService(db *gorm.DB) UserServiceInterface {
 	return NewService(NewRepository(db))
 }

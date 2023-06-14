@@ -1,5 +1,11 @@
 package user
 
+import (
+	"Datearn/pkg/advancedError"
+	"Datearn/pkg/hasher"
+	"Datearn/pkg/uuid"
+)
+
 type UserService struct {
 	repo UserRepositoryInterface
 }
@@ -23,14 +29,31 @@ func (u *UserService) GetUserByEmail(email string) (*User, error) {
 	return u.repo.GetUserByEmail(email)
 }
 
-func (u *UserService) UserExists(email string) bool {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (u *UserService) CreateUser(username *string, email, password string) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+	isExist := u.repo.UserExists(email)
+	if isExist {
+		return nil, UserAlreadyExists
+	}
+
+	hashedPassword, err := hasher.Make(password)
+	if err != nil {
+		return nil, advancedError.New(err, "user hashing password failed")
+	}
+
+	generatedUUID, err := uuid.GenerateUUId()
+	if err != nil {
+		return nil, advancedError.New(err, "user generate uuid failed")
+	}
+
+	user := &User{
+		UUID:     generatedUUID,
+		Email:    email,
+		Username: username,
+		Password: hashedPassword,
+	}
+
+	return u.repo.CreateUser(user)
+
 }
 
 func (u *UserService) UpdateUser(userId uint, username, password *string) (*User, error) {
