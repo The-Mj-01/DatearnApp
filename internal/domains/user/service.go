@@ -74,8 +74,12 @@ func (u *UserService) UpdateUser(userId uint, username, password *string) (*User
 }
 
 func (u *UserService) DeleteUser(userId uint, password *string) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+	user, err := u.repo.GetUserById(userId)
+	if err != nil {
+		return nil, UserDoesntExists
+	}
+
+	return u.repo.DeleteUser(user)
 }
 
 // makePasswordUseAble for in update operation

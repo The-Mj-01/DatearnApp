@@ -83,6 +83,7 @@ func TestUserService_UpdateUser(t *testing.T) {
 
 	service := createService(db)
 	users := mockAndInsertUser(db, 1)
+	defer destructCreatedObjects(db, users)
 
 	newName := "newlyyyname"
 	pass := "Password"
@@ -96,6 +97,24 @@ func TestUserService_UpdateUser(t *testing.T) {
 	_, err = service.UpdateUser(uint(randId), &newName, &pass)
 	assert.Error(t, err, "User service update user failed")
 	assert.ErrorIs(t, err, UserDoesntExists, "User service update user failed")
+}
+
+func TestUserService_DeleteUser(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	service := createService(db)
+	users := mockAndInsertUser(db, 1)
+	defer destructCreatedObjects(db, users)
+
+	deletedUser, err := service.DeleteUser(users[0].Id, &users[0].Password)
+
+	assertUsersEquality(t, deletedUser, &users[0])
+
+	_, err = service.DeleteUser(users[0].Id, &users[0].Password)
+	assert.Error(t, err, "User service user creation failed")
+	assert.ErrorIs(t, err, UserDoesntExists, "User service user creation failed")
+
 }
 
 func createService(db *gorm.DB) UserServiceInterface {
