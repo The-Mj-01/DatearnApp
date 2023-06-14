@@ -1,6 +1,7 @@
 package user
 
 import (
+	"Datearn/pkg/hasher"
 	"Datearn/pkg/tokenizer"
 	"context"
 )
@@ -12,12 +13,12 @@ type UserUseCase struct {
 }
 
 func NewUserUseCase(sv UserServiceInterface) UserUseCaseInterface {
-	return UserUseCase{
+	return &UserUseCase{
 		sv: sv,
 	}
 }
 
-func (u UserUseCase) Register(ctx context.Context, request *UserRegisterRequest) (*AuthResponse, error) {
+func (u *UserUseCase) Register(ctx context.Context, request *UserRegisterRequest) (*AuthResponse, error) {
 	user, err := u.sv.CreateUser(request.Username, request.Email, request.Password)
 	if err != nil {
 		return nil, err
@@ -37,22 +38,44 @@ func (u UserUseCase) Register(ctx context.Context, request *UserRegisterRequest)
 	}, nil
 }
 
-func (u UserUseCase) Login(ctx context.Context, request *UserLoginRequest) (*AuthResponse, error) {
+// Login user and generate token for them return it
+func (u *UserUseCase) Login(ctx context.Context, request *UserLoginRequest) (*AuthResponse, error) {
+	user, err := u.sv.GetUserByEmail(request.Email)
+	if err != nil {
+		return nil, UserDoesntExists
+	}
+
+	if !hasher.Check(request.Password, user.Password) {
+		return nil, WrongCredentials
+	}
+
+	requesterIP, err := u.extractIP(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	jwtTk, err := u.generateToken(ctx, requesterIP, user.UUID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &AuthResponse{
+		Tokens: jwtTk,
+		User:   user,
+	}, nil
+}
+
+func (u *UserUseCase) UpdateUserPass(ctx context.Context, request *UpdateUserRequest) (*User, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (u UserUseCase) UpdateUserPass(ctx context.Context, request *UpdateUserRequest) (*User, error) {
+func (u *UserUseCase) UpdateUserName(ctx context.Context, request *UpdateUserRequest) (*User, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (u UserUseCase) UpdateUserName(ctx context.Context, request *UpdateUserRequest) (*User, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (u UserUseCase) DeleteUser(ctx context.Context, request *DeleteUserRequest) (*User, error) {
+func (u *UserUseCase) DeleteUser(ctx context.Context, request *DeleteUserRequest) (*User, error) {
 	//TODO implement me
 	panic("implement me")
 }

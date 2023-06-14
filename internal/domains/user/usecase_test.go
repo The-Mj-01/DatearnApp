@@ -17,10 +17,33 @@ func TestUserUseCase_Register(t *testing.T) {
 	ctx := context.WithValue(context.Background(), ContextValueIpKey, "192.168.1.1")
 
 	result, err := useCase.Register(ctx, registerReq)
+	defer destructCreatedObjects(db, []User{*result.User})
+
 	assert.NoError(t, err, "register failed in user use-case")
 	assert.NotNil(t, result.Tokens, "register failed in user use-case")
 	assert.NotNil(t, result.User, "register failed in user use-case")
 	assert.Equal(t, *result.User.Username, *registerReq.Username, "register failed in user use-case")
+}
+
+func TestUserUseCase_Login(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.WithValue(context.Background(), ContextValueIpKey, "192.168.1.1")
+	usecase := createUseCase(db)
+	sv := createService(db)
+
+	mockedLoginReq := mockLoginRequest()
+	createdUser, err := sv.CreateUser(nil, mockedLoginReq.Email, mockedLoginReq.Password)
+	defer destructCreatedObjects(db, []User{*createdUser})
+
+	assert.NoError(t, err, "Use creation in test user use-case failed")
+
+	result, err := usecase.Login(ctx, mockedLoginReq)
+	assert.NoError(t, err, "login failed in user use-case")
+	assert.NotNil(t, result.Tokens, "login failed in user use-case")
+	assert.NotNil(t, result.User, "login failed in user use-case")
+	assertUsersEquality(t, result.User, createdUser)
 }
 
 // createUseCase and return it for testing purpose
