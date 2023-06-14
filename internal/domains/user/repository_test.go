@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -126,6 +127,11 @@ func TestUserRepository_DeleteUser(t *testing.T) {
 	DeletedUser, err := repo.DeleteUser(&users[0])
 
 	assertUsersEquality(t, DeletedUser, &users[0])
+	fetchUser := new(User)
+	result := db.Where("id = ?", users[0].Id).First(fetchUser)
+
+	fmt.Println(fetchUser, result.Error)
+	assert.Error(t, result.Error, "User Delete operation failed")
 }
 
 // setupDbConnection and run migration
