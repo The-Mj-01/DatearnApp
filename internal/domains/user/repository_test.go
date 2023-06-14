@@ -114,6 +114,20 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 	assert.Equal(t, fetchUser.Password, newPass, "User Update operation failed")
 }
 
+// TestUserRepository_DeleteUser functionality
+func TestUserRepository_DeleteUser(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed!")
+
+	repo := createRepo(db)
+	users := mockAndInsertUser(db, 1)
+	defer destructCreatedObjects(db, users)
+
+	DeletedUser, err := repo.DeleteUser(&users[0])
+
+	assertUsersEquality(t, DeletedUser, &users[0])
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})

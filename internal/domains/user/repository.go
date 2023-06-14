@@ -63,6 +63,8 @@ func (u *UserRepository) UpdateUser(user *User, username, password *string) (*Us
 }
 
 func (u *UserRepository) DeleteUser(user *User) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+
+	result := u.db.Delete(user)
+
+	return user, result.Error
 }
