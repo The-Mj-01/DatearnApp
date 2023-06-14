@@ -68,6 +68,28 @@ func TestUserUseCase_UpdateUserName(t *testing.T) {
 	assert.NotEqual(t, *mockedUser.Username, *result.Username, "Updating user name failed")
 }
 
+// TestUserUseCase_UpdateUserPass functionality
+func TestUserUseCase_UpdateUserPass(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.WithValue(context.Background(), ContextValueIpKey, "192.168.1.1")
+	usecase := createUseCase(db)
+	sv := createService(db)
+	mockedUser := mockUser()
+
+	createdUser, _ := sv.CreateUser(mockedUser.Username, mockedUser.Email, mockedUser.Password)
+	defer destructCreatedObjects(db, []User{*createdUser})
+
+	mockedJwt, err := mockUserJwtTk(ctx, createdUser.UUID, "192.168.1.1")
+	assert.NoError(t, err, "Mocking Jwt failed")
+
+	mockedUpdateUserRequest := mockUpdateUserRequest()
+
+	_, err = usecase.UpdateUserPass(ctx, mockedJwt, mockedUpdateUserRequest)
+	assert.NoError(t, err, "Updating user name failed")
+}
+
 // createUseCase and return it for testing purpose
 func createUseCase(db *gorm.DB) UserUseCaseInterface {
 	return NewUserUseCase(NewService(NewRepository(db)))

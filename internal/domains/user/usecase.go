@@ -71,8 +71,17 @@ func (u *UserUseCase) Login(ctx context.Context, request *UserLoginRequest) (*Au
 
 // UpdateUserPass for a user that is already exists
 func (u *UserUseCase) UpdateUserPass(ctx context.Context, token string, request *UpdateUserRequest) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+	userId, err := u.getUserID(ctx, token)
+	if err != nil {
+		return nil, AuthSomethingWrong
+	}
+
+	user, err := u.sv.UpdateUser(userId, nil, request.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 // UpdateUserName for a user that is already exists
