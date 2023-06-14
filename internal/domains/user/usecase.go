@@ -6,18 +6,22 @@ import (
 	"context"
 )
 
+// ContextValueIpKey determines requested key for extracting ip from context
 const ContextValueIpKey string = "REQUESTER_IP"
 
+// UserUseCase is a struct which satisfies user use case interface functionalities
 type UserUseCase struct {
 	sv UserServiceInterface
 }
 
+// NewUserUseCase and return it
 func NewUserUseCase(sv UserServiceInterface) UserUseCaseInterface {
 	return &UserUseCase{
 		sv: sv,
 	}
 }
 
+// Register user in system and generate token for it and then return it
 func (u *UserUseCase) Register(ctx context.Context, request *UserRegisterRequest) (*AuthResponse, error) {
 	user, err := u.sv.CreateUser(request.Username, request.Email, request.Password)
 	if err != nil {
@@ -65,12 +69,14 @@ func (u *UserUseCase) Login(ctx context.Context, request *UserLoginRequest) (*Au
 	}, nil
 }
 
-func (u *UserUseCase) UpdateUserPass(ctx context.Context, request *UpdateUserRequest) (*User, error) {
+// UpdateUserPass for a user that is already exists
+func (u *UserUseCase) UpdateUserPass(ctx context.Context, token string, request *UpdateUserRequest) (*User, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (u *UserUseCase) UpdateUserName(ctx context.Context, request *UpdateUserRequest) (*User, error) {
+// UpdateUserName for a user that is already exists
+func (u *UserUseCase) UpdateUserName(ctx context.Context, token string, request *UpdateUserRequest) (*User, error) {
 	//TODO implement me
 	panic("implement me")
 }
