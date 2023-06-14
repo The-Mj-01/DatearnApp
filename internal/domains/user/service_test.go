@@ -76,6 +76,28 @@ func TestUserService_CreateUser(t *testing.T) {
 	assert.ErrorIs(t, err, UserAlreadyExists, "User service user creation failed")
 }
 
+// TestUserService_UpdateUser functionality
+func TestUserService_UpdateUser(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	service := createService(db)
+	users := mockAndInsertUser(db, 1)
+
+	newName := "newlyyyname"
+	pass := "Password"
+
+	updatedUser, err := service.UpdateUser(users[0].Id, &newName, &pass)
+	assert.NoError(t, err, "User service update user failed")
+	assert.Equal(t, *updatedUser.Username, newName, "User service update user failed")
+	assert.NotEqual(t, pass, updatedUser.Password, "User service update user failed")
+
+	randId := rand.Int()
+	_, err = service.UpdateUser(uint(randId), &newName, &pass)
+	assert.Error(t, err, "User service update user failed")
+	assert.ErrorIs(t, err, UserDoesntExists, "User service update user failed")
+}
+
 func createService(db *gorm.DB) UserServiceInterface {
 	return NewService(NewRepository(db))
 }

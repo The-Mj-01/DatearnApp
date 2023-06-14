@@ -57,11 +57,33 @@ func (u *UserService) CreateUser(username *string, email, password string) (*Use
 }
 
 func (u *UserService) UpdateUser(userId uint, username, password *string) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+	user, err := u.repo.GetUserById(userId)
+	if err != nil {
+		return nil, UserDoesntExists
+	}
+
+	if password != nil {
+		password, err = u.makePasswordUseAble(password)
+	}
+
+	if err != nil {
+		return nil, advancedError.New(err, "Cannot hash password")
+	}
+
+	return u.repo.UpdateUser(user, username, password)
 }
 
 func (u *UserService) DeleteUser(userId uint, password *string) (*User, error) {
 	//TODO implement me
 	panic("implement me")
+}
+
+// makePasswordUseAble for in update operation
+func (u *UserService) makePasswordUseAble(password *string) (*string, error) {
+	hashedPass, err := hasher.Make(*password)
+	if err != nil {
+		return nil, err
+	}
+
+	return &hashedPass, nil
 }
