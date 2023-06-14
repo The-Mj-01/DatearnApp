@@ -77,8 +77,17 @@ func (u *UserUseCase) UpdateUserPass(ctx context.Context, token string, request 
 
 // UpdateUserName for a user that is already exists
 func (u *UserUseCase) UpdateUserName(ctx context.Context, token string, request *UpdateUserRequest) (*User, error) {
-	//TODO implement me
-	panic("implement me")
+	userId, err := u.getUserID(ctx, token)
+	if err != nil {
+		return nil, AuthSomethingWrong
+	}
+
+	user, err := u.sv.UpdateUser(userId, request.Username, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
 
 func (u *UserUseCase) DeleteUser(ctx context.Context, request *DeleteUserRequest) (*User, error) {
@@ -105,4 +114,27 @@ func (u *UserUseCase) generateToken(ctx context.Context, requestedIp, uuid strin
 		return nil, AuthSomethingWrong
 	}
 	return jwtTk, nil
+}
+
+// getUserId decodes token and returns userId form it's UUID
+func (u *UserUseCase) getUserID(ctx context.Context, token string) (uint, error) {
+	uuid, err := u.getUserUUID(ctx, token)
+
+	fetchedUser, err := u.sv.GetUserByUUID(uuid)
+	if err != nil {
+		return 0, err
+	}
+
+	return fetchedUser.Id, nil
+}
+
+// getUserUUID decodes token and returns userId form it's UUID
+func (u *UserUseCase) getUserUUID(ctx context.Context, token string) (string, error) {
+	tokenGenerator := tokenizer.CreateTokenizer(ctx)
+	tkInfo, err := tokenGenerator.TokenInfo(token)
+	if err != nil {
+		return "", AuthSomethingWrong
+	}
+
+	return tkInfo.UUID, nil
 }
