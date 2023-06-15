@@ -73,7 +73,7 @@ func (u *UserService) UpdateUser(userId uint, username, password *string) (*User
 	return u.repo.UpdateUser(user, username, password)
 }
 
-func (u *UserService) DeleteUser(userId uint, password *string) (*User, error) {
+func (u *UserService) DeleteUser(userId uint) (*User, error) {
 	user, err := u.repo.GetUserById(userId)
 	if err != nil {
 		return nil, UserDoesntExists

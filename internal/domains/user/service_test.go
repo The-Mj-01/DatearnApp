@@ -107,11 +107,11 @@ func TestUserService_DeleteUser(t *testing.T) {
 	users := mockAndInsertUser(db, 1)
 	defer destructCreatedObjects(db, users)
 
-	deletedUser, err := service.DeleteUser(users[0].Id, &users[0].Password)
+	deletedUser, err := service.DeleteUser(users[0].Id)
 
 	assertUsersEquality(t, deletedUser, &users[0])
 
-	_, err = service.DeleteUser(users[0].Id, &users[0].Password)
+	_, err = service.DeleteUser(users[0].Id)
 	assert.Error(t, err, "User service user creation failed")
 	assert.ErrorIs(t, err, UserDoesntExists, "User service user creation failed")
 

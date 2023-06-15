@@ -20,7 +20,7 @@ type UserServiceInterface interface {
 	GetUserByEmail(email string) (*User, error)
 	CreateUser(username *string, email, password string) (*User, error)
 	UpdateUser(userId uint, username, password *string) (*User, error)
-	DeleteUser(userId uint, password *string) (*User, error)
+	DeleteUser(userId uint) (*User, error)
 }
 
 // UserUseCaseInterface defines set of methods which every use case who wants to play role as user use case should obey.
@@ -29,5 +29,5 @@ type UserUseCaseInterface interface {
 	Login(ctx context.Context, request *UserLoginRequest) (*AuthResponse, error)
 	UpdateUserPass(ctx context.Context, token string, request *UpdateUserRequest) (*User, error)
 	UpdateUserName(ctx context.Context, token string, request *UpdateUserRequest) (*User, error)
-	DeleteUser(ctx context.Context, request *DeleteUserRequest) (*User, error)
+	DeleteUser(ctx context.Context, token string, request *DeleteUserRequest) (*User, error)
 }

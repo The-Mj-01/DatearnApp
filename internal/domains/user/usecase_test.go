@@ -90,6 +90,34 @@ func TestUserUseCase_UpdateUserPass(t *testing.T) {
 	assert.NoError(t, err, "Updating user name failed")
 }
 
+// TestUserCase_DeleteUser
+func TestUserUseCase_DeleteUser(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.WithValue(context.Background(), ContextValueIpKey, "192.168.1.1")
+	usecase := createUseCase(db)
+	sv := createService(db)
+	mockedUser := mockUser()
+
+	createdUser, _ := sv.CreateUser(mockedUser.Username, mockedUser.Email, mockedUser.Password)
+	defer destructCreatedObjects(db, []User{*createdUser})
+
+	mockedJwt, err := mockUserJwtTk(ctx, createdUser.UUID, "192.168.1.1")
+	assert.NoError(t, err, "Mocking Jwt failed")
+
+	mockedDeleteUserRequest := mockDeleteUserRequest()
+
+	user, err := usecase.DeleteUser(ctx, mockedJwt, mockedDeleteUserRequest)
+	assert.NoError(t, err, "Deleting user name failed")
+	//fmt.Println(user, mockedUser)
+	assertUsersEquality(t, user, createdUser)
+
+	_, err = usecase.DeleteUser(ctx, mockedJwt, mockedDeleteUserRequest)
+	assert.Error(t, err, "Updating user name failed")
+
+}
+
 // createUseCase and return it for testing purpose
 func createUseCase(db *gorm.DB) UserUseCaseInterface {
 	return NewUserUseCase(NewService(NewRepository(db)))
@@ -105,7 +133,7 @@ func mockLoginRequest() *UserLoginRequest {
 
 // mockRegisterRequest and return it for register operation
 func mockRegisterRequest() *UserRegisterRequest {
-	name := "KingApr"
+	name := "Mj"
 	return &UserRegisterRequest{
 		Email:           "example@gmail.com",
 		Password:        "1234567879",
@@ -123,6 +151,18 @@ func mockUpdateUserRequest() *UpdateUserRequest {
 		Password:        &newPass,
 		PasswordConfirm: &newPass,
 	}
+}
+
+func mockDeleteUserRequest() *DeleteUserRequest {
+	name := "Mj"
+	password := "1234567879"
+	return &DeleteUserRequest{
+
+		Password:        &password,
+		PasswordConfirm: &password,
+		Username:        &name,
+	}
+
 }
 
 // mockUserJwtTk and return it
