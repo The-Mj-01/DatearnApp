@@ -19,7 +19,7 @@ type Bio struct {
 
 type SocialMedia struct {
 	Id            uint      `json:"id" gorm:"primaryKey"`
-	Name          uint      `json:"name,omitempty" gorm:"uniqueIndex, not null"`
+	Name          string    `json:"name,omitempty" gorm:"uniqueIndex, not null"`
 	SocialMediaId uint      `json:"social_media_id,omitempty"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
@@ -29,7 +29,7 @@ type SocialMedia struct {
 // Country struct defines user entity which is used in database
 type Country struct {
 	Id        uint      `json:"id" gorm:"primaryKey"`
-	Name      uint      `json:"name,omitempty" gorm:"uniqueIndex, not null"`
+	Name      string    `json:"name,omitempty" gorm:"uniqueIndex, not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `json:"deleted_at"`
@@ -38,7 +38,7 @@ type Country struct {
 // City struct defines user entity which is used in database
 type City struct {
 	Id        uint      `json:"id" gorm:"primaryKey"`
-	Name      uint      `json:"name,omitempty" gorm:"Index, not null"`
+	Name      string    `json:"name,omitempty" gorm:"Index, not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `json:"deleted_at"`
@@ -47,7 +47,7 @@ type City struct {
 // Sex struct defines user entity which is used in database
 type Sex struct {
 	Id        uint      `json:"id" gorm:"primaryKey"`
-	Title     uint      `json:"title,omitempty" gorm:"uniqueIndex, not null"`
+	Title     string    `json:"title,omitempty" gorm:"uniqueIndex, not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `json:"deleted_at"`
