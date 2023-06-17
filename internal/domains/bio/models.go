@@ -20,7 +20,7 @@ type Bio struct {
 type SocialMedia struct {
 	Id            uint      `json:"id" gorm:"primaryKey"`
 	Name          string    `json:"name,omitempty" gorm:"uniqueIndex, not null"`
-	SocialMediaId uint      `json:"social_media_id,omitempty"`
+	SocialMediaId string    `json:"social_media_id,omitempty"`
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
 	DeletedAt     time.Time `json:"deleted_at"`

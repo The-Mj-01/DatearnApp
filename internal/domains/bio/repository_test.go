@@ -14,14 +14,41 @@ func TestBioRepository_GetBioById(t *testing.T) {
 	assert.NoError(t, err, "Setup database connection failed")
 
 	repo := createRepo(db)
-	bios := mockAndInsertBio(db, 1)
+	bios := mockAndInsertBio(db, 0, 0, 0, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBioById(bios[0].Id)
-	assertUsersEquality(t, fetchedBio, &bios[0])
+	assertUsersEquality(t, &bios[0], fetchedBio)
 
 	randId := rand.Int()
 	_, err = repo.GetBioById(uint(randId))
+	assert.Error(t, err, "Fetching wrong bio from db failed ! it should throw an error")
+}
+
+func TestBioRepository_GetBioByCountry(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+	repo := createRepo(db)
+	countries := mockAndInsertCountry(db, 1)
+	defer destructCreatedObjects(db, countries)
+
+	cities := mockAndInsertCity(db, 1)
+	defer destructCreatedObjects(db, cities)
+
+	sexs := mockAndInsertSex(db, 1)
+	defer destructCreatedObjects(db, sexs)
+
+	socialMedia := mockAndInsertSocialMedia(db, 1)
+	defer destructCreatedObjects(db, socialMedia)
+
+	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, socialMedia[0].Id, 1)
+	defer destructCreatedObjects(db, bios)
+
+	fetchBio, err := repo.GetBioByCountry(countries[0].Id)
+	assertUsersEquality(t, &bios[0], fetchBio)
+
+	randId := rand.Int()
+	_, err = repo.GetBioByCountry(uint(randId))
 	assert.Error(t, err, "Fetching wrong bio from db failed ! it should throw an error")
 }
 
@@ -31,7 +58,7 @@ func setupDbConnection() (*gorm.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = db.AutoMigrate(Bio{}, Country{}, City{}, Sex{})
+	err = db.AutoMigrate(Bio{}, Country{}, City{}, Sex{}, SocialMedia{})
 	return db, err
 }
 
@@ -124,11 +151,41 @@ func mockSex() *Sex {
 	}
 }
 
-func mockAndInsertBio(db *gorm.DB, count int) []Bio {
+func mockAndInsertSocialMedia(db *gorm.DB, count int) []SocialMedia {
+	medias := make([]SocialMedia, 0, count)
+	i := 0
+	for {
+		tmpSocialMedia := mockSocialMedia()
+
+		res := db.Create(tmpSocialMedia)
+		if res.Error != nil {
+			continue
+		}
+
+		medias = append(medias, *tmpSocialMedia)
+		i += 1
+
+		if i == count {
+			break
+		}
+	}
+	return medias
+}
+
+func mockSocialMedia() *SocialMedia {
+
+	return &SocialMedia{
+
+		Name:          "instagram",
+		SocialMediaId: "@ali",
+	}
+}
+
+func mockAndInsertBio(db *gorm.DB, countryId, cityId, sexId, socialMediaId uint, count int) []Bio {
 	bios := make([]Bio, 0, count)
 	i := 0
 	for {
-		tmpBio := mockBio()
+		tmpBio := mockBio(countryId, cityId, sexId, socialMediaId)
 
 		res := db.Create(tmpBio)
 		if res.Error != nil {
@@ -145,27 +202,27 @@ func mockAndInsertBio(db *gorm.DB, count int) []Bio {
 	return bios
 }
 
-func mockBio() *Bio {
+func mockBio(countryId, cityId, sexId, socialMediaId uint) *Bio {
 	return &Bio{
 
-		SocialMedia: 0,
+		SocialMedia: socialMediaId,
 		Description: "this is a description.",
-		Country:     0,
-		City:        0,
-		Sex:         0,
+		Country:     countryId,
+		City:        cityId,
+		Sex:         sexId,
 		Born:        time.Time{},
 	}
 }
 
 // destructCreatedObjects that are created for testing purpose
-func destructCreatedObjects[T Bio | Country | City | Sex](db *gorm.DB, records []T) {
+func destructCreatedObjects[T Bio | Country | City | Sex | SocialMedia](db *gorm.DB, records []T) {
 	for _, record := range records {
 		db.Unscoped().Delete(record)
 	}
 }
 
 // assertUsersEquality to see whether they are equal or not
-func assertUsersEquality(t *testing.T, fetchedBio, mockedBio *Bio) {
+func assertUsersEquality(t *testing.T, mockedBio, fetchedBio *Bio) {
 	assert.Equal(t, mockedBio.Id, fetchedBio.Id)
 	assert.Equal(t, mockedBio.Country, fetchedBio.Country)
 	assert.Equal(t, mockedBio.City, fetchedBio.City)

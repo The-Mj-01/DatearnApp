@@ -23,8 +23,9 @@ func (b BioRepository) GetBioById(id uint) (*Bio, error) {
 }
 
 func (b BioRepository) GetBioByCountry(countryId uint) (*Bio, error) {
-	//TODO implement me
-	panic("implement me")
+	var bio Bio
+	result := b.db.Where("country = ?", countryId).First(&bio)
+	return &bio, result.Error
 }
 
 func (b BioRepository) GetBioByCity(cityId uint) (*Bio, error) {
