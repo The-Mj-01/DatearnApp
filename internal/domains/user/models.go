@@ -10,7 +10,6 @@ type User struct {
 	Email       string     `json:"email" gorm:"uniqueIndex, not null"`
 	FirstName   string     `json:"first_name,omitempty"`
 	LastName    string     `json:"last_name,omitempty"`
-	Bio         uint       `json:"bio"`
 	Born        time.Time  `json:"born,omitempty"`
 	Country     uint       `json:"country"`
 	City        uint       `json:"city"`

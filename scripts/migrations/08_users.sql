@@ -5,7 +5,7 @@ CREATE TABLE `users`
     `username`      varchar(255)                    NOT NULL,
     `first_name`    varchar(255),
     `last_name`     varchar(255),
-    `bio`           INTEGER UNSIGNED                NOT NULL,
+--     `bio`           INTEGER UNSIGNED                NOT NULL,
     `born`          TIMESTAMP                       NOT NULL,
     `country`       INTEGER UNSIGNED                NOT NULL,
     `city`          INTEGER UNSIGNED                NOT NULL,

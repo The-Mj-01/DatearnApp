@@ -1,6 +1,7 @@
 CREATE TABLE `bio`
 (
     `id`                    INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id`               INTEGER UNSIGNED UNIQUE NOT NULL,
     `social_media`          INTEGER UNSIGNED NOT NULL,
     `description`           Text,
     `photos`                INTEGER UNSIGNED NOT NULL,
