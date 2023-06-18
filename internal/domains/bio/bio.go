@@ -2,7 +2,6 @@ package bio
 
 import (
 	"context"
-	"time"
 )
 
 type BioRepositoryInterface interface {
@@ -25,10 +24,10 @@ type BioServiceInterface interface {
 	GetBioByCountry(countryId uint) (*[]Bio, error)
 	GetBioByCity(cityId uint) (*[]Bio, error)
 	GetBioBySex(sexId uint) (*[]Bio, error)
-	GetBioByBorn(bornDate time.Time) (*[]Bio, error)
+	GetBioByBorn(bornDate int64) (*[]Bio, error)
 
 	//
-	GetBioByBornAfter(bornDate time.Time) (*[]Bio, error)
+	GetBioByBornAfter(bornDate int64) (*[]Bio, error)
 	GetBioByCountryCitySex(countryId, cityId, sexId uint) (*[]Bio, error)
 	GetBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate int64) (*[]Bio, error)
 	CreateBio(description string, socialMedia, country, city, sex uint, born int64) (*Bio, error)
