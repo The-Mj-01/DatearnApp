@@ -25,8 +25,7 @@ func (b BioService) GetBioByCity(cityId uint) (*[]Bio, error) {
 }
 
 func (b BioService) GetBioBySex(sexId uint) (*[]Bio, error) {
-	//TODO implement me
-	panic("implement me")
+	return b.repo.GetBatchesBioBySex(sexId)
 }
 
 func (b BioService) GetBioByBorn(bornDate time.Time) (*[]Bio, error) {

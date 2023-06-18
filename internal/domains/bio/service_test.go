@@ -51,6 +51,19 @@ func TestBioService_GetBioByCity(t *testing.T) {
 	assertBioEquality(t, bios, *fetchedBio)
 }
 
+// TestBioService_GetBioBySex functionality
+func TestBioService_GetBioBySex(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	service := createService(db)
+	bios := mockAndInsertBio(db, 0, 0, 0, 0, 1, 11)
+	defer destructCreatedObjects(db, bios)
+
+	fetchedBio, err := service.GetBioBySex(bios[0].Country)
+	assertBioEquality(t, bios, *fetchedBio)
+}
+
 func createService(db *gorm.DB) BioServiceInterface {
 	return NewService(NewRepository(db))
 }
