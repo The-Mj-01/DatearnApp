@@ -28,20 +28,13 @@ func TestBioRepository_GetBioById(t *testing.T) {
 func TestBioRepository_GetBioByCountry(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
+
 	repo := createRepo(db)
+
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
 
-	cities := mockAndInsertCity(db, 1)
-	defer destructCreatedObjects(db, cities)
-
-	sexs := mockAndInsertSex(db, 1)
-	defer destructCreatedObjects(db, sexs)
-
-	socialMedia := mockAndInsertSocialMedia(db, 1)
-	defer destructCreatedObjects(db, socialMedia)
-
-	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, socialMedia[0].Id, 1)
+	bios := mockAndInsertBio(db, countries[0].Id, 0, 0, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchBio, err := repo.GetBioByCountry(countries[0].Id)
