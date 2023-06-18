@@ -18,7 +18,7 @@ func TestBioRepository_GetBioById(t *testing.T) {
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBioById(bios[0].Id)
-	assertUsersEquality(t, &bios[0], fetchedBio)
+	assertBioEquality(t, &bios[0], fetchedBio)
 
 	randId := rand.Int()
 	_, err = repo.GetBioById(uint(randId))
@@ -38,7 +38,7 @@ func TestBioRepository_GetBioByCountry(t *testing.T) {
 	defer destructCreatedObjects(db, bios)
 
 	fetchBio, err := repo.GetBioByCountry(countries[0].Id)
-	assertUsersEquality(t, &bios[0], fetchBio)
+	assertBioEquality(t, &bios[0], fetchBio)
 
 	randId := rand.Int()
 	_, err = repo.GetBioByCountry(uint(randId))
@@ -58,7 +58,7 @@ func TestBioRepository_GetBioByCity(t *testing.T) {
 	defer destructCreatedObjects(db, bios)
 
 	fetchBio, err := repo.GetBioByCity(cities[0].Id)
-	assertUsersEquality(t, &bios[0], fetchBio)
+	assertBioEquality(t, &bios[0], fetchBio)
 
 	randId := rand.Int()
 	_, err = repo.GetBioByCity(uint(randId))
@@ -235,10 +235,11 @@ func destructCreatedObjects[T Bio | Country | City | Sex | SocialMedia](db *gorm
 	}
 }
 
-// assertUsersEquality to see whether they are equal or not
-func assertUsersEquality(t *testing.T, mockedBio, fetchedBio *Bio) {
+// assertBioEquality to see whether they are equal or not
+func assertBioEquality(t *testing.T, mockedBio, fetchedBio *Bio) {
 	assert.Equal(t, mockedBio.Id, fetchedBio.Id)
 	assert.Equal(t, mockedBio.Country, fetchedBio.Country)
 	assert.Equal(t, mockedBio.City, fetchedBio.City)
 	assert.Equal(t, mockedBio.Sex, fetchedBio.Sex)
+	assert.Equal(t, mockedBio.SocialMedia, fetchedBio.SocialMedia)
 }
