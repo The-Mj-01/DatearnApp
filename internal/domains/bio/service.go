@@ -1,7 +1,5 @@
 package bio
 
-import "time"
-
 type BioService struct {
 	repo BioRepositoryInterface
 }
@@ -28,12 +26,12 @@ func (b BioService) GetBioBySex(sexId uint) (*[]Bio, error) {
 	return b.repo.GetBatchesBioBySex(sexId)
 }
 
-func (b BioService) GetBioByBorn(bornDate time.Time) (*[]Bio, error) {
+func (b BioService) GetBioByBorn(bornDate int64) (*[]Bio, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b BioService) GetBioByBornAfter(bornDate time.Time) (*[]Bio, error) {
+func (b BioService) GetBioByBornAfter(bornDate int64) (*[]Bio, error) {
 	//TODO implement me
 	panic("implement me")
 }
