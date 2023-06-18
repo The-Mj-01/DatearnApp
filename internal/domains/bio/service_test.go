@@ -38,7 +38,7 @@ func TestBioService_GetBioByCountry(t *testing.T) {
 	assertBioEquality(t, bios, *fetchedBio)
 }
 
-// TestBioService_GetBioByCountry functionality
+// TestBioService_GetBioByCity functionality
 func TestBioService_GetBioByCity(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
