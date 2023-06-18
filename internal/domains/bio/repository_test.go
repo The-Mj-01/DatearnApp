@@ -38,7 +38,7 @@ func TestBioRepository_GetBioByCountry(t *testing.T) {
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioByCountry(countries[0].Id)
-	assertBioEquality(t, bios, []Bio{*fetchedBio})
+	assertBioEquality(t, bios, *fetchedBio)
 
 }
 
@@ -55,7 +55,7 @@ func TestBioRepository_GetBioByCity(t *testing.T) {
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioByCity(cities[0].Id)
-	assertBioEquality(t, bios, []Bio{*fetchedBio})
+	assertBioEquality(t, bios, *fetchedBio)
 
 }
 
@@ -72,7 +72,7 @@ func TestBioRepository_GetBioBySex(t *testing.T) {
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioBySex(sexs[0].Id)
-	assertBioEquality(t, bios, []Bio{*fetchedBio})
+	assertBioEquality(t, bios, *fetchedBio)
 
 }
 
@@ -86,10 +86,7 @@ func TestBioRepository_GetBioByBornAfter(t *testing.T) {
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioByBornAfter(bios[0].Born)
-	assertBioEquality(t, bios, []Bio{*fetchedBio})
-
-	randId := rand.Intn(int(time.Now().UnixNano() - 100000000))
-	_, err = repo.GetBatchesBioByBornAfter(time.Unix(int64(randId), 0))
+	assertBioEquality(t, bios, *fetchedBio)
 
 }
 
@@ -112,8 +109,30 @@ func TestBioRepository_GetBioByCountryCitySex(t *testing.T) {
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioByCountryCitySex(countries[0].Id, cities[0].Id, sexs[0].Id)
-	assertBioEquality(t, bios, []Bio{*fetchedBio})
+	assertBioEquality(t, bios, *fetchedBio)
 
+}
+
+func TestBioRepository_GetBatchesBioByCountryCitySexBornAfterDate(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+
+	countries := mockAndInsertCountry(db, 1)
+	defer destructCreatedObjects(db, countries)
+
+	cities := mockAndInsertCity(db, 1)
+	defer destructCreatedObjects(db, cities)
+
+	sexs := mockAndInsertSex(db, 1)
+	defer destructCreatedObjects(db, sexs)
+
+	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 0, 1)
+	defer destructCreatedObjects(db, bios)
+
+	fetchedBio, err := repo.GetBatchesBioByCountryCitySexBornAfterDate(countries[0].Id, cities[0].Id, sexs[0].Id, bios[0].Born)
+	assertBioEquality(t, bios, *fetchedBio)
 }
 
 // setupDbConnection and run migration

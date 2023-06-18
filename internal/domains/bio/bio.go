@@ -7,15 +7,15 @@ import (
 
 type BioRepositoryInterface interface {
 	GetBioById(id uint) (*Bio, error)
-	GetBatchesBioByCountry(countryId uint) (*Bio, error)
-	GetBatchesBioByCity(cityId uint) (*Bio, error)
-	GetBatchesBioBySex(sexId uint) (*Bio, error)
-	GetBatchesBioByBorn(bornDate time.Time) (*Bio, error)
+	GetBatchesBioByCountry(countryId uint) (*[]Bio, error)
+	GetBatchesBioByCity(cityId uint) (*[]Bio, error)
+	GetBatchesBioBySex(sexId uint) (*[]Bio, error)
+	GetBatchesBioByBorn(bornDate time.Time) (*[]Bio, error)
 
 	//
-	GetBatchesBioByBornAfter(bornDate time.Time) (*Bio, error)
-	GetBatchesBioByCountryCitySex(countryId, cityId, sexId uint) (*Bio, error)
-	GetBatchesBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate time.Time) (*Bio, error)
+	GetBatchesBioByBornAfter(bornDate time.Time) (*[]Bio, error)
+	GetBatchesBioByCountryCitySex(countryId, cityId, sexId uint) (*[]Bio, error)
+	GetBatchesBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate time.Time) (*[]Bio, error)
 	CreateBio(bio *Bio) (*Bio, error)
 	UpdateBio(bio *Bio) (*Bio, error)
 }
