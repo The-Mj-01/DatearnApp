@@ -22,17 +22,17 @@ type BioRepositoryInterface interface {
 
 type BioServiceInterface interface {
 	GetBioById(id uint) (*Bio, error)
-	GetBioByCountry(countryId uint) (*Bio, error)
-	GetBioByCity(cityId uint) (*Bio, error)
-	GetBioBySex(sexId uint) (*Bio, error)
-	GetBioByBorn(bornDate time.Time) (*Bio, error)
+	GetBioByCountry(countryId uint) (*[]Bio, error)
+	GetBioByCity(cityId uint) (*[]Bio, error)
+	GetBioBySex(sexId uint) (*[]Bio, error)
+	GetBioByBorn(bornDate time.Time) (*[]Bio, error)
 
 	//
-	GetBioByBornAfter(bornDate time.Time) (*Bio, error)
-	GetBioByCountryCitySex(countryId, cityId, sexId uint) (*Bio, error)
-	GetBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate time.Time) (*Bio, error)
-	CreateBio(description string, socialMedia, country, city, sex uint, born time.Time) (*Bio, error)
-	UpdateBio(description string, socialMedia, country, city, sex uint, born time.Time) (*Bio, error)
+	GetBioByBornAfter(bornDate time.Time) (*[]Bio, error)
+	GetBioByCountryCitySex(countryId, cityId, sexId uint) (*[]Bio, error)
+	GetBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate int64) (*[]Bio, error)
+	CreateBio(description string, socialMedia, country, city, sex uint, born int64) (*Bio, error)
+	UpdateBio(description string, socialMedia, country, city, sex uint, born int64) (*Bio, error)
 }
 
 type BioUseCaseInterface interface {
