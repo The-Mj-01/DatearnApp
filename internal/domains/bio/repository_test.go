@@ -135,6 +135,33 @@ func TestBioRepository_GetBatchesBioByCountryCitySexBornAfterDate(t *testing.T) 
 	assertBioEquality(t, bios, *fetchedBio)
 }
 
+func TestBioRepository_CreateBio(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+
+	countries := mockAndInsertCountry(db, 1)
+	defer destructCreatedObjects(db, countries)
+
+	cities := mockAndInsertCity(db, 1)
+	defer destructCreatedObjects(db, cities)
+
+	sexs := mockAndInsertSex(db, 1)
+	defer destructCreatedObjects(db, sexs)
+
+	socials := mockAndInsertSex(db, 1)
+	defer destructCreatedObjects(db, socials)
+
+	mockedBio := mockBio(countries[0].Id, countries[0].Id, cities[0].Id, sexs[0].Id, socials[0].Id)
+
+	createdBio, err := repo.CreateBio(mockedBio)
+	defer destructCreatedObjects(db, []Bio{*createdBio})
+
+	assert.NoError(t, err, "Bio creation in repository failed")
+
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})

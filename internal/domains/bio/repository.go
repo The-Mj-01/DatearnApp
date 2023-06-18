@@ -64,8 +64,8 @@ func (b BioRepository) GetBatchesBioByCountryCitySexBornAfterDate(countryId, cit
 }
 
 func (b BioRepository) CreateBio(bio *Bio) (*Bio, error) {
-	//TODO implement me
-	panic("implement me")
+	result := b.db.Create(bio)
+	return bio, result.Error
 }
 
 func (b BioRepository) UpdateBio(bio *Bio) (*Bio, error) {
