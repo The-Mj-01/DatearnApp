@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// TestBioRepository_GetBioById functionality
 func TestBioRepository_GetBioById(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -25,6 +26,7 @@ func TestBioRepository_GetBioById(t *testing.T) {
 	assert.Error(t, err, "Fetching wrong bio from db failed ! it should throw an error")
 }
 
+// TestBioRepository_GetBioByCountry functionality
 func TestBioRepository_GetBioByCountry(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -42,6 +44,7 @@ func TestBioRepository_GetBioByCountry(t *testing.T) {
 
 }
 
+// TestBioRepository_GetBioByCity functionality
 func TestBioRepository_GetBioByCity(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -59,6 +62,7 @@ func TestBioRepository_GetBioByCity(t *testing.T) {
 
 }
 
+// TestBioRepository_GetBioBySex functionality
 func TestBioRepository_GetBioBySex(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -76,6 +80,7 @@ func TestBioRepository_GetBioBySex(t *testing.T) {
 
 }
 
+// TestBioRepository_GetBioByBornAfter functionality
 func TestBioRepository_GetBioByBornAfter(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -90,6 +95,7 @@ func TestBioRepository_GetBioByBornAfter(t *testing.T) {
 
 }
 
+// TestBioRepository_GetBioByCountryCitySex functionality
 func TestBioRepository_GetBioByCountryCitySex(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -113,6 +119,7 @@ func TestBioRepository_GetBioByCountryCitySex(t *testing.T) {
 
 }
 
+// TestBioRepository_GetBatchesBioByCountryCitySexBornAfterDate functionality
 func TestBioRepository_GetBatchesBioByCountryCitySexBornAfterDate(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -135,6 +142,7 @@ func TestBioRepository_GetBatchesBioByCountryCitySexBornAfterDate(t *testing.T) 
 	assertBioEquality(t, bios, *fetchedBio)
 }
 
+// TestBioRepository_CreateBio functionality
 func TestBioRepository_CreateBio(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -162,6 +170,7 @@ func TestBioRepository_CreateBio(t *testing.T) {
 
 }
 
+// TestBioRepository_UpdateBio functionality
 func TestBioRepository_UpdateBio(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -221,6 +230,7 @@ func createRepo(db *gorm.DB) BioRepositoryInterface {
 	return NewRepository(db)
 }
 
+// mockAndInsertCountry in database for testing purpose
 func mockAndInsertCountry(db *gorm.DB, count int) []Country {
 	countries := make([]Country, 0, count)
 	i := 0
@@ -242,12 +252,14 @@ func mockAndInsertCountry(db *gorm.DB, count int) []Country {
 	return countries
 }
 
+// mockCountry object and return it
 func mockCountry() *Country {
 	return &Country{
 		Name: "Iran",
 	}
 }
 
+// mockAndInsertCity in database for testing purpose
 func mockAndInsertCity(db *gorm.DB, count int) []City {
 	cities := make([]City, 0, count)
 	i := 0
@@ -269,6 +281,7 @@ func mockAndInsertCity(db *gorm.DB, count int) []City {
 	return cities
 }
 
+// mockCity object and return it
 func mockCity() *City {
 	return &City{
 
@@ -276,6 +289,7 @@ func mockCity() *City {
 	}
 }
 
+// mockAndInsertSex in database for testing purpose
 func mockAndInsertSex(db *gorm.DB, count int) []Sex {
 	sexs := make([]Sex, 0, count)
 	i := 0
@@ -297,6 +311,7 @@ func mockAndInsertSex(db *gorm.DB, count int) []Sex {
 	return sexs
 }
 
+// mockSex object and return it
 func mockSex() *Sex {
 
 	return &Sex{
@@ -305,36 +320,7 @@ func mockSex() *Sex {
 	}
 }
 
-func mockAndInsertSocialMedia(db *gorm.DB, count int) []SocialMedia {
-	medias := make([]SocialMedia, 0, count)
-	i := 0
-	for {
-		tmpSocialMedia := mockSocialMedia()
-
-		res := db.Create(tmpSocialMedia)
-		if res.Error != nil {
-			continue
-		}
-
-		medias = append(medias, *tmpSocialMedia)
-		i += 1
-
-		if i == count {
-			break
-		}
-	}
-	return medias
-}
-
-func mockSocialMedia() *SocialMedia {
-
-	return &SocialMedia{
-
-		Name:          "instagram",
-		SocialMediaId: "@ali",
-	}
-}
-
+// mockAndInsertBio in database for testing purpose
 func mockAndInsertBio(db *gorm.DB, countryId, cityId, sexId, socialMediaId uint, count int) []Bio {
 	bios := make([]Bio, 0, count)
 
@@ -356,6 +342,7 @@ func mockAndInsertBio(db *gorm.DB, countryId, cityId, sexId, socialMediaId uint,
 	return bios
 }
 
+// mockBio object and return it
 func mockBio(countryId, cityId, sexId, socialMediaId, index uint) *Bio {
 	return &Bio{
 		Id:          index,

@@ -9,64 +9,75 @@ type BioRepository struct {
 	db *gorm.DB
 }
 
+// NewRepository instantiates and returns new repository
 func NewRepository(db *gorm.DB) BioRepositoryInterface {
 	return &BioRepository{
 		db: db,
 	}
 }
 
+// GetBioById instantiates and returns new repository
 func (b BioRepository) GetBioById(id uint) (*Bio, error) {
 	var bio Bio
 	result := b.db.Where("id = ?", id).First(&bio)
 	return &bio, result.Error
 }
 
+// GetBatchesBioByCountry and return it
 func (b BioRepository) GetBatchesBioByCountry(countryId uint) (*[]Bio, error) {
 	var bio []Bio
 	result := b.db.Where("country = ?", countryId).Find(&bio)
 	return &bio, result.Error
 }
 
+// GetBatchesBioByCity and return it
 func (b BioRepository) GetBatchesBioByCity(cityId uint) (*[]Bio, error) {
 	var bio []Bio
 	result := b.db.Where("city = ?", cityId).Find(&bio)
 	return &bio, result.Error
 }
 
+// GetBatchesBioBySex and return it
 func (b BioRepository) GetBatchesBioBySex(sexId uint) (*[]Bio, error) {
 	var bio []Bio
 	result := b.db.Where("sex = ?", sexId).Find(&bio)
 	return &bio, result.Error
 }
 
+// GetBatchesBioByBorn and return it
 func (b BioRepository) GetBatchesBioByBorn(bornDate int64) (*[]Bio, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
+// GetBatchesBioByBornAfter and return it
 func (b BioRepository) GetBatchesBioByBornAfter(bornDate int64) (*[]Bio, error) {
 	var bio []Bio
 	result := b.db.Where("born >= ?", bornDate).Find(&bio)
 	return &bio, result.Error
 }
 
+// GetBatchesBioByCountryCitySex and return it
 func (b BioRepository) GetBatchesBioByCountryCitySex(countryId, cityId, sexId uint) (*[]Bio, error) {
 	var bio []Bio
 	result := b.db.Where("country = ? ", countryId).Where("city", cityId).Where("sex", sexId).Find(&bio)
 	return &bio, result.Error
 }
 
+// GetBatchesBioByCountryCitySexBornAfterDate and return it
 func (b BioRepository) GetBatchesBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate int64) (*[]Bio, error) {
 	var bio []Bio
 	result := b.db.Where("country = ? ", countryId).Where("city", cityId).Where("sex", sexId).Where("born >= ?", bornDate).Find(&bio)
 	return &bio, result.Error
 }
 
+// CreateBio that doesn't already exist in database
 func (b BioRepository) CreateBio(bio *Bio) (*Bio, error) {
 	result := b.db.Create(bio)
 	return bio, result.Error
 }
 
+// UpdateBio that already exists in database
 func (b BioRepository) UpdateBio(oldBio, newBio *Bio) (*Bio, error) {
 	if newBio.Country != 0 {
 		oldBio.Country = newBio.Country
