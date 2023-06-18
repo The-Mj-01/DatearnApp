@@ -13,8 +13,7 @@ func NewService(repo BioRepositoryInterface) BioServiceInterface {
 }
 
 func (b BioService) GetBioById(id uint) (*Bio, error) {
-	//TODO implement me
-	panic("implement me")
+	return b.repo.GetBioById(id)
 }
 
 func (b BioService) GetBioByCountry(countryId uint) (*Bio, error) {
