@@ -103,6 +103,32 @@ func TestBioRepository_GetBioByBornAfter(t *testing.T) {
 
 }
 
+func TestBioRepository_GetBioByCountryCitySex(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+
+	countries := mockAndInsertCountry(db, 1)
+	defer destructCreatedObjects(db, countries)
+
+	cities := mockAndInsertCity(db, 1)
+	defer destructCreatedObjects(db, cities)
+
+	sexs := mockAndInsertSex(db, 1)
+	defer destructCreatedObjects(db, sexs)
+
+	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 0, 1)
+	defer destructCreatedObjects(db, bios)
+
+	fetchedBio, err := repo.GetBioByCountryCitySex(countries[0].Id, cities[0].Id, sexs[0].Id)
+	assertBioEquality(t, &bios[0], fetchedBio)
+
+	randId := rand.Int()
+	_, err = repo.GetBioBySex(uint(randId))
+	assert.Error(t, err, "Fetching wrong bio from db failed ! it should throw an error")
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
