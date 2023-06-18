@@ -18,7 +18,7 @@ func TestBioRepository_GetBioById(t *testing.T) {
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBioById(bios[0].Id)
-	assertBioEquality(t, &bios[0], fetchedBio)
+	assertBioEquality(t, bios, []Bio{*fetchedBio})
 
 	randId := rand.Int()
 	_, err = repo.GetBioById(uint(randId))
@@ -37,12 +37,9 @@ func TestBioRepository_GetBioByCountry(t *testing.T) {
 	bios := mockAndInsertBio(db, countries[0].Id, 0, 0, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
-	fetchedBio, err := repo.GetBioByCountry(countries[0].Id)
-	assertBioEquality(t, &bios[0], fetchedBio)
+	fetchedBio, err := repo.GetBatchesBioByCountry(countries[0].Id)
+	assertBioEquality(t, bios, []Bio{*fetchedBio})
 
-	randId := rand.Int()
-	_, err = repo.GetBioByCountry(uint(randId))
-	assert.Error(t, err, "Fetching wrong bio from db failed ! it should throw an error")
 }
 
 func TestBioRepository_GetBioByCity(t *testing.T) {
@@ -57,12 +54,8 @@ func TestBioRepository_GetBioByCity(t *testing.T) {
 	bios := mockAndInsertBio(db, 0, cities[0].Id, 0, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
-	fetchedBio, err := repo.GetBioByCity(cities[0].Id)
-	assertBioEquality(t, &bios[0], fetchedBio)
-
-	randId := rand.Int()
-	_, err = repo.GetBioByCity(uint(randId))
-	assert.Error(t, err, "Fetching wrong bio from db failed ! it should throw an error")
+	fetchedBio, err := repo.GetBatchesBioByCity(cities[0].Id)
+	assertBioEquality(t, bios, []Bio{*fetchedBio})
 
 }
 
@@ -78,12 +71,9 @@ func TestBioRepository_GetBioBySex(t *testing.T) {
 	bios := mockAndInsertBio(db, 0, 0, sexs[0].Id, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
-	fetchedBio, err := repo.GetBioBySex(sexs[0].Id)
-	assertBioEquality(t, &bios[0], fetchedBio)
+	fetchedBio, err := repo.GetBatchesBioBySex(sexs[0].Id)
+	assertBioEquality(t, bios, []Bio{*fetchedBio})
 
-	randId := rand.Int()
-	_, err = repo.GetBioBySex(uint(randId))
-	assert.Error(t, err, "Fetching wrong bio from db failed ! it should throw an error")
 }
 
 func TestBioRepository_GetBioByBornAfter(t *testing.T) {
@@ -95,11 +85,11 @@ func TestBioRepository_GetBioByBornAfter(t *testing.T) {
 	bios := mockAndInsertBio(db, 0, 0, 0, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
-	fetchedBio, err := repo.GetBioByBornAfter(bios[0].Born)
-	assertBioEquality(t, &bios[0], fetchedBio)
+	fetchedBio, err := repo.GetBatchesBioByBornAfter(bios[0].Born)
+	assertBioEquality(t, bios, []Bio{*fetchedBio})
 
 	randId := rand.Intn(int(time.Now().UnixNano() - 100000000))
-	_, err = repo.GetBioByBornAfter(time.Unix(int64(randId), 0))
+	_, err = repo.GetBatchesBioByBornAfter(time.Unix(int64(randId), 0))
 
 }
 
@@ -121,12 +111,9 @@ func TestBioRepository_GetBioByCountryCitySex(t *testing.T) {
 	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
-	fetchedBio, err := repo.GetBioByCountryCitySex(countries[0].Id, cities[0].Id, sexs[0].Id)
-	assertBioEquality(t, &bios[0], fetchedBio)
+	fetchedBio, err := repo.GetBatchesBioByCountryCitySex(countries[0].Id, cities[0].Id, sexs[0].Id)
+	assertBioEquality(t, bios, []Bio{*fetchedBio})
 
-	randId := rand.Int()
-	_, err = repo.GetBioBySex(uint(randId))
-	assert.Error(t, err, "Fetching wrong bio from db failed ! it should throw an error")
 }
 
 // setupDbConnection and run migration
@@ -299,11 +286,13 @@ func destructCreatedObjects[T Bio | Country | City | Sex | SocialMedia](db *gorm
 }
 
 // assertBioEquality to see whether they are equal or not
-func assertBioEquality(t *testing.T, mockedBio, fetchedBio *Bio) {
-	assert.Equal(t, mockedBio.Id, fetchedBio.Id)
-	assert.Equal(t, mockedBio.Country, fetchedBio.Country)
-	assert.Equal(t, mockedBio.City, fetchedBio.City)
-	assert.Equal(t, mockedBio.Sex, fetchedBio.Sex)
-	assert.Equal(t, mockedBio.SocialMedia, fetchedBio.SocialMedia)
-	assert.Equal(t, mockedBio.Born, fetchedBio.Born)
+func assertBioEquality(t *testing.T, mockedBio, fetchedBio []Bio) {
+	for index := range mockedBio {
+		assert.Equal(t, mockedBio[index].Id, fetchedBio[index].Id)
+		assert.Equal(t, mockedBio[index].Country, fetchedBio[index].Country)
+		assert.Equal(t, mockedBio[index].City, fetchedBio[index].City)
+		assert.Equal(t, mockedBio[index].Sex, fetchedBio[index].Sex)
+		assert.Equal(t, mockedBio[index].SocialMedia, fetchedBio[index].SocialMedia)
+		assert.Equal(t, mockedBio[index].Born, fetchedBio[index].Born)
+	}
 }

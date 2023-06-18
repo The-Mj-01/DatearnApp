@@ -22,42 +22,42 @@ func (b BioRepository) GetBioById(id uint) (*Bio, error) {
 	return &bio, result.Error
 }
 
-func (b BioRepository) GetBioByCountry(countryId uint) (*Bio, error) {
+func (b BioRepository) GetBatchesBioByCountry(countryId uint) (*Bio, error) {
 	var bio Bio
-	result := b.db.Where("country = ?", countryId).First(&bio)
+	result := b.db.Where("country = ?", countryId).Find(&bio)
 	return &bio, result.Error
 }
 
-func (b BioRepository) GetBioByCity(cityId uint) (*Bio, error) {
+func (b BioRepository) GetBatchesBioByCity(cityId uint) (*Bio, error) {
 	var bio Bio
-	result := b.db.Where("city = ?", cityId).First(&bio)
+	result := b.db.Where("city = ?", cityId).Find(&bio)
 	return &bio, result.Error
 }
 
-func (b BioRepository) GetBioBySex(sexId uint) (*Bio, error) {
+func (b BioRepository) GetBatchesBioBySex(sexId uint) (*Bio, error) {
 	var bio Bio
-	result := b.db.Where("sex = ?", sexId).First(&bio)
+	result := b.db.Where("sex = ?", sexId).Find(&bio)
 	return &bio, result.Error
 }
 
-func (b BioRepository) GetBioByBorn(bornDate time.Time) (*Bio, error) {
+func (b BioRepository) GetBatchesBioByBorn(bornDate time.Time) (*Bio, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b BioRepository) GetBioByBornAfter(bornDate time.Time) (*Bio, error) {
+func (b BioRepository) GetBatchesBioByBornAfter(bornDate time.Time) (*Bio, error) {
 	var bio Bio
-	result := b.db.Where("born >= ?", bornDate).First(&bio)
+	result := b.db.Where("born >= ?", bornDate).Find(&bio)
 	return &bio, result.Error
 }
 
-func (b BioRepository) GetBioByCountryCitySex(countryId, cityId, sexId uint) (*Bio, error) {
+func (b BioRepository) GetBatchesBioByCountryCitySex(countryId, cityId, sexId uint) (*Bio, error) {
 	var bio Bio
-	result := b.db.Where("country = ? ", countryId).Where("city", cityId).Where("sex", sexId).First(&bio)
+	result := b.db.Where("country = ? ", countryId).Where("city", cityId).Where("sex", sexId).Find(&bio)
 	return &bio, result.Error
 }
 
-func (b BioRepository) GetBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate time.Time) (*Bio, error) {
+func (b BioRepository) GetBatchesBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate time.Time) (*Bio, error) {
 	//TODO implement me
 	panic("implement me")
 }
