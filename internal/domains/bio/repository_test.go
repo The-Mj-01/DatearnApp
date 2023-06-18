@@ -37,8 +37,8 @@ func TestBioRepository_GetBioByCountry(t *testing.T) {
 	bios := mockAndInsertBio(db, countries[0].Id, 0, 0, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
-	fetchBio, err := repo.GetBioByCountry(countries[0].Id)
-	assertBioEquality(t, &bios[0], fetchBio)
+	fetchedBio, err := repo.GetBioByCountry(countries[0].Id)
+	assertBioEquality(t, &bios[0], fetchedBio)
 
 	randId := rand.Int()
 	_, err = repo.GetBioByCountry(uint(randId))
@@ -57,8 +57,8 @@ func TestBioRepository_GetBioByCity(t *testing.T) {
 	bios := mockAndInsertBio(db, 0, cities[0].Id, 0, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
-	fetchBio, err := repo.GetBioByCity(cities[0].Id)
-	assertBioEquality(t, &bios[0], fetchBio)
+	fetchedBio, err := repo.GetBioByCity(cities[0].Id)
+	assertBioEquality(t, &bios[0], fetchedBio)
 
 	randId := rand.Int()
 	_, err = repo.GetBioByCity(uint(randId))
@@ -78,8 +78,8 @@ func TestBioRepository_GetBioBySex(t *testing.T) {
 	bios := mockAndInsertBio(db, 0, 0, sexs[0].Id, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
-	fetchBio, err := repo.GetBioBySex(sexs[0].Id)
-	assertBioEquality(t, &bios[0], fetchBio)
+	fetchedBio, err := repo.GetBioBySex(sexs[0].Id)
+	assertBioEquality(t, &bios[0], fetchedBio)
 
 	randId := rand.Int()
 	_, err = repo.GetBioBySex(uint(randId))
