@@ -7,6 +7,7 @@ import (
 	"testing"
 )
 
+// TestUserService_GetUserById functionality
 func TestUserService_GetUserById(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -24,6 +25,7 @@ func TestUserService_GetUserById(t *testing.T) {
 
 }
 
+// TestUserService_GetUserByUUID functionality
 func TestUserService_GetUserByUUID(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -40,6 +42,7 @@ func TestUserService_GetUserByUUID(t *testing.T) {
 	assert.Error(t, err, "Fetching wrong user from db failed ! it should throw an error")
 }
 
+// TestUserService_GetUserByEmail functionality
 func TestUserService_GetUserByEmail(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -57,6 +60,7 @@ func TestUserService_GetUserByEmail(t *testing.T) {
 
 }
 
+// TestUserService_CreateUser functionality
 func TestUserService_CreateUser(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
@@ -99,6 +103,7 @@ func TestUserService_UpdateUser(t *testing.T) {
 	assert.ErrorIs(t, err, UserDoesntExists, "User service update user failed")
 }
 
+// TestUserService_DeleteUser functionality
 func TestUserService_DeleteUser(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")

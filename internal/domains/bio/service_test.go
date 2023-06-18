@@ -7,6 +7,7 @@ import (
 	"testing"
 )
 
+// TestBioService_GetBioById functionality
 func TestBioService_GetBioById(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
