@@ -6,12 +6,11 @@ import "time"
 type Bio struct {
 	Id          uint      `json:"-,omitempty" gorm:"primaryKey"`
 	UserId      uint      `json:"userId,omitempty" gorm:"uniqueIndex"`
-	SocialMedia uint      `json:"social_media,omitempty"`
 	Description string    `json:"description,omitempty" `
 	Country     uint      `json:"country"`
 	City        uint      `json:"city"`
 	Sex         uint      `json:"sex"`
-	Born        time.Time `json:"born,omitempty"`
+	Born        int64     `json:"born,omitempty"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 	DeletedAt   time.Time `json:"deleted_at"`

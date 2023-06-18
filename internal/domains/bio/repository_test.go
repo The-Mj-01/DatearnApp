@@ -162,6 +162,50 @@ func TestBioRepository_CreateBio(t *testing.T) {
 
 }
 
+func TestBioRepository_UpdateBio(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+
+	countries := mockAndInsertCountry(db, 2)
+	defer destructCreatedObjects(db, countries)
+
+	cities := mockAndInsertCity(db, 2)
+	defer destructCreatedObjects(db, cities)
+
+	sexs := mockAndInsertSex(db, 2)
+	defer destructCreatedObjects(db, sexs)
+
+	socials := mockAndInsertSex(db, 2)
+	defer destructCreatedObjects(db, socials)
+
+	oldBio := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, socials[0].Id, 1)
+	newBorn := oldBio[0].Born + 10000
+	time.Now().Unix()
+	newBio := Bio{
+
+		Description: "salam",
+		Country:     countries[1].Id,
+		City:        cities[1].Id,
+		Sex:         sexs[1].Id,
+		Born:        newBorn,
+	}
+
+	_, err = repo.UpdateBio(&oldBio[0], &newBio)
+	assert.NoError(t, err, "Bio Update operation failed")
+
+	fetchBio := new(Bio)
+	db.Where("id = ?", oldBio[0].Id).First(fetchBio)
+
+	assert.Equal(t, oldBio[0].Id, fetchBio.Id, "Bio Update operation failed")
+	assert.Equal(t, newBio.Description, fetchBio.Description, "Bio Update operation failed")
+	assert.Equal(t, newBio.Country, fetchBio.Country, "Bio Update operation failed")
+	assert.Equal(t, newBio.City, fetchBio.City, "Bio Update operation failed")
+	assert.Equal(t, newBio.Sex, fetchBio.Sex, "Bio Update operation failed")
+	assert.Equal(t, newBio.Born, fetchBio.Born, "Bio Update operation failed")
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
@@ -315,12 +359,11 @@ func mockAndInsertBio(db *gorm.DB, countryId, cityId, sexId, socialMediaId uint,
 func mockBio(countryId, cityId, sexId, socialMediaId, index uint) *Bio {
 	return &Bio{
 		Id:          index,
-		SocialMedia: socialMediaId,
 		Description: "this is a description.",
 		Country:     countryId,
 		City:        cityId,
 		Sex:         sexId,
-		Born:        time.Time{},
+		Born:        0,
 	}
 }
 
@@ -338,7 +381,6 @@ func assertBioEquality(t *testing.T, mockedBio, fetchedBio []Bio) {
 		assert.Equal(t, mockedBio[index].Country, fetchedBio[index].Country)
 		assert.Equal(t, mockedBio[index].City, fetchedBio[index].City)
 		assert.Equal(t, mockedBio[index].Sex, fetchedBio[index].Sex)
-		assert.Equal(t, mockedBio[index].SocialMedia, fetchedBio[index].SocialMedia)
 		assert.Equal(t, mockedBio[index].Born, fetchedBio[index].Born)
 	}
 }
