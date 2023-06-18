@@ -46,8 +46,9 @@ func (b BioRepository) GetBioByBorn(bornDate time.Time) (*Bio, error) {
 }
 
 func (b BioRepository) GetBioByBornAfter(bornDate time.Time) (*Bio, error) {
-	//TODO implement me
-	panic("implement me")
+	var bio Bio
+	result := b.db.Where("born >= ?", bornDate).First(&bio)
+	return &bio, result.Error
 }
 
 func (b BioRepository) GetBioByCountryCitySex(countryId, cityId, sexId uint) (*Bio, error) {
