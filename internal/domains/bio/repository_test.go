@@ -262,4 +262,5 @@ func assertBioEquality(t *testing.T, mockedBio, fetchedBio *Bio) {
 	assert.Equal(t, mockedBio.City, fetchedBio.City)
 	assert.Equal(t, mockedBio.Sex, fetchedBio.Sex)
 	assert.Equal(t, mockedBio.SocialMedia, fetchedBio.SocialMedia)
+	assert.Equal(t, mockedBio.Born, fetchedBio.Born)
 }
