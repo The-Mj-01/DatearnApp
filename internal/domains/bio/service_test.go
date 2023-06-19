@@ -116,12 +116,34 @@ func TestBioRepository_GetBatchesBioByCountryCitySex(t *testing.T) {
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
 
-	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 1)
+	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 10)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := service.GetBioByCountryCitySex(countries[0].Id, cities[0].Id, sexs[0].Id)
 	assertBioEquality(t, bios, *fetchedBio)
 
+}
+
+func TestBioService_GetBioByCountryCitySexBornAfterDate(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	service := createService(db)
+
+	countries := mockAndInsertCountry(db, 1)
+	defer destructCreatedObjects(db, countries)
+
+	cities := mockAndInsertCity(db, 1)
+	defer destructCreatedObjects(db, cities)
+
+	sexs := mockAndInsertSex(db, 1)
+	defer destructCreatedObjects(db, sexs)
+
+	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 10)
+	defer destructCreatedObjects(db, bios)
+
+	fetchedBio, err := service.GetBioByCountryCitySexBornAfterDate(countries[0].Id, cities[0].Id, sexs[0].Id, bios[0].Born)
+	assertBioEquality(t, bios, *fetchedBio)
 }
 
 func createService(db *gorm.DB) BioServiceInterface {
