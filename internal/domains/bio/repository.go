@@ -57,6 +57,21 @@ func (b BioRepository) GetBatchesBioByBorn(bornDate int64) (*[]Bio, error) {
 	panic("implement me")
 }
 
+func (b BioRepository) CountryExists(countryId uint) bool {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (b BioRepository) CityExists(cityId uint) bool {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (b BioRepository) SexExists(sexId uint) bool {
+	//TODO implement me
+	panic("implement me")
+}
+
 // GetBatchesBioByBornAfter and return it
 func (b BioRepository) GetBatchesBioByBornAfter(bornDate int64) (*[]Bio, error) {
 	var bio []Bio

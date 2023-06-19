@@ -11,7 +11,9 @@ type BioRepositoryInterface interface {
 	GetBatchesBioByCity(cityId uint) (*[]Bio, error)
 	GetBatchesBioBySex(sexId uint) (*[]Bio, error)
 	GetBatchesBioByBorn(bornDate int64) (*[]Bio, error)
-
+	CountryExists(countryId uint) bool
+	CityExists(cityId uint) bool
+	SexExists(sexId uint) bool
 	//
 	GetBatchesBioByBornAfter(bornDate int64) (*[]Bio, error)
 	GetBatchesBioByCountryCitySex(countryId, cityId, sexId uint) (*[]Bio, error)
