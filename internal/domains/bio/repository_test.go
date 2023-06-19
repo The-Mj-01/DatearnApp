@@ -15,7 +15,7 @@ func TestBioRepository_GetBioById(t *testing.T) {
 	assert.NoError(t, err, "Setup database connection failed")
 
 	repo := createRepo(db)
-	bios := mockAndInsertBio(db, 0, 0, 0, 0, 1, 1)
+	bios := mockAndInsertBio(db, 0, 0, 0, 1, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBioById(bios[0].Id)
@@ -36,7 +36,7 @@ func TestBioRepository_GetBioByCountry(t *testing.T) {
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
 
-	bios := mockAndInsertBio(db, countries[0].Id, 0, 0, 0, 10, 1)
+	bios := mockAndInsertBio(db, countries[0].Id, 0, 0, 10, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioByCountry(countries[0].Id)
@@ -54,7 +54,7 @@ func TestBioRepository_GetBioByCity(t *testing.T) {
 	cities := mockAndInsertCity(db, 1)
 	defer destructCreatedObjects(db, cities)
 
-	bios := mockAndInsertBio(db, 0, cities[0].Id, 0, 0, 10, 1)
+	bios := mockAndInsertBio(db, 0, cities[0].Id, 0, 10, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioByCity(cities[0].Id)
@@ -72,7 +72,7 @@ func TestBioRepository_GetBioBySex(t *testing.T) {
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
 
-	bios := mockAndInsertBio(db, 0, 0, sexs[0].Id, 0, 10, 1)
+	bios := mockAndInsertBio(db, 0, 0, sexs[0].Id, 10, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioBySex(sexs[0].Id)
@@ -87,7 +87,7 @@ func TestBioRepository_GetBioByBornAfter(t *testing.T) {
 
 	repo := createRepo(db)
 
-	bios := mockAndInsertBio(db, 0, 0, 0, 0, 10, 1)
+	bios := mockAndInsertBio(db, 0, 0, 0, 10, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioByBornAfter(bios[0].Born)
@@ -111,7 +111,7 @@ func TestBioRepository_GetBioByCountryCitySex(t *testing.T) {
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
 
-	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 0, 10, 1)
+	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 10, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioByCountryCitySex(countries[0].Id, cities[0].Id, sexs[0].Id)
@@ -135,7 +135,7 @@ func TestBioRepository_GetBatchesBioByCountryCitySexBornAfterDate(t *testing.T) 
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
 
-	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 0, 10, 1)
+	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 10, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := repo.GetBatchesBioByCountryCitySexBornAfterDate(countries[0].Id, cities[0].Id, sexs[0].Id, bios[0].Born)
@@ -161,7 +161,7 @@ func TestBioRepository_CreateBio(t *testing.T) {
 	socials := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, socials)
 
-	mockedBio := mockBio(countries[0].Id, countries[0].Id, cities[0].Id, sexs[0].Id, socials[0].Id)
+	mockedBio := mockBio(countries[0].Id, countries[0].Id, cities[0].Id, sexs[0].Id)
 
 	createdBio, err := repo.CreateBio(mockedBio)
 	defer destructCreatedObjects(db, []Bio{*createdBio})
@@ -189,7 +189,7 @@ func TestBioRepository_UpdateBio(t *testing.T) {
 	socials := mockAndInsertSex(db, 2)
 	defer destructCreatedObjects(db, socials)
 
-	oldBio := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, socials[0].Id, 1, 1)
+	oldBio := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 1, 1)
 	newBorn := oldBio[0].Born + 10000
 	time.Now().Unix()
 	newBio := Bio{
@@ -321,11 +321,11 @@ func mockSex() *Sex {
 }
 
 // mockAndInsertBio in database for testing purpose
-func mockAndInsertBio(db *gorm.DB, countryId, cityId, sexId, socialMediaId uint, count, fromCount int) []Bio {
+func mockAndInsertBio(db *gorm.DB, countryId, cityId, sexId, count, fromCount uint) []Bio {
 	bios := make([]Bio, 0, count)
 
 	for i := fromCount; i < count+fromCount; i++ {
-		tmpBio := mockBio(countryId, cityId, sexId, socialMediaId, uint(i))
+		tmpBio := mockBio(countryId, cityId, sexId, i)
 
 		res := db.Create(tmpBio)
 		if res.Error != nil {
@@ -343,7 +343,7 @@ func mockAndInsertBio(db *gorm.DB, countryId, cityId, sexId, socialMediaId uint,
 }
 
 // mockBio object and return it
-func mockBio(countryId, cityId, sexId, socialMediaId, index uint) *Bio {
+func mockBio(countryId, cityId, sexId, index uint) *Bio {
 	return &Bio{
 		Id:          index,
 		UserId:      index,
