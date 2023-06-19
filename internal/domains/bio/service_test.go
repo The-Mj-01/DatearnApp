@@ -97,13 +97,6 @@ func TestBioService_GetBioByBornAfter(t *testing.T) {
 
 	fetchedBio, err := service.GetBioByBornAfter(bios[0].Born)
 	assertBioEquality(t, bios, *fetchedBio)
-	fetchedBioVal := *fetchedBio
-	for index := range bios {
-		assert.Equal(t, bios[index].Id, fetchedBioVal[index].Id)
-		assert.Equal(t, bios[index].Country, fetchedBioVal[index].Country)
-		assert.Equal(t, bios[index].City, fetchedBioVal[index].City)
-		assert.Equal(t, bios[index].Sex, fetchedBioVal[index].Sex)
-	}
 
 }
 
