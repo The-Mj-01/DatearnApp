@@ -32,8 +32,7 @@ func (b BioService) GetBioByBorn(bornDate int64) (*[]Bio, error) {
 }
 
 func (b BioService) GetBioByBornAfter(bornDate int64) (*[]Bio, error) {
-	//TODO implement me
-	panic("implement me")
+	return b.repo.GetBatchesBioByBornAfter(bornDate)
 }
 
 func (b BioService) GetBioByCountryCitySex(countryId, cityId, sexId uint) (*[]Bio, error) {
