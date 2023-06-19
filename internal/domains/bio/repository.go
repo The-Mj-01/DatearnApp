@@ -1,6 +1,7 @@
 package bio
 
 import (
+	"errors"
 	"gorm.io/gorm"
 )
 
@@ -58,8 +59,9 @@ func (b BioRepository) GetBatchesBioByBorn(bornDate int64) (*[]Bio, error) {
 }
 
 func (b BioRepository) CountryExists(countryId uint) bool {
-	//TODO implement me
-	panic("implement me")
+	var country Country
+	result := b.db.Where("id = ?", countryId).First(&country)
+	return result.Error == nil && !errors.Is(result.Error, gorm.ErrRecordNotFound)
 }
 
 func (b BioRepository) CityExists(cityId uint) bool {

@@ -97,6 +97,24 @@ func TestBioRepository_GetBioBySex(t *testing.T) {
 
 }
 
+// TestBioRepository_CountryExists functionality
+func TestBioRepository_CountryExists(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+
+	countries := mockAndInsertCountry(db, 1)
+	defer destructCreatedObjects(db, countries)
+
+	exists := repo.CountryExists(1)
+	assert.True(t, exists, "checking country existence from repository failed")
+
+	exists = repo.CountryExists(uint(rand.Int()))
+	assert.False(t, exists, "checking country existence from repository failed")
+
+}
+
 // TestBioRepository_GetBioByBornAfter functionality
 func TestBioRepository_GetBioByBornAfter(t *testing.T) {
 	db, err := setupDbConnection()
