@@ -19,15 +19,27 @@ func (b BioService) GetBioById(id uint) (*Bio, error) {
 }
 
 func (b BioService) GetBioByCountry(countryId uint) (*[]Bio, error) {
-	return b.repo.GetBatchesBioByCountry(countryId)
+	bios, err := b.repo.GetBatchesBioByCountry(countryId)
+	if len(*bios) == 0 {
+		return nil, BioDoesntExists
+	}
+	return bios, err
 }
 
 func (b BioService) GetBioByCity(cityId uint) (*[]Bio, error) {
-	return b.repo.GetBatchesBioByCity(cityId)
+	bios, err := b.repo.GetBatchesBioByCity(cityId)
+	if len(*bios) == 0 {
+		return nil, BioDoesntExists
+	}
+	return bios, err
 }
 
 func (b BioService) GetBioBySex(sexId uint) (*[]Bio, error) {
-	return b.repo.GetBatchesBioBySex(sexId)
+	bios, err := b.repo.GetBatchesBioBySex(sexId)
+	if len(*bios) == 0 {
+		return nil, BioDoesntExists
+	}
+	return bios, err
 }
 
 func (b BioService) GetBioByBorn(bornDate int64) (*[]Bio, error) {
@@ -36,15 +48,27 @@ func (b BioService) GetBioByBorn(bornDate int64) (*[]Bio, error) {
 }
 
 func (b BioService) GetBioByBornAfter(bornDate int64) (*[]Bio, error) {
-	return b.repo.GetBatchesBioByBornAfter(bornDate)
+	bios, err := b.repo.GetBatchesBioByBornAfter(bornDate)
+	if len(*bios) == 0 {
+		return nil, BioDoesntExists
+	}
+	return bios, err
 }
 
 func (b BioService) GetBioByCountryCitySex(countryId, cityId, sexId uint) (*[]Bio, error) {
-	return b.repo.GetBatchesBioByCountryCitySex(countryId, cityId, sexId)
+	bios, err := b.repo.GetBatchesBioByCountryCitySex(countryId, cityId, sexId)
+	if len(*bios) == 0 {
+		return nil, BioDoesntExists
+	}
+	return bios, err
 }
 
 func (b BioService) GetBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate int64) (*[]Bio, error) {
-	return b.repo.GetBatchesBioByCountryCitySexBornAfterDate(countryId, cityId, sexId, bornDate)
+	bios, err := b.repo.GetBatchesBioByCountryCitySexBornAfterDate(countryId, cityId, sexId, bornDate)
+	if len(*bios) == 0 {
+		return nil, BioDoesntExists
+	}
+	return bios, err
 }
 
 func (b BioService) CreateBio(description string, userId, country, city, sex uint, born int64) (*Bio, error) {
