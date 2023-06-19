@@ -7,6 +7,33 @@ import (
 	"testing"
 )
 
+// TestBioService_GetBioByUserId functionality
+func TestBioService_GetBioByUserId(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	service := createService(db)
+
+	countries := mockAndInsertCountry(db, 1)
+	defer destructCreatedObjects(db, countries)
+
+	cities := mockAndInsertCity(db, 1)
+	defer destructCreatedObjects(db, cities)
+
+	sexs := mockAndInsertSex(db, 1)
+	defer destructCreatedObjects(db, sexs)
+
+	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 1)
+	defer destructCreatedObjects(db, bios)
+
+	fetchedBio, err := service.GetBioByUserId(bios[0].UserId)
+	assertBioEquality(t, bios, []Bio{*fetchedBio})
+
+	randId := rand.Int()
+	_, err = service.GetBioByUserId(uint(randId))
+	assert.Error(t, err, "Fetching wrong bio from db failed ! it should throw an error")
+}
+
 // TestBioService_GetBioById functionality
 func TestBioService_GetBioById(t *testing.T) {
 	db, err := setupDbConnection()

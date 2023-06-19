@@ -10,6 +10,10 @@ func NewService(repo BioRepositoryInterface) BioServiceInterface {
 	}
 }
 
+func (b BioService) GetBioByUserId(userId uint) (*Bio, error) {
+	return b.repo.GetBioByUserId(userId)
+}
+
 func (b BioService) GetBioById(id uint) (*Bio, error) {
 	return b.repo.GetBioById(id)
 }
@@ -49,11 +53,6 @@ func (b BioService) CreateBio(description string, userId, country, city, sex uin
 }
 
 func (b BioService) UpdateBio(description string, country, city, sex uint, born int64) (*Bio, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (b BioService) GetBioByUserId(userId uint) (*Bio, error) {
 	//TODO implement me
 	panic("implement me")
 }
