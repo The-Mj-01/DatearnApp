@@ -43,12 +43,12 @@ func (b BioService) GetBioByCountryCitySexBornAfterDate(countryId, cityId, sexId
 	return b.repo.GetBatchesBioByCountryCitySexBornAfterDate(countryId, cityId, sexId, bornDate)
 }
 
-func (b BioService) CreateBio(description string, socialMedia, country, city, sex uint, born int64) (*Bio, error) {
+func (b BioService) CreateBio(description string, country, city, sex uint, born int64) (*Bio, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (b BioService) UpdateBio(description string, socialMedia, country, city, sex uint, born int64) (*Bio, error) {
+func (b BioService) UpdateBio(description string, country, city, sex uint, born int64) (*Bio, error) {
 	//TODO implement me
 	panic("implement me")
 }
