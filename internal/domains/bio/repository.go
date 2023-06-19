@@ -58,15 +58,18 @@ func (b BioRepository) GetBatchesBioByBorn(bornDate int64) (*[]Bio, error) {
 	panic("implement me")
 }
 
+// CountryExists and return is Exists
 func (b BioRepository) CountryExists(countryId uint) bool {
 	var country Country
 	result := b.db.Where("id = ?", countryId).First(&country)
 	return result.Error == nil && !errors.Is(result.Error, gorm.ErrRecordNotFound)
 }
 
+// CityExists and return is Exists
 func (b BioRepository) CityExists(cityId uint) bool {
-	//TODO implement me
-	panic("implement me")
+	var city City
+	result := b.db.Where("id = ?", cityId).First(&city)
+	return result.Error == nil && !errors.Is(result.Error, gorm.ErrRecordNotFound)
 }
 
 func (b BioRepository) SexExists(sexId uint) bool {

@@ -107,10 +107,28 @@ func TestBioRepository_CountryExists(t *testing.T) {
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
 
-	exists := repo.CountryExists(1)
+	exists := repo.CountryExists(countries[0].Id)
 	assert.True(t, exists, "checking country existence from repository failed")
 
 	exists = repo.CountryExists(uint(rand.Int()))
+	assert.False(t, exists, "checking country existence from repository failed")
+
+}
+
+// TestBioRepository_CityExists functionality
+func TestBioRepository_CityExists(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+
+	cities := mockAndInsertCity(db, 1)
+	defer destructCreatedObjects(db, cities)
+
+	exists := repo.CityExists(cities[0].Id)
+	assert.True(t, exists, "checking country existence from repository failed")
+
+	exists = repo.CityExists(uint(rand.Int()))
 	assert.False(t, exists, "checking country existence from repository failed")
 
 }
