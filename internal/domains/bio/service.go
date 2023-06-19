@@ -72,8 +72,41 @@ func (b BioService) GetBioByCountryCitySexBornAfterDate(countryId, cityId, sexId
 }
 
 func (b BioService) CreateBio(description string, userId, country, city, sex uint, born int64) (*Bio, error) {
-	//TODO implement me
-	panic("implement me")
+	if description == "" {
+		return nil, DescripitonNotFound
+	}
+	countryExists := b.repo.CountryExists(country)
+	if !countryExists {
+		return nil, CountryNotFound
+	}
+	cityExists := b.repo.CityExists(city)
+	if !cityExists {
+		return nil, CityNotFound
+	}
+	sexExists := b.repo.SexExists(sex)
+	if !sexExists {
+		return nil, SexNotFound
+	}
+
+	if userId == 0 {
+		return nil, UserIdNotFound
+	}
+
+	if born == 0 {
+		return nil, BornIdNotFound
+	}
+
+	tmpBio := &Bio{
+
+		UserId:      userId,
+		Description: description,
+		Country:     country,
+		City:        city,
+		Sex:         sex,
+		Born:        born,
+	}
+	bio, err := b.repo.CreateBio(tmpBio)
+	return bio, err
 }
 
 func (b BioService) UpdateBio(description string, country, city, sex uint, born int64) (*Bio, error) {

@@ -419,7 +419,7 @@ func mockBio(countryId, cityId, sexId, userId uint) *Bio {
 		Country:     countryId,
 		City:        cityId,
 		Sex:         sexId,
-		Born:        0,
+		Born:        time.Now().Unix(),
 	}
 }
 
