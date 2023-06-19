@@ -23,7 +23,7 @@ func TestBioService_GetBioById(t *testing.T) {
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
 
-	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 1, 11)
+	bios := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := service.GetBioById(bios[0].Id)
@@ -45,7 +45,7 @@ func TestBioService_GetBioByCountry(t *testing.T) {
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
 
-	bios := mockAndInsertBio(db, countries[0].Id, 0, 0, 1, 11)
+	bios := mockAndInsertBio(db, countries[0].Id, 0, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := service.GetBioByCountry(bios[0].Country)
@@ -62,7 +62,7 @@ func TestBioService_GetBioByCity(t *testing.T) {
 	cities := mockAndInsertCity(db, 1)
 	defer destructCreatedObjects(db, cities)
 
-	bios := mockAndInsertBio(db, 0, cities[0].Id, 0, 1, 11)
+	bios := mockAndInsertBio(db, 0, cities[0].Id, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := service.GetBioByCity(bios[0].City)
@@ -79,7 +79,7 @@ func TestBioService_GetBioBySex(t *testing.T) {
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
 
-	bios := mockAndInsertBio(db, 0, 0, sexs[0].Id, 1, 11)
+	bios := mockAndInsertBio(db, 0, 0, sexs[0].Id, 1)
 	defer destructCreatedObjects(db, bios)
 
 	fetchedBio, err := service.GetBioBySex(bios[0].Sex)
