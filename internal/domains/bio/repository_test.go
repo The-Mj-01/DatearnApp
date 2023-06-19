@@ -126,11 +126,27 @@ func TestBioRepository_CityExists(t *testing.T) {
 	defer destructCreatedObjects(db, cities)
 
 	exists := repo.CityExists(cities[0].Id)
-	assert.True(t, exists, "checking country existence from repository failed")
+	assert.True(t, exists, "checking city existence from repository failed")
 
 	exists = repo.CityExists(uint(rand.Int()))
-	assert.False(t, exists, "checking country existence from repository failed")
+	assert.False(t, exists, "checking city existence from repository failed")
 
+}
+
+func TestBioRepository_SexExists(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+
+	sexs := mockAndInsertSex(db, 1)
+	defer destructCreatedObjects(db, sexs)
+
+	exists := repo.SexExists(sexs[0].Id)
+	assert.True(t, exists, "checking sex existence from repository failed")
+
+	exists = repo.SexExists(uint(rand.Int()))
+	assert.False(t, exists, "checking sex existence from repository failed")
 }
 
 // TestBioRepository_GetBioByBornAfter functionality

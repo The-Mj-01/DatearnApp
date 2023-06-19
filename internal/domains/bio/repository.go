@@ -73,8 +73,9 @@ func (b BioRepository) CityExists(cityId uint) bool {
 }
 
 func (b BioRepository) SexExists(sexId uint) bool {
-	//TODO implement me
-	panic("implement me")
+	var sex Sex
+	result := b.db.Where("id = ?", sexId).First(&sex)
+	return result.Error == nil && !errors.Is(result.Error, gorm.ErrRecordNotFound)
 }
 
 // GetBatchesBioByBornAfter and return it
