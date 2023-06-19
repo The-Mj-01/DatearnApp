@@ -5,6 +5,7 @@ import (
 )
 
 type BioRepositoryInterface interface {
+	GetBioByUserId(userId uint) (*Bio, error)
 	GetBioById(id uint) (*Bio, error)
 	GetBatchesBioByCountry(countryId uint) (*[]Bio, error)
 	GetBatchesBioByCity(cityId uint) (*[]Bio, error)

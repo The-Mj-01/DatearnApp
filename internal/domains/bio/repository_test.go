@@ -9,6 +9,23 @@ import (
 	"time"
 )
 
+// TestBioRepository_GetBioByUserId functionality
+func TestBioRepository_GetBioByUserId(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createRepo(db)
+	bios := mockAndInsertBio(db, 0, 0, 0, 10)
+	defer destructCreatedObjects(db, bios)
+
+	fetchedBio, err := repo.GetBioByUserId(bios[0].UserId)
+	assertBioEquality(t, []Bio{bios[0]}, []Bio{*fetchedBio})
+
+	randId := rand.Int()
+	_, err = repo.GetBioById(uint(randId))
+	assert.Error(t, err, "Fetching wrong bio from db failed ! it should throw an error")
+}
+
 // TestBioRepository_GetBioById functionality
 func TestBioRepository_GetBioById(t *testing.T) {
 	db, err := setupDbConnection()
@@ -161,7 +178,7 @@ func TestBioRepository_CreateBio(t *testing.T) {
 	socials := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, socials)
 
-	mockedBio := mockBio(countries[0].Id, cities[0].Id, sexs[0].Id)
+	mockedBio := mockBio(countries[0].Id, cities[0].Id, sexs[0].Id, 1)
 
 	createdBio, err := repo.CreateBio(mockedBio)
 	defer destructCreatedObjects(db, []Bio{*createdBio})
@@ -325,8 +342,8 @@ func mockSex() *Sex {
 func mockAndInsertBio(db *gorm.DB, countryId, cityId, sexId, count uint) []Bio {
 	bios := make([]Bio, 0, count)
 
-	for i := 0; i < int(count); i++ {
-		tmpBio := mockBio(countryId, cityId, sexId)
+	for i := 1; i <= int(count); i++ {
+		tmpBio := mockBio(countryId, cityId, sexId, uint(i))
 
 		res := db.Create(tmpBio)
 		if res.Error != nil {
@@ -334,7 +351,6 @@ func mockAndInsertBio(db *gorm.DB, countryId, cityId, sexId, count uint) []Bio {
 		}
 
 		bios = append(bios, *tmpBio)
-		i += 1
 
 		if i == int(count) {
 			break
@@ -344,8 +360,9 @@ func mockAndInsertBio(db *gorm.DB, countryId, cityId, sexId, count uint) []Bio {
 }
 
 // mockBio object and return it
-func mockBio(countryId, cityId, sexId uint) *Bio {
+func mockBio(countryId, cityId, sexId, userId uint) *Bio {
 	return &Bio{
+		UserId:      userId,
 		Description: "this is a description.",
 		Country:     countryId,
 		City:        cityId,

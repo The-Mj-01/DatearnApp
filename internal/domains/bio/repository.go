@@ -16,7 +16,14 @@ func NewRepository(db *gorm.DB) BioRepositoryInterface {
 	}
 }
 
-// GetBioById instantiates and returns new repository
+// GetBioByUserId and return it
+func (b BioRepository) GetBioByUserId(userId uint) (*Bio, error) {
+	var bio Bio
+	result := b.db.Where(" user_id = ?", userId).First(&bio)
+	return &bio, result.Error
+}
+
+// GetBioById and return it
 func (b BioRepository) GetBioById(id uint) (*Bio, error) {
 	var bio Bio
 	result := b.db.Where("id = ?", id).First(&bio)
