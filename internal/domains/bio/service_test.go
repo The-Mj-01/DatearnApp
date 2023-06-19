@@ -124,6 +124,7 @@ func TestBioRepository_GetBatchesBioByCountryCitySex(t *testing.T) {
 
 }
 
+// TestBioService_GetBioByCountryCitySexBornAfterDate functionality
 func TestBioService_GetBioByCountryCitySexBornAfterDate(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")

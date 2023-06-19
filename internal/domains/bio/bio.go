@@ -20,6 +20,7 @@ type BioRepositoryInterface interface {
 }
 
 type BioServiceInterface interface {
+	GetBioByUserId(userId uint) (*Bio, error)
 	GetBioById(id uint) (*Bio, error)
 	GetBioByCountry(countryId uint) (*[]Bio, error)
 	GetBioByCity(cityId uint) (*[]Bio, error)
@@ -30,7 +31,7 @@ type BioServiceInterface interface {
 	GetBioByBornAfter(bornDate int64) (*[]Bio, error)
 	GetBioByCountryCitySex(countryId, cityId, sexId uint) (*[]Bio, error)
 	GetBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate int64) (*[]Bio, error)
-	CreateBio(description string, country, city, sex uint, born int64) (*Bio, error)
+	CreateBio(description string, userId, country, city, sex uint, born int64) (*Bio, error)
 	UpdateBio(description string, country, city, sex uint, born int64) (*Bio, error)
 }
 
