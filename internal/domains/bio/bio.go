@@ -39,7 +39,7 @@ type BioServiceInterface interface {
 }
 
 type BioUseCaseInterface interface {
-	WriteBio(ctx context.Context, request *BioCreateRequest) (*Bio, error)
-	GetBio(ctx context.Context, request *BioGetSingleRequest) (*Bio, error)
-	UpdateBio(ctx context.Context, request *BioUpdateRequest) (*Bio, error)
+	WriteBio(ctx context.Context, token string, request *BioCreateRequest) (*Bio, error)
+	GetBio(ctx context.Context, token string, request *BioGetSingleRequest) (*Bio, error)
+	UpdateBio(ctx context.Context, token string, request *BioUpdateRequest) (*Bio, error)
 }
