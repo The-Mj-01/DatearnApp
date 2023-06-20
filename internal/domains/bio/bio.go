@@ -35,7 +35,7 @@ type BioServiceInterface interface {
 	GetBioByCountryCitySex(countryId, cityId, sexId uint) (*[]Bio, error)
 	GetBioByCountryCitySexBornAfterDate(countryId, cityId, sexId uint, bornDate int64) (*[]Bio, error)
 	CreateBio(description string, userId, country, city, sex uint, born int64) (*Bio, error)
-	UpdateBio(description string, country, city, sex uint, born int64) (*Bio, error)
+	UpdateBio(userId uint, description string, country, city, sex uint, born int64) (*Bio, error)
 }
 
 type BioUseCaseInterface interface {

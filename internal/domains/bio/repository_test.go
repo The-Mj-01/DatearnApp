@@ -261,7 +261,7 @@ func TestBioRepository_UpdateBio(t *testing.T) {
 	oldBio := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 1)
 	defer destructCreatedObjects(db, oldBio)
 	newBorn := oldBio[0].Born + 10000
-	time.Now().Unix()
+
 	newBio := Bio{
 
 		Description: "salam",

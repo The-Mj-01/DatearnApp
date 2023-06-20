@@ -1,5 +1,12 @@
 package bio
 
+import (
+	"Datearn/pkg/authorization"
+)
+
+// userAddrAuthorizerField is the field which authorization should get done and checked with that
+const userAddrAuthorizerField string = "UserId"
+
 type BioService struct {
 	repo BioRepositoryInterface
 }
@@ -93,7 +100,7 @@ func (b BioService) CreateBio(description string, userId, country, city, sex uin
 	}
 
 	if born == 0 {
-		return nil, BornIdNotFound
+		return nil, BornNotFound
 	}
 
 	tmpBio := &Bio{
@@ -109,7 +116,45 @@ func (b BioService) CreateBio(description string, userId, country, city, sex uin
 	return bio, err
 }
 
-func (b BioService) UpdateBio(description string, country, city, sex uint, born int64) (*Bio, error) {
-	//TODO implement me
-	panic("implement me")
+func (b BioService) UpdateBio(userId uint, description string, country, city, sex uint, born int64) (*Bio, error) {
+	if description == "" {
+		return nil, DescripitonNotFound
+	}
+	countryExists := b.repo.CountryExists(country)
+	if !countryExists {
+		return nil, CountryNotFound
+	}
+	cityExists := b.repo.CityExists(city)
+	if !cityExists {
+		return nil, CityNotFound
+	}
+	sexExists := b.repo.SexExists(sex)
+	if !sexExists {
+		return nil, SexNotFound
+	}
+	if userId == 0 {
+		return nil, UserIdNotFound
+	}
+
+	if born == 0 {
+		return nil, BornNotFound
+	}
+
+	bio, err := b.GetBioByUserId(userId)
+
+	if err = authorization.SimpleFieldAuthorization(*bio, userAddrAuthorizerField, userId, YouAreNotAllowed); err != nil {
+		return nil, err
+	}
+
+	newBio := &Bio{
+
+		UserId:      userId,
+		Description: description,
+		Country:     country,
+		City:        city,
+		Sex:         sex,
+		Born:        born,
+	}
+
+	return b.repo.UpdateBio(bio, newBio)
 }
