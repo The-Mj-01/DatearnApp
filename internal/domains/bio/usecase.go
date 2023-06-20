@@ -38,6 +38,10 @@ func (b BioUseCase) GetBio(ctx context.Context, token string, request *BioGetSin
 }
 
 func (b BioUseCase) UpdateBio(ctx context.Context, token string, request *BioUpdateRequest) (*Bio, error) {
-	//TODO implement me
-	panic("implement me")
+	userId, err := b.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+
+	return b.sv.UpdateBio(userId, request.Description, request.Country, request.City, request.Sex, request.Born)
 }

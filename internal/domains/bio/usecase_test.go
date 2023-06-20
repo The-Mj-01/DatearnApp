@@ -16,6 +16,7 @@ func TestBioUseCase_WriteBio(t *testing.T) {
 
 	randUserId := uint(rand.Int())
 	useCase := createUseCase(db, randUserId)
+
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
 
@@ -40,6 +41,40 @@ func TestBioUseCase_WriteBio(t *testing.T) {
 	assert.Equal(t, result.UserId, mockedRequest.UserId, "Bio creation failed in bio use-case")
 }
 
+func TestBioUseCase_UpdateBio(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.Background()
+	randUserId := uint(1)
+	useCase := createUseCase(db, randUserId)
+
+	countries := mockAndInsertCountry(db, 2)
+	defer destructCreatedObjects(db, countries)
+
+	cities := mockAndInsertCity(db, 2)
+	defer destructCreatedObjects(db, cities)
+
+	sexs := mockAndInsertSex(db, 2)
+	defer destructCreatedObjects(db, sexs)
+
+	oldBio := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 1)
+	defer destructCreatedObjects(db, oldBio)
+
+	newBorn := oldBio[0].Born + 10000
+	newDescription := "salam"
+
+	mockedEditRequest := mockEditBioRequest(countries[1].Id, cities[1].Id, sexs[1].Id, newDescription, newBorn)
+	editedBio, err := useCase.UpdateBio(ctx, "", mockedEditRequest)
+	assert.NoError(t, err, "Bio use-case update functionality failed")
+
+	assert.Equal(t, mockedEditRequest.Description, editedBio.Description, "UserAddress use-case update functionality failed")
+	assert.Equal(t, mockedEditRequest.Country, editedBio.Country, "UserAddress use-case update functionality failed")
+	assert.Equal(t, mockedEditRequest.City, editedBio.City, "UserAddress use-case update functionality failed")
+	assert.Equal(t, mockedEditRequest.Sex, editedBio.Sex, "UserAddress use-case update functionality failed")
+	assert.Equal(t, mockedEditRequest.Born, editedBio.Born, "UserAddress use-case update functionality failed")
+}
+
 func createUseCase(db *gorm.DB, userId uint) BioUseCaseInterface {
 	return NewBioUseCase(NewService(NewRepository(db)), func(ctx context.Context, token string) (uint, error) {
 		return userId, nil
@@ -49,6 +84,16 @@ func createUseCase(db *gorm.DB, userId uint) BioUseCaseInterface {
 func mockWriteBioRequest(userId, countryId, cityId, sexId uint, description string, born int64) *BioCreateRequest {
 	return &BioCreateRequest{
 		UserId:      userId,
+		Description: description,
+		Country:     countryId,
+		City:        cityId,
+		Sex:         sexId,
+		Born:        born,
+	}
+}
+
+func mockEditBioRequest(countryId, cityId, sexId uint, description string, born int64) *BioUpdateRequest {
+	return &BioUpdateRequest{
 		Description: description,
 		Country:     countryId,
 		City:        cityId,
