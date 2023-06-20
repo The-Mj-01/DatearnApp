@@ -54,22 +54,20 @@ type Sex struct {
 
 // BioCreateRequest defines a struct for user creation operation
 type BioCreateRequest struct {
-	UserId      uint      `json:"userId,omitempty" validate:"omitempty, numeric, min=1"`
-	SocialMedia uint      `json:"social_media,omitempty" validate:"omitempty,numeric,min=1"`
-	Description string    `json:"description,omitempty" validate:"omitempty, min=10, max= 2048"`
-	Country     uint      `json:"country" validate:"omitempty,numeric, min=1"`
-	City        uint      `json:"city" validate:"omitempty,numeric,min=1"`
-	Sex         uint      `json:"sex" validate:"omitempty,numeric,min=1"`
-	Born        time.Time `json:"born,omitempty" validate:"omitempty"`
+	UserId      uint   `json:"userId,omitempty" validate:"omitempty, numeric, min=1"`
+	Description string `json:"description,omitempty" validate:"omitempty, min=10, max= 2048"`
+	Country     uint   `json:"country" validate:"omitempty,numeric, min=1"`
+	City        uint   `json:"city" validate:"omitempty,numeric,min=1"`
+	Sex         uint   `json:"sex" validate:"omitempty,numeric,min=1"`
+	Born        int64  `json:"born,omitempty" validate:"omitempty"`
 }
 
 type BioUpdateRequest struct {
-	SocialMedia uint      `json:"social_media,omitempty" validate:"omitempty,numeric,min=1"`
-	Description string    `json:"description,omitempty" validate:"omitempty, min=10, max= 2048"`
-	Country     uint      `json:"country" validate:"omitempty,numeric, min=1"`
-	City        uint      `json:"city" validate:"omitempty,numeric,min=1"`
-	Sex         uint      `json:"sex" validate:"omitempty,numeric,min=1"`
-	Born        time.Time `json:"born,omitempty" validate:"omitempty"`
+	Description string `json:"description,omitempty" validate:"omitempty, min=10, max= 2048"`
+	Country     uint   `json:"country" validate:"omitempty,numeric, min=1"`
+	City        uint   `json:"city" validate:"omitempty,numeric,min=1"`
+	Sex         uint   `json:"sex" validate:"omitempty,numeric,min=1"`
+	Born        int64  `json:"born,omitempty" validate:"omitempty"`
 }
 
 type BioGetSingleRequest struct {
