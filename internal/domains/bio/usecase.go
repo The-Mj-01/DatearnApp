@@ -33,8 +33,11 @@ func (b BioUseCase) WriteBio(ctx context.Context, token string, request *BioCrea
 }
 
 func (b BioUseCase) GetBio(ctx context.Context, token string, request *BioGetSingleRequest) (*Bio, error) {
-	//TODO implement me
-	panic("implement me")
+	userId, err := b.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+	return b.sv.GetBioByUserId(userId)
 }
 
 func (b BioUseCase) UpdateBio(ctx context.Context, token string, request *BioUpdateRequest) (*Bio, error) {

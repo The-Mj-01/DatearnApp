@@ -75,6 +75,34 @@ func TestBioUseCase_UpdateBio(t *testing.T) {
 	assert.Equal(t, mockedEditRequest.Born, editedBio.Born, "UserAddress use-case update functionality failed")
 }
 
+func TestBioUseCase_GetBio(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.Background()
+	randUserId := uint(1)
+	useCase := createUseCase(db, randUserId)
+
+	countries := mockAndInsertCountry(db, 1)
+	defer destructCreatedObjects(db, countries)
+
+	cities := mockAndInsertCity(db, 1)
+	defer destructCreatedObjects(db, cities)
+
+	sexs := mockAndInsertSex(db, 1)
+	defer destructCreatedObjects(db, sexs)
+
+	mockedBio := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 1)
+
+	assert.Equal(t, len(mockedBio), 1, "Mocking products failed")
+
+	mockedGetSingleRequest := mockedGetSingleBioRequest(randUserId)
+
+	fetchedBio, err := useCase.GetBio(ctx, "", mockedGetSingleRequest)
+	assert.NotNil(t, fetchedBio)
+	assertBioEquality(t, mockedBio, []Bio{*fetchedBio})
+}
+
 func createUseCase(db *gorm.DB, userId uint) BioUseCaseInterface {
 	return NewBioUseCase(NewService(NewRepository(db)), func(ctx context.Context, token string) (uint, error) {
 		return userId, nil
@@ -99,5 +127,11 @@ func mockEditBioRequest(countryId, cityId, sexId uint, description string, born 
 		City:        cityId,
 		Sex:         sexId,
 		Born:        born,
+	}
+}
+
+func mockedGetSingleBioRequest(userId uint) *BioGetSingleRequest {
+	return &BioGetSingleRequest{
+		UserId: userId,
 	}
 }
