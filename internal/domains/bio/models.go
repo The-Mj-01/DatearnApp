@@ -75,9 +75,13 @@ type BioGetSingleRequest struct {
 }
 
 type CountryGetrequest struct {
-	Name *string `json:"name,omitempty" validate:"omitempty,min=1, max=256"`
+	Name   *string `json:"name,omitempty" validate:"omitempty,min=1, max=256"`
+	Limit  *int    `json:"limit" validate:"required,gte=1"`
+	Offset int     `json:"offset" validate:"omitempty,min=0"`
 }
 
 type CityGetrequest struct {
-	Name *string `json:"name,omitempty" validate:"omitempty,min=1, max= 256"`
+	Name   *string `json:"name,omitempty" validate:"omitempty,min=1, max= 256"`
+	Limit  *int    `json:"limit" validate:"required,gte=1"`
+	Offset int     `json:"offset" validate:"omitempty,min=0"`
 }

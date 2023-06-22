@@ -147,14 +147,19 @@ func NewCountryRepository(db *gorm.DB) CountryRepositoryInterface {
 }
 
 // GetAllCountry and return it
-func (c *CountryRepository) GetAllCountries(name *string) (*[]Country, error) {
+func (c *CountryRepository) GetAllCountries(name *string, limit *int, offset int) (*[]Country, error) {
 	var countries *[]Country
 	db := c.db
 
 	if name != nil {
-		db = db.Where("title LIKE ?", *name)
+		db = db.Where("name LIKE ?", *name)
 	}
-	db.Preload("Type").Find(&countries)
+
+	if limit != nil {
+		db = db.Limit(*limit)
+	}
+
+	db.Offset(offset).Find(&countries)
 	return countries, db.Error
 }
 
@@ -166,7 +171,18 @@ func NewCityRepository(db *gorm.DB) CityRepositoryInterface {
 }
 
 // GetAllCity and return it
-func (c *CityRepository) GetAllCities(name *string) (*[]City, error) {
-	//TODO implement me
-	panic("implement me")
+func (c *CityRepository) GetAllCities(name *string, limit *int, offset int) (*[]City, error) {
+	var cities *[]City
+	db := c.db
+
+	if name != nil {
+		db = db.Where("name Like ?", *name)
+	}
+
+	if limit != nil {
+		db = db.Limit(*limit)
+	}
+
+	db.Offset(offset).Find(&cities)
+	return cities, db.Error
 }

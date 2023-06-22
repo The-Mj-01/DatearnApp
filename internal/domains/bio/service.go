@@ -173,7 +173,7 @@ func NewCountryService(repo CountryRepositoryInterface) CountryServiceInterface 
 	}
 }
 
-func (c CountryService) GetAllCountries(name *string) (*[]Country, error) {
+func (c CountryService) GetAllCountries(name *string, limit *int, offset int) (*[]Country, error) {
 	//TODO implement me
 	panic("implement me")
 }
@@ -184,7 +184,7 @@ func NewCityService(repo CityRepositoryInterface) CityServiceInterface {
 	}
 }
 
-func (c CityService) GetAllCities(name *string) (*[]City, error) {
+func (c CityService) GetAllCities(name *string, limit *int, offset int) (*[]City, error) {
 	//TODO implement me
 	panic("implement me")
 }

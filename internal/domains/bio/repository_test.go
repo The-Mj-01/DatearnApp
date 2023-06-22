@@ -295,9 +295,49 @@ func TestCountryRepository_GetAllCountries(t *testing.T) {
 	countries := mockAndInsertCountry(db, 5)
 	defer destructCreatedObjects(db, countries)
 
-	fetchedCountries, err := repo.GetAllCountries(nil)
-	assert.Equal(t, len(*fetchedCountries), 5, "Fetched categories are not equal")
+	fetchedCountries, err := repo.GetAllCountries(nil, nil, 10)
+	assert.Equal(t, len(*fetchedCountries), 0, "Fetched countries are not equal")
 
+	limit := 1
+	fetchedCountries, err = repo.GetAllCountries(nil, &limit, 0)
+	assert.Equal(t, len(*fetchedCountries), limit, "one Country must be fetched")
+
+	falseTitle := "Test irrelevant country title which not exists"
+	fetchedCountries, err = repo.GetAllCountries(&falseTitle, nil, 0)
+	assert.Equal(t, len(*fetchedCountries), 0, "zero Country must be fetched")
+
+	fetchedCountries, err = repo.GetAllCountries(nil, nil, 0)
+	assert.NotZero(t, len(*fetchedCountries), "Zero countries fetched")
+	assert.Equal(t, len(*fetchedCountries), 5, "Fetched cities are not equal")
+	assertCountries(t, countries, *fetchedCountries)
+
+}
+
+// TestCityRepository_GetAllCities functionality
+func TestCityRepository_GetAllCities(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createCityRepo(db)
+
+	cities := mockAndInsertCity(db, 5)
+	defer destructCreatedObjects(db, cities)
+
+	fetchedCities, err := repo.GetAllCities(nil, nil, 10)
+	assert.Equal(t, len(*fetchedCities), 0, "Fetched cities are not equal")
+
+	limit := 1
+	fetchedCities, err = repo.GetAllCities(nil, &limit, 0)
+	assert.Equal(t, len(*fetchedCities), limit, "one City must be fetched")
+
+	falseTitle := "Test irrelevant city title which not exists"
+	fetchedCities, err = repo.GetAllCities(&falseTitle, nil, 0)
+	assert.Equal(t, len(*fetchedCities), 0, "zero City must be fetched")
+
+	fetchedCities, err = repo.GetAllCities(nil, nil, 0)
+	assert.NotZero(t, len(*fetchedCities), "Zero cities fetched")
+	assert.Equal(t, len(*fetchedCities), 5, "Fetched cities are not equal")
+	assertCities(t, cities, *fetchedCities)
 }
 
 // setupDbConnection and run migration
@@ -315,8 +355,14 @@ func createBioRepo(db *gorm.DB) BioRepositoryInterface {
 	return NewBioRepository(db)
 }
 
+// createCountryRepo for testing purpose and return it
 func createCountryRepo(db *gorm.DB) CountryRepositoryInterface {
 	return NewCountryRepository(db)
+}
+
+// createCityRepo for testing purpose and return it
+func createCityRepo(db *gorm.DB) CityRepositoryInterface {
+	return NewCityRepository(db)
 }
 
 // mockAndInsertCountry in database for testing purpose
@@ -457,5 +503,23 @@ func assertBioEquality(t *testing.T, mockedBio, fetchedBio []Bio) {
 		assert.Equal(t, mockedBio[index].City, fetchedBio[index].City)
 		assert.Equal(t, mockedBio[index].Sex, fetchedBio[index].Sex)
 		assert.Equal(t, mockedBio[index].Born, fetchedBio[index].Born)
+	}
+}
+
+// assertCountries check whether they are equal or not
+func assertCountries(t *testing.T, createdCountry, fetchedCountries []Country) {
+	for index := range createdCountry {
+		assert.Equal(t, createdCountry[index].Id, fetchedCountries[index].Id, "Countries Repository test: Ids are not equal")
+		assert.Equal(t, createdCountry[index].Name, fetchedCountries[index].Name, "Countries Repository test: titles are not equal")
+
+	}
+}
+
+// assertCities check whether they are equal or not
+func assertCities(t *testing.T, createdCity, fetchedCities []City) {
+	for index := range createdCity {
+		assert.Equal(t, createdCity[index].Id, fetchedCities[index].Id, "Cities Repository test: Ids are not equal")
+		assert.Equal(t, createdCity[index].Name, fetchedCities[index].Name, "Cities Repository test: titles are not equal")
+
 	}
 }
