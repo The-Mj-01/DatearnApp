@@ -12,7 +12,7 @@ func TestBioService_GetBioByUserId(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	service := createService(db)
+	service := createBioService(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -39,7 +39,7 @@ func TestBioService_GetBioById(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	service := createService(db)
+	service := createBioService(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -67,7 +67,7 @@ func TestBioService_GetBioByCountry(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	service := createService(db)
+	service := createBioService(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -84,7 +84,7 @@ func TestBioService_GetBioByCity(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	service := createService(db)
+	service := createBioService(db)
 
 	cities := mockAndInsertCity(db, 1)
 	defer destructCreatedObjects(db, cities)
@@ -101,7 +101,7 @@ func TestBioService_GetBioBySex(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	service := createService(db)
+	service := createBioService(db)
 
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
@@ -118,7 +118,7 @@ func TestBioService_GetBioByBornAfter(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	service := createService(db)
+	service := createBioService(db)
 	bios := mockAndInsertBio(db, 0, 0, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
@@ -132,7 +132,7 @@ func TestBioRepository_GetBatchesBioByCountryCitySex(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	service := createService(db)
+	service := createBioService(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -156,7 +156,7 @@ func TestBioService_GetBioByCountryCitySexBornAfterDate(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	service := createService(db)
+	service := createBioService(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -179,7 +179,7 @@ func TestBioService_CreateBio(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	service := createService(db)
+	service := createBioService(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -206,7 +206,7 @@ func TestBioService_UpdateBio(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	service := createService(db)
+	service := createBioService(db)
 
 	countries := mockAndInsertCountry(db, 2)
 	defer destructCreatedObjects(db, countries)
@@ -274,6 +274,26 @@ func TestBioService_UpdateBio(t *testing.T) {
 
 }
 
-func createService(db *gorm.DB) BioServiceInterface {
+func TestCountryService_GetAllCountries(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	sv := createCountryService(db)
+
+	_, err = sv.GetAllCountries(nil, nil, 0)
+	assert.Error(t, err, "Expected countries not found error")
+	assert.ErrorIs(t, err, CountryNotFound, "Expected countries not found error")
+
+}
+
+func createBioService(db *gorm.DB) BioServiceInterface {
 	return NewBioService(NewBioRepository(db))
+}
+
+func createCountryService(db *gorm.DB) CountryServiceInterface {
+	return NewCountryService(NewCountryRepository(db))
+}
+
+func createCityService(db *gorm.DB) CityServiceInterface {
+	return NewCityService(NewCityRepository(db))
 }

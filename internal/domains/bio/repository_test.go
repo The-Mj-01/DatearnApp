@@ -295,18 +295,18 @@ func TestCountryRepository_GetAllCountries(t *testing.T) {
 	countries := mockAndInsertCountry(db, 5)
 	defer destructCreatedObjects(db, countries)
 
-	fetchedCountries, err := repo.GetAllCountries(nil, nil, 10)
+	fetchedCountries := repo.GetAllCountries(nil, nil, 10)
 	assert.Equal(t, len(*fetchedCountries), 0, "Fetched countries are not equal")
 
 	limit := 1
-	fetchedCountries, err = repo.GetAllCountries(nil, &limit, 0)
+	fetchedCountries = repo.GetAllCountries(nil, &limit, 0)
 	assert.Equal(t, len(*fetchedCountries), limit, "one Country must be fetched")
 
 	falseTitle := "Test irrelevant country title which not exists"
-	fetchedCountries, err = repo.GetAllCountries(&falseTitle, nil, 0)
+	fetchedCountries = repo.GetAllCountries(&falseTitle, nil, 0)
 	assert.Equal(t, len(*fetchedCountries), 0, "zero Country must be fetched")
 
-	fetchedCountries, err = repo.GetAllCountries(nil, nil, 0)
+	fetchedCountries = repo.GetAllCountries(nil, nil, 0)
 	assert.NotZero(t, len(*fetchedCountries), "Zero countries fetched")
 	assert.Equal(t, len(*fetchedCountries), 5, "Fetched cities are not equal")
 	assertCountries(t, countries, *fetchedCountries)
@@ -323,18 +323,18 @@ func TestCityRepository_GetAllCities(t *testing.T) {
 	cities := mockAndInsertCity(db, 5)
 	defer destructCreatedObjects(db, cities)
 
-	fetchedCities, err := repo.GetAllCities(nil, nil, 10)
+	fetchedCities := repo.GetAllCities(nil, nil, 10)
 	assert.Equal(t, len(*fetchedCities), 0, "Fetched cities are not equal")
 
 	limit := 1
-	fetchedCities, err = repo.GetAllCities(nil, &limit, 0)
+	fetchedCities = repo.GetAllCities(nil, &limit, 0)
 	assert.Equal(t, len(*fetchedCities), limit, "one City must be fetched")
 
 	falseTitle := "Test irrelevant city title which not exists"
-	fetchedCities, err = repo.GetAllCities(&falseTitle, nil, 0)
+	fetchedCities = repo.GetAllCities(&falseTitle, nil, 0)
 	assert.Equal(t, len(*fetchedCities), 0, "zero City must be fetched")
 
-	fetchedCities, err = repo.GetAllCities(nil, nil, 0)
+	fetchedCities = repo.GetAllCities(nil, nil, 0)
 	assert.NotZero(t, len(*fetchedCities), "Zero cities fetched")
 	assert.Equal(t, len(*fetchedCities), 5, "Fetched cities are not equal")
 	assertCities(t, cities, *fetchedCities)

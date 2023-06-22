@@ -174,8 +174,12 @@ func NewCountryService(repo CountryRepositoryInterface) CountryServiceInterface 
 }
 
 func (c CountryService) GetAllCountries(name *string, limit *int, offset int) (*[]Country, error) {
-	//TODO implement me
-	panic("implement me")
+	countries := c.repo.GetAllCountries(name, limit, offset)
+	if len(*countries) == 0 {
+		return nil, CountryNotFound
+	}
+
+	return countries, nil
 }
 
 func NewCityService(repo CityRepositoryInterface) CityServiceInterface {

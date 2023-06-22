@@ -147,7 +147,7 @@ func NewCountryRepository(db *gorm.DB) CountryRepositoryInterface {
 }
 
 // GetAllCountry and return it
-func (c *CountryRepository) GetAllCountries(name *string, limit *int, offset int) (*[]Country, error) {
+func (c *CountryRepository) GetAllCountries(name *string, limit *int, offset int) *[]Country {
 	var countries *[]Country
 	db := c.db
 
@@ -160,7 +160,7 @@ func (c *CountryRepository) GetAllCountries(name *string, limit *int, offset int
 	}
 
 	db.Offset(offset).Find(&countries)
-	return countries, db.Error
+	return countries
 }
 
 // NewCityRepository instantiates and returns new repository
@@ -171,7 +171,7 @@ func NewCityRepository(db *gorm.DB) CityRepositoryInterface {
 }
 
 // GetAllCity and return it
-func (c *CityRepository) GetAllCities(name *string, limit *int, offset int) (*[]City, error) {
+func (c *CityRepository) GetAllCities(name *string, limit *int, offset int) *[]City {
 	var cities *[]City
 	db := c.db
 
@@ -184,5 +184,5 @@ func (c *CityRepository) GetAllCities(name *string, limit *int, offset int) (*[]
 	}
 
 	db.Offset(offset).Find(&cities)
-	return cities, db.Error
+	return cities
 }

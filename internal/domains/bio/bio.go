@@ -45,7 +45,7 @@ type BioUseCaseInterface interface {
 }
 
 type CountryRepositoryInterface interface {
-	GetAllCountries(name *string, limit *int, offset int) (*[]Country, error)
+	GetAllCountries(name *string, limit *int, offset int) *[]Country
 }
 
 type CountryServiceInterface interface {
@@ -57,7 +57,7 @@ type CountryUseCaseInterface interface {
 }
 
 type CityRepositoryInterface interface {
-	GetAllCities(name *string, limit *int, offset int) (*[]City, error)
+	GetAllCities(name *string, limit *int, offset int) *[]City
 }
 
 type CityServiceInterface interface {
