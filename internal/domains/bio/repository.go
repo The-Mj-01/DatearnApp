@@ -148,8 +148,14 @@ func NewCountryRepository(db *gorm.DB) CountryRepositoryInterface {
 
 // GetAllCountry and return it
 func (c *CountryRepository) GetAllCountries(name *string) (*[]Country, error) {
-	//TODO implement me
-	panic("implement me")
+	var countries *[]Country
+	db := c.db
+
+	if name != nil {
+		db = db.Where("title LIKE ?", *name)
+	}
+	db.Preload("Type").Find(&countries)
+	return countries, db.Error
 }
 
 // NewCityRepository instantiates and returns new repository

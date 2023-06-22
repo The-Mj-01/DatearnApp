@@ -14,7 +14,7 @@ func TestBioRepository_GetBioByUserId(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 	bios := mockAndInsertBio(db, 0, 0, 0, 10)
 	defer destructCreatedObjects(db, bios)
 
@@ -31,7 +31,7 @@ func TestBioRepository_GetBioById(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 	bios := mockAndInsertBio(db, 0, 0, 0, 1)
 	defer destructCreatedObjects(db, bios)
 
@@ -48,7 +48,7 @@ func TestBioRepository_GetBioByCountry(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -66,7 +66,7 @@ func TestBioRepository_GetBioByCity(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	cities := mockAndInsertCity(db, 1)
 	defer destructCreatedObjects(db, cities)
@@ -84,7 +84,7 @@ func TestBioRepository_GetBioBySex(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
@@ -102,7 +102,7 @@ func TestBioRepository_CountryExists(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -120,7 +120,7 @@ func TestBioRepository_CityExists(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	cities := mockAndInsertCity(db, 1)
 	defer destructCreatedObjects(db, cities)
@@ -137,7 +137,7 @@ func TestBioRepository_SexExists(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
@@ -154,7 +154,7 @@ func TestBioRepository_GetBioByBornAfter(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	bios := mockAndInsertBio(db, 0, 0, 0, 10)
 	defer destructCreatedObjects(db, bios)
@@ -169,7 +169,7 @@ func TestBioRepository_GetBioByCountryCitySex(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -193,7 +193,7 @@ func TestBioRepository_GetBatchesBioByCountryCitySexBornAfterDate(t *testing.T) 
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -216,7 +216,7 @@ func TestBioRepository_CreateBio(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -244,7 +244,7 @@ func TestBioRepository_UpdateBio(t *testing.T) {
 	db, err := setupDbConnection()
 	assert.NoError(t, err, "Setup database connection failed")
 
-	repo := createRepo(db)
+	repo := createBioRepo(db)
 
 	countries := mockAndInsertCountry(db, 2)
 	defer destructCreatedObjects(db, countries)
@@ -285,6 +285,21 @@ func TestBioRepository_UpdateBio(t *testing.T) {
 	assert.Equal(t, newBio.Born, fetchBio.Born, "Bio Update operation failed")
 }
 
+// TestCountryRepository_GetAllCountries functionality
+func TestCountryRepository_GetAllCountries(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createCountryRepo(db)
+
+	countries := mockAndInsertCountry(db, 5)
+	defer destructCreatedObjects(db, countries)
+
+	fetchedCountries, err := repo.GetAllCountries(nil)
+	assert.Equal(t, len(*fetchedCountries), 5, "Fetched categories are not equal")
+
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
@@ -295,9 +310,13 @@ func setupDbConnection() (*gorm.DB, error) {
 	return db, err
 }
 
-// createRepo for testing purpose and return it
-func createRepo(db *gorm.DB) BioRepositoryInterface {
+// createBioRepo for testing purpose and return it
+func createBioRepo(db *gorm.DB) BioRepositoryInterface {
 	return NewBioRepository(db)
+}
+
+func createCountryRepo(db *gorm.DB) CountryRepositoryInterface {
+	return NewCountryRepository(db)
 }
 
 // mockAndInsertCountry in database for testing purpose
