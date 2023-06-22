@@ -11,7 +11,15 @@ type BioService struct {
 	repo BioRepositoryInterface
 }
 
-func NewService(repo BioRepositoryInterface) BioServiceInterface {
+type CountryService struct {
+	repo CountryRepositoryInterface
+}
+
+type CityService struct {
+	repo CityRepositoryInterface
+}
+
+func NewBioService(repo BioRepositoryInterface) BioServiceInterface {
 	return &BioService{
 		repo: repo,
 	}
@@ -157,4 +165,26 @@ func (b BioService) UpdateBio(userId uint, description string, country, city, se
 	}
 
 	return b.repo.UpdateBio(bio, newBio)
+}
+
+func NewCountryService(repo CountryRepositoryInterface) CountryServiceInterface {
+	return &CountryService{
+		repo: repo,
+	}
+}
+
+func (c CountryService) GetAllCountries(name *string) (*[]Country, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func NewCityService(repo CityRepositoryInterface) CityServiceInterface {
+	return &CityService{
+		repo: repo,
+	}
+}
+
+func (c CityService) GetAllCities(name *string) (*[]City, error) {
+	//TODO implement me
+	panic("implement me")
 }

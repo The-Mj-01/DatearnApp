@@ -10,8 +10,18 @@ type BioRepository struct {
 	db *gorm.DB
 }
 
-// NewRepository instantiates and returns new repository
-func NewRepository(db *gorm.DB) BioRepositoryInterface {
+// CountryRepository which implements repository interface
+type CountryRepository struct {
+	db *gorm.DB
+}
+
+// CityRepository which implements repository interface
+type CityRepository struct {
+	db *gorm.DB
+}
+
+// NewBioRepository instantiates and returns new repository
+func NewBioRepository(db *gorm.DB) BioRepositoryInterface {
 	return &BioRepository{
 		db: db,
 	}
@@ -127,4 +137,30 @@ func (b BioRepository) UpdateBio(oldBio, newBio *Bio) (*Bio, error) {
 	result := b.db.Save(oldBio)
 
 	return oldBio, result.Error
+}
+
+// NewCountryRepository instantiates and returns new repository
+func NewCountryRepository(db *gorm.DB) CountryRepositoryInterface {
+	return &CountryRepository{
+		db: db,
+	}
+}
+
+// GetAllCountry and return it
+func (c *CountryRepository) GetAllCountries(name *string) (*[]Country, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+// NewCityRepository instantiates and returns new repository
+func NewCityRepository(db *gorm.DB) CityRepositoryInterface {
+	return &CityRepository{
+		db: db,
+	}
+}
+
+// GetAllCity and return it
+func (c *CityRepository) GetAllCities(name *string) (*[]City, error) {
+	//TODO implement me
+	panic("implement me")
 }

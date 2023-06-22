@@ -104,7 +104,7 @@ func TestBioUseCase_GetBio(t *testing.T) {
 }
 
 func createUseCase(db *gorm.DB, userId uint) BioUseCaseInterface {
-	return NewBioUseCase(NewService(NewRepository(db)), func(ctx context.Context, token string) (uint, error) {
+	return NewBioUseCase(NewBioService(NewBioRepository(db)), func(ctx context.Context, token string) (uint, error) {
 		return userId, nil
 	})
 }

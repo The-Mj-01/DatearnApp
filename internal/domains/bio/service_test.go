@@ -275,5 +275,5 @@ func TestBioService_UpdateBio(t *testing.T) {
 }
 
 func createService(db *gorm.DB) BioServiceInterface {
-	return NewService(NewRepository(db))
+	return NewBioService(NewBioRepository(db))
 }

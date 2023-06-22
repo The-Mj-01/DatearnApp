@@ -297,7 +297,7 @@ func setupDbConnection() (*gorm.DB, error) {
 
 // createRepo for testing purpose and return it
 func createRepo(db *gorm.DB) BioRepositoryInterface {
-	return NewRepository(db)
+	return NewBioRepository(db)
 }
 
 // mockAndInsertCountry in database for testing purpose

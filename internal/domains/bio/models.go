@@ -73,3 +73,11 @@ type BioUpdateRequest struct {
 type BioGetSingleRequest struct {
 	UserId uint `json:"userId,omitempty" validate:"omitempty, numeric, min=1"`
 }
+
+type CountryGetrequest struct {
+	Name *string `json:"name,omitempty" validate:"omitempty,min=1, max=256"`
+}
+
+type CityGetrequest struct {
+	Name *string `json:"name,omitempty" validate:"omitempty,min=1, max= 256"`
+}

@@ -43,3 +43,27 @@ type BioUseCaseInterface interface {
 	GetBio(ctx context.Context, token string, request *BioGetSingleRequest) (*Bio, error)
 	UpdateBio(ctx context.Context, token string, request *BioUpdateRequest) (*Bio, error)
 }
+
+type CountryRepositoryInterface interface {
+	GetAllCountries(name *string) (*[]Country, error)
+}
+
+type CountryServiceInterface interface {
+	GetAllCountries(name *string) (*[]Country, error)
+}
+
+type CountryUseCaseInterface interface {
+	GetAllCountries(ctx context.Context, token string, request *CountryGetrequest) (*[]Country, error)
+}
+
+type CityRepositoryInterface interface {
+	GetAllCities(name *string) (*[]City, error)
+}
+
+type CityServiceInterface interface {
+	GetAllCities(name *string) (*[]City, error)
+}
+
+type CityUseCaseInterface interface {
+	GetAllCities(ctx context.Context, token string, request *CityGetrequest) (*[]City, error)
+}
