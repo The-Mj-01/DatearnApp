@@ -286,6 +286,18 @@ func TestCountryService_GetAllCountries(t *testing.T) {
 
 }
 
+func TestCityService_GetAllCities(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	sv := createCityService(db)
+
+	_, err = sv.GetAllCities(nil, nil, 0)
+	assert.Error(t, err, "Expected cities not found error")
+	assert.ErrorIs(t, err, CityNotFound, "Expected cities not found error")
+
+}
+
 func createBioService(db *gorm.DB) BioServiceInterface {
 	return NewBioService(NewBioRepository(db))
 }

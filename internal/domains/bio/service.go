@@ -189,6 +189,10 @@ func NewCityService(repo CityRepositoryInterface) CityServiceInterface {
 }
 
 func (c CityService) GetAllCities(name *string, limit *int, offset int) (*[]City, error) {
-	//TODO implement me
-	panic("implement me")
+	cities := c.repo.GetAllCities(name, limit, offset)
+	if len(*cities) == 0 {
+		return nil, CityNotFound
+	}
+
+	return cities, nil
 }
