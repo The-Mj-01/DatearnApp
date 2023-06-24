@@ -1,6 +1,8 @@
 package socialMedia
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type SocialMediaRepository struct {
 	db *gorm.DB
@@ -30,6 +32,9 @@ func (s *SocialMediaRepository) GetAllSocialMedia(id *uint, name *string, limit 
 }
 
 func (s *SocialMediaRepository) CreateSocialMedia(name string) (*SocialMedia, error) {
-	//TODO implement me
-	panic("implement me")
+	social := &SocialMedia{
+		Name: name,
+	}
+	result := s.db.Create(social)
+	return social, result.Error
 }

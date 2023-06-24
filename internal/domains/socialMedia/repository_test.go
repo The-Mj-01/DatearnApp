@@ -38,6 +38,22 @@ func TestSocialMediaRepository_GetAllSocialMedia(t *testing.T) {
 
 }
 
+func TestSocialMediaRepository_CreateSocialMedia(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createSocialMediaRepo(db)
+
+	social := mockSocialMedia()
+
+	createdSocialMedia, err := repo.CreateSocialMedia(social.Name)
+	defer destructCreatedObjects(db, []SocialMedia{*createdSocialMedia})
+
+	assert.NoError(t, err, "Bio creation in repository failed")
+	assert.Equal(t, social.Name, createdSocialMedia.Name, "SocialMedia Repository test: titles are not equal")
+
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
