@@ -69,8 +69,11 @@ func NewCountryUseCase(sv CountryServiceInterface, decoderFn func(ctx context.Co
 
 // GetAllCountries and return them
 func (c CountryUseCase) GetAllCountries(ctx context.Context, token string, request *CountryGetrequest) (*[]Country, error) {
-	//TODO implement me
-	panic("implement me")
+	_, err := c.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+	return c.sv.GetAllCountries(request.Name, request.Limit, request.Offset)
 }
 
 // NewCityUseCase and return it

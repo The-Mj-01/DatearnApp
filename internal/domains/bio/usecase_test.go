@@ -15,7 +15,7 @@ func TestBioUseCase_WriteBio(t *testing.T) {
 	ctx := context.Background()
 
 	randUserId := uint(rand.Int())
-	useCase := createUseCase(db, randUserId)
+	useCase := createBioUseCase(db, randUserId)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -47,7 +47,7 @@ func TestBioUseCase_UpdateBio(t *testing.T) {
 
 	ctx := context.Background()
 	randUserId := uint(1)
-	useCase := createUseCase(db, randUserId)
+	useCase := createBioUseCase(db, randUserId)
 
 	countries := mockAndInsertCountry(db, 2)
 	defer destructCreatedObjects(db, countries)
@@ -81,7 +81,7 @@ func TestBioUseCase_GetBio(t *testing.T) {
 
 	ctx := context.Background()
 	randUserId := uint(1)
-	useCase := createUseCase(db, randUserId)
+	useCase := createBioUseCase(db, randUserId)
 
 	countries := mockAndInsertCountry(db, 1)
 	defer destructCreatedObjects(db, countries)
@@ -103,8 +103,36 @@ func TestBioUseCase_GetBio(t *testing.T) {
 	assertBioEquality(t, mockedBio, []Bio{*fetchedBio})
 }
 
-func createUseCase(db *gorm.DB, userId uint) BioUseCaseInterface {
+func TestCountryUseCase_GetAllCountries(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.Background()
+	randUserId := uint(1)
+	useCase := createCountryUseCase(db, randUserId)
+
+	mockedCountry := mockAndInsertCountry(db, 1)
+	//fmt.Println(mockedCountry[0].Name)
+
+	defer destructCreatedObjects(db, mockedCountry)
+	assert.Equal(t, len(mockedCountry), 1, "Mocking products failed")
+
+	mockedGetAllCountryRequest := mockGetAllCountryRequest(&mockedCountry[0].Name, nil, 0)
+	//fmt.Println(*mockedGetAllCountryRequest)
+	//fmt.Println(&mockedCountry[0].Name)
+	fetchedCountry, err := useCase.GetAllCountries(ctx, "", mockedGetAllCountryRequest)
+	assert.NoError(t, err, "Fetching Countries from db failed")
+	assertCountries(t, mockedCountry, *fetchedCountry)
+}
+
+func createBioUseCase(db *gorm.DB, userId uint) BioUseCaseInterface {
 	return NewBioUseCase(NewBioService(NewBioRepository(db)), func(ctx context.Context, token string) (uint, error) {
+		return userId, nil
+	})
+}
+
+func createCountryUseCase(db *gorm.DB, userId uint) CountryUseCaseInterface {
+	return NewCountryUseCase(NewCountryService(NewCountryRepository(db)), func(ctx context.Context, token string) (uint, error) {
 		return userId, nil
 	})
 }
@@ -133,5 +161,13 @@ func mockEditBioRequest(countryId, cityId, sexId uint, description string, born 
 func mockedGetSingleBioRequest(userId uint) *BioGetSingleRequest {
 	return &BioGetSingleRequest{
 		UserId: userId,
+	}
+}
+
+func mockGetAllCountryRequest(name *string, limit *int, offset int) *CountryGetrequest {
+	return &CountryGetrequest{
+		Name:   name,
+		Limit:  limit,
+		Offset: offset,
 	}
 }
