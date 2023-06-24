@@ -74,9 +74,10 @@ func TestBioRepository_CountryExists(t *testing.T) {
 
 	repo := createCountryRepo(db)
 
-	randId := uint(rand.Int())
+	countries := mockAndInsertCountry(db, 5)
+	defer destructCreatedObjects(db, countries)
 
-	exists := repo.CountryExists(randId)
+	exists := repo.CountryExists(countries[0].Id)
 	assert.True(t, exists, "checking country existence from repository failed")
 
 	exists = repo.CountryExists(uint(rand.Int()))
@@ -91,9 +92,10 @@ func TestBioRepository_CityExists(t *testing.T) {
 
 	repo := createCityRepo(db)
 
-	randId := uint(rand.Int())
+	cities := mockAndInsertCity(db, 5)
+	defer destructCreatedObjects(db, cities)
 
-	exists := repo.CityExists(randId)
+	exists := repo.CityExists(cities[0].Id)
 	assert.True(t, exists, "checking city existence from repository failed")
 
 	exists = repo.CityExists(uint(rand.Int()))
