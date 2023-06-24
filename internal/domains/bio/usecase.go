@@ -86,6 +86,9 @@ func NewCityUseCase(sv CityServiceInterface, decoderFn func(ctx context.Context,
 
 // GetAllCities and return them
 func (c *CityUseCase) GetAllCities(ctx context.Context, token string, request *CityGetrequest) (*[]City, error) {
-	//TODO implement me
-	panic("implement me")
+	_, err := c.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+	return c.sv.GetAllCities(request.Name, request.Limit, request.Offset)
 }
