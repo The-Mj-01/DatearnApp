@@ -1,6 +1,7 @@
 package location
 
 import (
+	"context"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 	"testing"
