@@ -20,6 +20,9 @@ func (s SocialMediaService) GetAllSocialMedia(id *uint, name *string, limit *int
 }
 
 func (s SocialMediaService) CreateSocialMedia(name string) (*SocialMedia, error) {
-	//TODO implement me
-	panic("implement me")
+	if name == "" {
+		return nil, NameNotFound
+	}
+
+	return s.repo.CreateSocialMedia(name)
 }
