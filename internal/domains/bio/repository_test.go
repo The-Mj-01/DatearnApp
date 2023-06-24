@@ -311,6 +311,10 @@ func TestCountryRepository_GetAllCountries(t *testing.T) {
 	assert.Equal(t, len(*fetchedCountries), 5, "Fetched cities are not equal")
 	assertCountries(t, countries, *fetchedCountries)
 
+	fetchedCountries = repo.GetAllCountries(&countries[0].Name, nil, 0)
+	assert.NotZero(t, len(*fetchedCountries), "Zero countries fetched")
+	assertCountries(t, countries, *fetchedCountries)
+
 }
 
 // TestCityRepository_GetAllCities functionality
