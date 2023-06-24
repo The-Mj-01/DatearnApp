@@ -11,8 +11,7 @@ type BioRepositoryInterface interface {
 	GetBatchesBioByCity(cityId uint) (*[]Bio, error)
 	GetBatchesBioBySex(sexId uint) (*[]Bio, error)
 	GetBatchesBioByBorn(bornDate int64) (*[]Bio, error)
-	CountryExists(countryId uint) bool
-	CityExists(cityId uint) bool
+
 	SexExists(sexId uint) bool
 	//
 	GetBatchesBioByBornAfter(bornDate int64) (*[]Bio, error)
@@ -42,28 +41,4 @@ type BioUseCaseInterface interface {
 	WriteBio(ctx context.Context, token string, request *BioCreateRequest) (*Bio, error)
 	GetBio(ctx context.Context, token string, request *BioGetSingleRequest) (*Bio, error)
 	UpdateBio(ctx context.Context, token string, request *BioUpdateRequest) (*Bio, error)
-}
-
-type CountryRepositoryInterface interface {
-	GetAllCountries(name *string, limit *int, offset int) *[]Country
-}
-
-type CountryServiceInterface interface {
-	GetAllCountries(name *string, limit *int, offset int) (*[]Country, error)
-}
-
-type CountryUseCaseInterface interface {
-	GetAllCountries(ctx context.Context, token string, request *CountryGetrequest) (*[]Country, error)
-}
-
-type CityRepositoryInterface interface {
-	GetAllCities(name *string, limit *int, offset int) *[]City
-}
-
-type CityServiceInterface interface {
-	GetAllCities(name *string, limit *int, offset int) (*[]City, error)
-}
-
-type CityUseCaseInterface interface {
-	GetAllCities(ctx context.Context, token string, request *CityGetrequest) (*[]City, error)
 }

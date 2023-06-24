@@ -2,26 +2,32 @@ package bio
 
 import (
 	"Datearn/pkg/authorization"
+	"Datearn/pkg/bioHandler"
 )
 
 // userAddrAuthorizerField is the field which authorization should get done and checked with that
 const userAddrAuthorizerField string = "UserId"
 
 type BioService struct {
-	repo BioRepositoryInterface
+	repo             BioRepositoryInterface
+	countryValidator func(id uint) error
+	cityValidator    func(id uint) error
 }
 
-type CountryService struct {
-	repo CountryRepositoryInterface
-}
+func NewBioService(repo BioRepositoryInterface, countryValidator, cityValidator func(id uint) error) BioServiceInterface {
 
-type CityService struct {
-	repo CityRepositoryInterface
-}
+	if countryValidator == nil {
+		countryValidator = bioHandler.CountryIsValid
+	}
 
-func NewBioService(repo BioRepositoryInterface) BioServiceInterface {
+	if cityValidator == nil {
+		cityValidator = bioHandler.CityIsValid
+	}
+
 	return &BioService{
-		repo: repo,
+		repo:             repo,
+		countryValidator: countryValidator,
+		cityValidator:    cityValidator,
 	}
 }
 
@@ -90,14 +96,22 @@ func (b BioService) CreateBio(description string, userId, country, city, sex uin
 	if description == "" {
 		return nil, DescripitonNotFound
 	}
-	countryExists := b.repo.CountryExists(country)
-	if !countryExists {
-		return nil, CountryNotFound
+
+	tmpBio := &Bio{
+
+		UserId:      userId,
+		Description: description,
+		Country:     country,
+		City:        city,
+		Sex:         sex,
+		Born:        born,
 	}
-	cityExists := b.repo.CityExists(city)
-	if !cityExists {
-		return nil, CityNotFound
+
+	err := b.bioCanCreated(tmpBio)
+	if err != nil {
+		return nil, err
 	}
+
 	sexExists := b.repo.SexExists(sex)
 	if !sexExists {
 		return nil, SexNotFound
@@ -111,15 +125,6 @@ func (b BioService) CreateBio(description string, userId, country, city, sex uin
 		return nil, BornNotFound
 	}
 
-	tmpBio := &Bio{
-
-		UserId:      userId,
-		Description: description,
-		Country:     country,
-		City:        city,
-		Sex:         sex,
-		Born:        born,
-	}
 	bio, err := b.repo.CreateBio(tmpBio)
 	return bio, err
 }
@@ -128,18 +133,27 @@ func (b BioService) UpdateBio(userId uint, description string, country, city, se
 	if description == "" {
 		return nil, DescripitonNotFound
 	}
-	countryExists := b.repo.CountryExists(country)
-	if !countryExists {
-		return nil, CountryNotFound
+
+	newBio := &Bio{
+
+		UserId:      userId,
+		Description: description,
+		Country:     country,
+		City:        city,
+		Sex:         sex,
+		Born:        born,
 	}
-	cityExists := b.repo.CityExists(city)
-	if !cityExists {
-		return nil, CityNotFound
+
+	err := b.bioCanCreated(newBio)
+	if err != nil {
+		return nil, err
 	}
+
 	sexExists := b.repo.SexExists(sex)
 	if !sexExists {
 		return nil, SexNotFound
 	}
+
 	if userId == 0 {
 		return nil, UserIdNotFound
 	}
@@ -154,45 +168,18 @@ func (b BioService) UpdateBio(userId uint, description string, country, city, se
 		return nil, err
 	}
 
-	newBio := &Bio{
-
-		UserId:      userId,
-		Description: description,
-		Country:     country,
-		City:        city,
-		Sex:         sex,
-		Born:        born,
-	}
-
 	return b.repo.UpdateBio(bio, newBio)
 }
 
-func NewCountryService(repo CountryRepositoryInterface) CountryServiceInterface {
-	return &CountryService{
-		repo: repo,
-	}
-}
-
-func (c CountryService) GetAllCountries(name *string, limit *int, offset int) (*[]Country, error) {
-	countries := c.repo.GetAllCountries(name, limit, offset)
-	if len(*countries) == 0 {
-		return nil, CountryNotFound
+// bioCanCreated checks whether payment is allowed to insert in db or not!
+func (b *BioService) bioCanCreated(bio *Bio) error {
+	if err := b.countryValidator(bio.Country); err != nil {
+		return err
 	}
 
-	return countries, nil
-}
-
-func NewCityService(repo CityRepositoryInterface) CityServiceInterface {
-	return &CityService{
-		repo: repo,
-	}
-}
-
-func (c CityService) GetAllCities(name *string, limit *int, offset int) (*[]City, error) {
-	cities := c.repo.GetAllCities(name, limit, offset)
-	if len(*cities) == 0 {
-		return nil, CityNotFound
+	if err := b.cityValidator(bio.City); err != nil {
+		return err
 	}
 
-	return cities, nil
+	return nil
 }

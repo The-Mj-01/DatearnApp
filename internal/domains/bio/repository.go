@@ -10,16 +10,6 @@ type BioRepository struct {
 	db *gorm.DB
 }
 
-// CountryRepository which implements repository interface
-type CountryRepository struct {
-	db *gorm.DB
-}
-
-// CityRepository which implements repository interface
-type CityRepository struct {
-	db *gorm.DB
-}
-
 // NewBioRepository instantiates and returns new repository
 func NewBioRepository(db *gorm.DB) BioRepositoryInterface {
 	return &BioRepository{
@@ -68,19 +58,19 @@ func (b BioRepository) GetBatchesBioByBorn(bornDate int64) (*[]Bio, error) {
 	panic("implement me")
 }
 
-// CountryExists and return is Exists
-func (b BioRepository) CountryExists(countryId uint) bool {
-	var country Country
-	result := b.db.Where("id = ?", countryId).First(&country)
-	return result.Error == nil && !errors.Is(result.Error, gorm.ErrRecordNotFound)
-}
-
-// CityExists and return is Exists
-func (b BioRepository) CityExists(cityId uint) bool {
-	var city City
-	result := b.db.Where("id = ?", cityId).First(&city)
-	return result.Error == nil && !errors.Is(result.Error, gorm.ErrRecordNotFound)
-}
+//// CountryExists and return is Exists
+//func (b BioRepository) CountryExists(countryId uint) bool {
+//	var country Country
+//	result := b.db.Where("id = ?", countryId).First(&country)
+//	return result.Error == nil && !errors.Is(result.Error, gorm.ErrRecordNotFound)
+//}
+//
+//// CityExists and return is Exists
+//func (b BioRepository) CityExists(cityId uint) bool {
+//	var city City
+//	result := b.db.Where("id = ?", cityId).First(&city)
+//	return result.Error == nil && !errors.Is(result.Error, gorm.ErrRecordNotFound)
+//}
 
 func (b BioRepository) SexExists(sexId uint) bool {
 	var sex Sex
@@ -137,52 +127,4 @@ func (b BioRepository) UpdateBio(oldBio, newBio *Bio) (*Bio, error) {
 	result := b.db.Save(oldBio)
 
 	return oldBio, result.Error
-}
-
-// NewCountryRepository instantiates and returns new repository
-func NewCountryRepository(db *gorm.DB) CountryRepositoryInterface {
-	return &CountryRepository{
-		db: db,
-	}
-}
-
-// GetAllCountry and return it
-func (c *CountryRepository) GetAllCountries(name *string, limit *int, offset int) *[]Country {
-	var countries *[]Country
-	db := c.db
-
-	if name != nil {
-		db = db.Where("name LIKE ?", *name)
-	}
-
-	if limit != nil {
-		db = db.Limit(*limit)
-	}
-
-	db.Offset(offset).Find(&countries)
-	return countries
-}
-
-// NewCityRepository instantiates and returns new repository
-func NewCityRepository(db *gorm.DB) CityRepositoryInterface {
-	return &CityRepository{
-		db: db,
-	}
-}
-
-// GetAllCity and return it
-func (c *CityRepository) GetAllCities(name *string, limit *int, offset int) *[]City {
-	var cities *[]City
-	db := c.db
-
-	if name != nil {
-		db = db.Where("name Like ?", *name)
-	}
-
-	if limit != nil {
-		db = db.Limit(*limit)
-	}
-
-	db.Offset(offset).Find(&cities)
-	return cities
 }

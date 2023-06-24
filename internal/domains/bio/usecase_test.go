@@ -15,20 +15,17 @@ func TestBioUseCase_WriteBio(t *testing.T) {
 	ctx := context.Background()
 
 	randUserId := uint(rand.Int())
-	useCase := createBioUseCase(db, randUserId)
+	useCase := createBioUseCase(db, randUserId, true)
 
-	countries := mockAndInsertCountry(db, 1)
-	defer destructCreatedObjects(db, countries)
-
-	cities := mockAndInsertCity(db, 1)
-	defer destructCreatedObjects(db, cities)
+	randCountryId := uint(rand.Int())
+	randCityId := uint(rand.Int())
 
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
 
 	born := time.Now().Unix()
 	description := "this is a description!"
-	mockedRequest := mockWriteBioRequest(randUserId, countries[0].Id, cities[0].Id, sexs[0].Id, description, born)
+	mockedRequest := mockWriteBioRequest(randUserId, randCountryId, randCityId, sexs[0].Id, description, born)
 
 	result, err := useCase.WriteBio(ctx, "", mockedRequest)
 	assert.NoError(t, err, "Bio creation failed in address use-case")
@@ -47,24 +44,23 @@ func TestBioUseCase_UpdateBio(t *testing.T) {
 
 	ctx := context.Background()
 	randUserId := uint(1)
-	useCase := createBioUseCase(db, randUserId)
+	useCase := createBioUseCase(db, randUserId, true)
 
-	countries := mockAndInsertCountry(db, 2)
-	defer destructCreatedObjects(db, countries)
-
-	cities := mockAndInsertCity(db, 2)
-	defer destructCreatedObjects(db, cities)
+	randCountryId := uint(rand.Int())
+	randCityId := uint(rand.Int())
 
 	sexs := mockAndInsertSex(db, 2)
 	defer destructCreatedObjects(db, sexs)
 
-	oldBio := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 1)
+	oldBio := mockAndInsertBio(db, randCountryId, randCityId, sexs[0].Id, 1)
 	defer destructCreatedObjects(db, oldBio)
 
 	newBorn := oldBio[0].Born + 10000
 	newDescription := "salam"
+	randNewCountryId := uint(rand.Int())
+	randNewCityId := uint(rand.Int())
 
-	mockedEditRequest := mockEditBioRequest(countries[1].Id, cities[1].Id, sexs[1].Id, newDescription, newBorn)
+	mockedEditRequest := mockEditBioRequest(randNewCountryId, randNewCityId, sexs[1].Id, newDescription, newBorn)
 	editedBio, err := useCase.UpdateBio(ctx, "", mockedEditRequest)
 	assert.NoError(t, err, "Bio use-case update functionality failed")
 
@@ -81,18 +77,15 @@ func TestBioUseCase_GetBio(t *testing.T) {
 
 	ctx := context.Background()
 	randUserId := uint(1)
-	useCase := createBioUseCase(db, randUserId)
+	useCase := createBioUseCase(db, randUserId, true)
 
-	countries := mockAndInsertCountry(db, 1)
-	defer destructCreatedObjects(db, countries)
-
-	cities := mockAndInsertCity(db, 1)
-	defer destructCreatedObjects(db, cities)
+	randCountryId := uint(rand.Int())
+	randCityId := uint(rand.Int())
 
 	sexs := mockAndInsertSex(db, 1)
 	defer destructCreatedObjects(db, sexs)
 
-	mockedBio := mockAndInsertBio(db, countries[0].Id, cities[0].Id, sexs[0].Id, 1)
+	mockedBio := mockAndInsertBio(db, randCountryId, randCityId, sexs[0].Id, 1)
 
 	assert.Equal(t, len(mockedBio), 1, "Mocking products failed")
 
@@ -103,59 +96,9 @@ func TestBioUseCase_GetBio(t *testing.T) {
 	assertBioEquality(t, mockedBio, []Bio{*fetchedBio})
 }
 
-func TestCountryUseCase_GetAllCountries(t *testing.T) {
-	db, err := setupDbConnection()
-	assert.NoError(t, err, "Setup database connection failed")
-
-	ctx := context.Background()
-	randUserId := uint(1)
-	useCase := createCountryUseCase(db, randUserId)
-
-	mockedCountry := mockAndInsertCountry(db, 10)
-	defer destructCreatedObjects(db, mockedCountry)
-	assert.Equal(t, len(mockedCountry), 10, "Mocking products failed")
-
-	mockedGetAllCountryRequest := mockGetAllCountryRequest(&mockedCountry[0].Name, nil, 0)
-
-	fetchedCountry, err := useCase.GetAllCountries(ctx, "", mockedGetAllCountryRequest)
-	assert.NoError(t, err, "Fetching Countries from db failed")
-	assertCountries(t, mockedCountry, *fetchedCountry)
-}
-
-func TestCityUseCase_GetAllCities(t *testing.T) {
-	db, err := setupDbConnection()
-	assert.NoError(t, err, "Setup database connection failed")
-
-	ctx := context.Background()
-	randUserId := uint(1)
-	useCase := createCityUseCase(db, randUserId)
-
-	mockedCity := mockAndInsertCity(db, 10)
-	defer destructCreatedObjects(db, mockedCity)
-	assert.Equal(t, len(mockedCity), 10, "Mocking products failed")
-
-	mockedGetAllCityRequest := mockGetAllCityRequest(&mockedCity[0].Name, nil, 0)
-
-	fetchedCity, err := useCase.GetAllCities(ctx, "", mockedGetAllCityRequest)
-	assert.NoError(t, err, "Fetching Cities from db failed")
-	assertCities(t, mockedCity, *fetchedCity)
-
-}
-
-func createBioUseCase(db *gorm.DB, userId uint) BioUseCaseInterface {
-	return NewBioUseCase(NewBioService(NewBioRepository(db)), func(ctx context.Context, token string) (uint, error) {
-		return userId, nil
-	})
-}
-
-func createCountryUseCase(db *gorm.DB, userId uint) CountryUseCaseInterface {
-	return NewCountryUseCase(NewCountryService(NewCountryRepository(db)), func(ctx context.Context, token string) (uint, error) {
-		return userId, nil
-	})
-}
-
-func createCityUseCase(db *gorm.DB, userId uint) CityUseCaseInterface {
-	return NewCityUseCase(NewCityService(NewCityRepository(db)), func(ctx context.Context, token string) (uint, error) {
+func createBioUseCase(db *gorm.DB, userId uint, withValidFunc bool) BioUseCaseInterface {
+	validFunc := generateValidationFunction(withValidFunc)
+	return NewBioUseCase(NewBioService(NewBioRepository(db), validFunc, validFunc), func(ctx context.Context, token string) (uint, error) {
 		return userId, nil
 	})
 }
@@ -184,21 +127,5 @@ func mockEditBioRequest(countryId, cityId, sexId uint, description string, born 
 func mockedGetSingleBioRequest(userId uint) *BioGetSingleRequest {
 	return &BioGetSingleRequest{
 		UserId: userId,
-	}
-}
-
-func mockGetAllCountryRequest(name *string, limit *int, offset int) *CountryGetrequest {
-	return &CountryGetrequest{
-		Name:   name,
-		Limit:  limit,
-		Offset: offset,
-	}
-}
-
-func mockGetAllCityRequest(name *string, limit *int, offset int) *CityGetrequest {
-	return &CityGetrequest{
-		Name:   name,
-		Limit:  limit,
-		Offset: offset,
 	}
 }
