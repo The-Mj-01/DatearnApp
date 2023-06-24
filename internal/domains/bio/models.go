@@ -17,12 +17,25 @@ type Bio struct {
 }
 
 type SocialMedia struct {
-	Id            uint      `json:"id" gorm:"primaryKey"`
-	Name          string    `json:"name,omitempty" gorm:"uniqueIndex, not null"`
-	SocialMediaId string    `json:"social_media_id,omitempty"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
-	DeletedAt     time.Time `json:"deleted_at"`
+	Id        uint      `json:"id" gorm:"primaryKey"`
+	Name      string    `json:"name,omitempty" gorm:"uniqueIndex, not null"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt time.Time `json:"deleted_at"`
+}
+
+type BioSocialMedia struct {
+	BioId                uint      `json:"bio_id"`
+	SocialMediaId        uint      `json:"social_media_id,omitempty"`
+	SocialMediaAccountId string    `json:"social_media_account_id,omitempty"`
+	CreatedAt            time.Time `json:"created_at"`
+	UpdatedAt            time.Time `json:"updated_at"`
+	DeletedAt            time.Time `json:"deleted_at"`
+}
+
+// TableName overrides default table name in gorm for them
+func (*BioSocialMedia) TableName() string {
+	return "bio_social_media"
 }
 
 // Country struct defines user entity which is used in database
