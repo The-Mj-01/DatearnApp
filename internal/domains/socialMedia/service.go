@@ -51,5 +51,9 @@ func (s *SocialMediaService) DeleteSocialMedia(socialId *uint) (*SocialMedia, er
 		return nil, SocialMediaNotFound
 	}
 
-	return s.repo.DeleteSocialMedia(&(*socialMedia)[0])
+	deletedSocialMedia, err := s.repo.DeleteSocialMedia(&(*socialMedia)[0])
+	if err != nil {
+		return nil, SocialMediaNotFound
+	}
+	return deletedSocialMedia, nil
 }
