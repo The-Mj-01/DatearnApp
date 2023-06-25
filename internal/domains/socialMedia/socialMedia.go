@@ -11,7 +11,7 @@ type SocialMediaRepositoryInterface interface {
 type SocialMediaServiceInterface interface {
 	GetAllSocialMedia(id *uint, name *string, limit *int, offset int) (*[]SocialMedia, error)
 	CreateSocialMedia(name string) (*SocialMedia, error)
-	UpdateSocialMedia(id uint, name string) (*SocialMedia, error)
+	UpdateSocialMedia(id *uint, name string) (*SocialMedia, error)
 }
 
 type SocialMediaUseCaseInterface interface {
