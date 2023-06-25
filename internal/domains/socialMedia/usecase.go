@@ -39,8 +39,13 @@ func (s *SocialMediaUseCase) CreateSocialMedia(ctx context.Context, token string
 }
 
 func (s *SocialMediaUseCase) UpdateSocialMedia(ctx context.Context, token string, request *SocialMediaUpdateRequest) (*SocialMedia, error) {
-	//TODO implement me
-	panic("implement me")
+	_, err := s.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+
+	return s.sv.UpdateSocialMedia(request.Id, *request.Name)
+
 }
 
 func (s *SocialMediaUseCase) DeleteSocialMedia(ctx context.Context, token string, request *SocialMediaDeleteRequest) (*SocialMedia, error) {

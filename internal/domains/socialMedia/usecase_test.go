@@ -44,6 +44,25 @@ func TestSocialMediaUseCase_CreateSocialMedia(t *testing.T) {
 
 }
 
+func TestSocialMediaUseCase_UpdateSocialMedia(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.Background()
+	randUserId := uint(1)
+	useCase := createSocialMediaUseCase(db, randUserId)
+
+	oldSocialMedia := mockAndInsertSocialMedia(db, 1)
+	defer destructCreatedObjects(db, oldSocialMedia)
+
+	newName := "Twitter"
+	mockedEditRequest := mockEditSocialMediaRequest(&oldSocialMedia[0].Id, &newName)
+	editedSocialMedia, err := useCase.UpdateSocialMedia(ctx, "", mockedEditRequest)
+	assert.NoError(t, err, "Social media use-case update functionality failed")
+
+	assert.Equal(t, *mockedEditRequest.Name, editedSocialMedia.Name, "Social media use-case update functionality failed")
+}
+
 func createSocialMediaUseCase(db *gorm.DB, userId uint) SocialMediaUseCaseInterface {
 	return NewSocialMediaUseCase(NewSocialMediaService(NewSocialMediaRepository(db)), func(ctx context.Context, token string) (uint, error) {
 		return userId, nil
@@ -61,6 +80,13 @@ func mockGetSocialMediaRequest(id *uint, name *string, limit *int, offset int) *
 
 func mockWriteSocialMediaRequest(name string) *SocialMediaCreateRequest {
 	return &SocialMediaCreateRequest{
+		Name: name,
+	}
+}
+
+func mockEditSocialMediaRequest(id *uint, name *string) *SocialMediaUpdateRequest {
+	return &SocialMediaUpdateRequest{
+		Id:   id,
 		Name: name,
 	}
 }
