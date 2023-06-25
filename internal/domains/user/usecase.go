@@ -4,7 +4,6 @@ import (
 	"Datearn/pkg/hasher"
 	"Datearn/pkg/tokenizer"
 	"context"
-	"fmt"
 )
 
 // ContextValueIpKey determines requested key for extracting ip from context
@@ -106,13 +105,11 @@ func (u *UserUseCase) DeleteUser(ctx context.Context, token string, request *Del
 		return nil, err
 	}
 
-	fmt.Println(userId)
-
 	user, err := u.sv.DeleteUser(userId)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(user)
+
 	return user, nil
 }
 
