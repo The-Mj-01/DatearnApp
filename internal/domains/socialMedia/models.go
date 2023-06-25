@@ -28,3 +28,7 @@ type SocialMediaUpdateRequest struct {
 	Id   *uint   `json:"id,omitempty" validate:"omitempty, numeric, min=1"`
 	Name *string `json:"name,omitempty" validate:"omitempty,min=1, max=256"`
 }
+
+type SocialMediaDeleteRequest struct {
+	Id *uint `json:"id,omitempty" validate:"omitempty, numeric, min=1"`
+}

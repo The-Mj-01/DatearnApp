@@ -42,3 +42,8 @@ func (s *SocialMediaUseCase) UpdateSocialMedia(ctx context.Context, token string
 	//TODO implement me
 	panic("implement me")
 }
+
+func (s *SocialMediaUseCase) DeleteSocialMedia(ctx context.Context, token string, request *SocialMediaDeleteRequest) (*SocialMedia, error) {
+	//TODO implement me
+	panic("implement me")
+}
