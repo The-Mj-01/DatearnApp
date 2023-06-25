@@ -63,6 +63,24 @@ func TestSocialMediaService_UpdateSocialMedia(t *testing.T) {
 
 }
 
+func TestSocialMediaService_DeleteSocialMedia(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	service := createSocialMediaService(db)
+	social := mockAndInsertSocialMedia(db, 1)
+	defer destructCreatedObjects(db, social)
+
+	deletedUser, err := service.DeleteSocialMedia(&social[0].Id)
+
+	assertSocialMedia(t, []SocialMedia{*deletedUser}, []SocialMedia{social[0]})
+
+	_, err = service.DeleteSocialMedia(&social[0].Id)
+	assert.Error(t, err, "Social service user creation failed")
+	assert.ErrorIs(t, err, SocialMediaNotFound, "Social service user creation failed")
+
+}
+
 func createSocialMediaService(db *gorm.DB) SocialMediaServiceInterface {
 	return NewSocialMediaService(NewSocialMediaRepository(db))
 }

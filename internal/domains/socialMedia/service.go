@@ -44,3 +44,12 @@ func (s *SocialMediaService) UpdateSocialMedia(id *uint, name string) (*SocialMe
 	return s.repo.UpdateSocialMedia(&(*social)[0], newSocialMedia)
 
 }
+
+func (s *SocialMediaService) DeleteSocialMedia(socialId *uint) (*SocialMedia, error) {
+	socialMedia := s.repo.GetAllSocialMedia(socialId, nil, nil, 0)
+	if len(*socialMedia) == 0 {
+		return nil, SocialMediaNotFound
+	}
+
+	return s.repo.DeleteSocialMedia(&(*socialMedia)[0])
+}
