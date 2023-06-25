@@ -27,7 +27,20 @@ func (s *SocialMediaService) CreateSocialMedia(name string) (*SocialMedia, error
 	return s.repo.CreateSocialMedia(name)
 }
 
-func (s *SocialMediaService) UpdateSocialMedia(id uint, name string) (*SocialMedia, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *SocialMediaService) UpdateSocialMedia(id *uint, name string) (*SocialMedia, error) {
+	if name == "" {
+		return nil, NameNotFound
+	}
+	newSocialMedia := &SocialMedia{
+		Name: name,
+	}
+
+	social, err := s.GetAllSocialMedia(id, nil, nil, 0)
+
+	if err != nil {
+		return nil, SocialMediaNotFound
+	}
+
+	return s.repo.UpdateSocialMedia(&(*social)[0], newSocialMedia)
+
 }
