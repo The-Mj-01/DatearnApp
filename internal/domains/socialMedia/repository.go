@@ -38,3 +38,13 @@ func (s *SocialMediaRepository) CreateSocialMedia(name string) (*SocialMedia, er
 	result := s.db.Create(social)
 	return social, result.Error
 }
+
+func (s *SocialMediaRepository) UpdateSocialMedia(oldSocial, newSocial *SocialMedia) (*SocialMedia, error) {
+	if newSocial.Name != "" {
+		oldSocial.Name = newSocial.Name
+	}
+
+	result := s.db.Save(oldSocial)
+
+	return oldSocial, result.Error
+}
