@@ -78,6 +78,23 @@ func TestSocialMediaRepository_UpdateSocialMedia(t *testing.T) {
 	assert.Equal(t, newSocialMedia.Name, fetchSocialMedia.Name, "SocialMedia Update operation failed")
 }
 
+func TestSocialMediaRepository_DeleteSocialMedia(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed!")
+
+	repo := createSocialMediaRepo(db)
+	social := mockAndInsertSocialMedia(db, 1)
+	defer destructCreatedObjects(db, social)
+
+	deletedSocial, err := repo.DeleteSocialMedia(&social[0])
+
+	assertSocialMedia(t, []SocialMedia{*deletedSocial}, []SocialMedia{social[0]})
+	fetchUser := new(SocialMedia)
+	result := db.Where("id = ?", social[0].Id).First(fetchUser)
+
+	assert.Error(t, result.Error, "Social media Delete operation failed")
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})

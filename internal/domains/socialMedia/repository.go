@@ -48,3 +48,9 @@ func (s *SocialMediaRepository) UpdateSocialMedia(oldSocial, newSocial *SocialMe
 
 	return oldSocial, result.Error
 }
+
+func (s *SocialMediaRepository) DeleteSocialMedia(socialMedia *SocialMedia) (*SocialMedia, error) {
+	result := s.db.Delete(socialMedia)
+
+	return socialMedia, result.Error
+}
