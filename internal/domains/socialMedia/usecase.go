@@ -37,3 +37,8 @@ func (s *SocialMediaUseCase) CreateSocialMedia(ctx context.Context, token string
 	}
 	return s.sv.CreateSocialMedia(request.Name)
 }
+
+func (s *SocialMediaUseCase) UpdateSocialMedia(ctx context.Context, token string, request *SocialMediaUpdateRequest) (*SocialMedia, error) {
+	//TODO implement me
+	panic("implement me")
+}
