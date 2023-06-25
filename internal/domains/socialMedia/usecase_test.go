@@ -39,6 +39,7 @@ func TestSocialMediaUseCase_CreateSocialMedia(t *testing.T) {
 
 	mockedRequest := mockWriteSocialMediaRequest(social.Name)
 	result, err := useCase.CreateSocialMedia(ctx, "", mockedRequest)
+	defer destructCreatedObjects(db, []SocialMedia{*result})
 	assert.NoError(t, err, "Social media creation failed in address use-case")
 	assert.Equal(t, result.Name, mockedRequest.Name, "Social media creation failed in bio use-case")
 
@@ -58,6 +59,7 @@ func TestSocialMediaUseCase_UpdateSocialMedia(t *testing.T) {
 	newName := "Twitter"
 	mockedEditRequest := mockEditSocialMediaRequest(&oldSocialMedia[0].Id, &newName)
 	editedSocialMedia, err := useCase.UpdateSocialMedia(ctx, "", mockedEditRequest)
+	defer destructCreatedObjects(db, []SocialMedia{*editedSocialMedia})
 	assert.NoError(t, err, "Social media use-case update functionality failed")
 
 	assert.Equal(t, *mockedEditRequest.Name, editedSocialMedia.Name, "Social media use-case update functionality failed")
@@ -78,7 +80,7 @@ func TestSocialMediaUseCase_DeleteSocialMedia(t *testing.T) {
 
 	deletedSocialMedia, err := useCase.DeleteSocialMedia(ctx, "", mockedDeleteRequest)
 	assert.NoError(t, err, "Deleting user name failed")
-	//fmt.Println(user, mockedUser)
+
 	assertSocialMedia(t, mockedSocialMedia, []SocialMedia{*deletedSocialMedia})
 
 }
