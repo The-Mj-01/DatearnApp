@@ -17,23 +17,23 @@ func TestInterestRepository_GetAllInterest(t *testing.T) {
 	defer destructCreatedObjects(db, interest)
 
 	fetchedInterest := repo.GetAllInterest(nil, nil, nil, 10)
-	assert.Equal(t, len(*fetchedInterest), 0, "Fetched interest media are not equal")
+	assert.Equal(t, len(*fetchedInterest), 0, "Fetched interest  are not equal")
 
 	limit := 1
 	fetchedInterest = repo.GetAllInterest(nil, nil, &limit, 0)
 	assert.Equal(t, len(*fetchedInterest), limit, "one interest must be fetched")
 
-	falseTitle := "Test irrelevant interest media title which not exists"
+	falseTitle := "Test irrelevant interest  title which not exists"
 	fetchedInterest = repo.GetAllInterest(nil, &falseTitle, nil, 0)
 	assert.Equal(t, len(*fetchedInterest), 0, "zero interest must be fetched")
 
 	fetchedInterest = repo.GetAllInterest(nil, nil, nil, 0)
-	assert.NotZero(t, len(*fetchedInterest), "Zero interest media fetched")
-	assert.Equal(t, len(*fetchedInterest), 5, "Fetched interest media are not equal")
+	assert.NotZero(t, len(*fetchedInterest), "Zero interest  fetched")
+	assert.Equal(t, len(*fetchedInterest), 5, "Fetched interest  are not equal")
 	assertInterest(t, interest, *fetchedInterest)
 
 	fetchedInterest = repo.GetAllInterest(nil, &interest[0].Name, nil, 0)
-	assert.NotZero(t, len(*fetchedInterest), "Zero interest media fetched")
+	assert.NotZero(t, len(*fetchedInterest), "Zero interest  fetched")
 	assertInterest(t, interest, *fetchedInterest)
 
 }
@@ -76,6 +76,23 @@ func TestInterestRepository_UpdateInterest(t *testing.T) {
 
 	assert.Equal(t, oldMockedInterest[0].Id, fetchInterest.Id, "Interest Update operation failed")
 	assert.Equal(t, newInterest.Name, fetchInterest.Name, "Interest Update operation failed")
+}
+
+func TestInterestRepository_DeleteInterest(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed!")
+
+	repo := createInterestRepo(db)
+	interest := mockAndInsertInterest(db, 1)
+	defer destructCreatedObjects(db, interest)
+
+	deletedInterest, err := repo.DeleteInterest(&interest[0])
+
+	assertInterest(t, []Interest{*deletedInterest}, []Interest{interest[0]})
+	fetchUser := new(Interest)
+	result := db.Where("id = ?", interest[0].Id).First(fetchUser)
+
+	assert.Error(t, result.Error, "Interest Delete operation failed")
 }
 
 // setupDbConnection and run migration

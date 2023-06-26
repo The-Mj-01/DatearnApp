@@ -47,7 +47,8 @@ func (s *InterestRepository) UpdateInterest(oldInterest, newInterest *Interest) 
 	return oldInterest, result.Error
 }
 
-func (i InterestRepository) DeleteInterest(interest *Interest) (*Interest, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestRepository) DeleteInterest(interest *Interest) (*Interest, error) {
+	result := s.db.Delete(interest)
+
+	return interest, result.Error
 }
