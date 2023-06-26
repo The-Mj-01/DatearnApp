@@ -38,6 +38,22 @@ func TestInterestRepository_GetAllInterest(t *testing.T) {
 
 }
 
+func TestInterestRepository_CreateInterest(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createInterestRepo(db)
+
+	interest := mockInterest()
+
+	createdInterest, err := repo.CreateInterest(interest.Name)
+	defer destructCreatedObjects(db, []Interest{*createdInterest})
+
+	assert.NoError(t, err, "Bio creation in repository failed")
+	assert.Equal(t, interest.Name, createdInterest.Name, "Interest Repository test: titles are not equal")
+
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
