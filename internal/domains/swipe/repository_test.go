@@ -26,6 +26,23 @@ func TestSwipeRepository_Like(t *testing.T) {
 
 }
 
+func TestSwipeRepository_DisLike(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createSwipeRepo(db)
+
+	randDisLikerId := uint(rand.Int())
+	randDisLikedId := uint(rand.Int())
+
+	disLike := mockDisLike(randDisLikerId, randDisLikedId)
+
+	disLikedSwipe, err := repo.DisLike(disLike.DisLikerId, disLike.DisLikedId)
+	assert.NoError(t, err, "disLike swipe  operation failed")
+
+	assertDisLike(t, []DisLike{*disLike}, []DisLike{*disLikedSwipe})
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
@@ -72,11 +89,11 @@ func mockLike(likerId, likedId uint) *Like {
 }
 
 // mockAndInsertDisLike in database for testing purpose
-func mockAndInsertDisLike(db *gorm.DB, count int) []DisLike {
+func mockAndInsertDisLike(db *gorm.DB, likerId, likedId []uint, count int) []DisLike {
 	interest := make([]DisLike, 0, count)
 	i := 0
 	for {
-		tmpDisLike := mockDisLike()
+		tmpDisLike := mockDisLike(likerId[i], likedId[i])
 
 		res := db.Create(tmpDisLike)
 		if res.Error != nil {
@@ -94,8 +111,11 @@ func mockAndInsertDisLike(db *gorm.DB, count int) []DisLike {
 }
 
 // mockDisLike object and return it
-func mockDisLike() *DisLike {
-	return &DisLike{}
+func mockDisLike(likerId, likedId uint) *DisLike {
+	return &DisLike{
+		DisLikerId: likerId,
+		DisLikedId: likedId,
+	}
 }
 
 // assertLike check whether they are equal or not

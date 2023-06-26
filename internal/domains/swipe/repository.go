@@ -26,9 +26,13 @@ func (s SwipeRepository) DisableLike(likerId, likedId uint) (*Like, error) {
 	panic("implement me")
 }
 
-func (s SwipeRepository) DisLike(likerId, likedId uint) (*DisLike, error) {
-	//TODO implement me
-	panic("implement me")
+func (s SwipeRepository) DisLike(disLikerId, disLikedId uint) (*DisLike, error) {
+	disLike := &DisLike{
+		DisLikerId: disLikerId,
+		DisLikedId: disLikedId,
+	}
+	result := s.db.Create(disLike)
+	return disLike, result.Error
 }
 
 func (s SwipeRepository) DisableDisLike(likerId, likedId uint) (*DisLike, error) {
