@@ -10,9 +10,13 @@ func NewInterestService(repo InterestRepositoryInterface) InterestServiceInterfa
 	}
 }
 
-func (i InterestService) GetAllInterest(id *uint, name *string, limit *int, offset int) (*[]Interest, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestService) GetAllInterest(id *uint, name *string, limit *int, offset int) (*[]Interest, error) {
+	interest := s.repo.GetAllInterest(id, name, limit, offset)
+	if len(*interest) == 0 {
+		return nil, InterestNotFound
+	}
+
+	return interest, nil
 }
 
 func (i InterestService) CreateInterest(name string) (*Interest, error) {
@@ -25,7 +29,7 @@ func (i InterestService) UpdateInterest(id *uint, name string) (*Interest, error
 	panic("implement me")
 }
 
-func (i InterestService) DeleteInterest(socialId *uint) (*Interest, error) {
+func (i InterestService) DeleteInterest(interestId *uint) (*Interest, error) {
 	//TODO implement me
 	panic("implement me")
 }
