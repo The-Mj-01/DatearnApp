@@ -12,9 +12,21 @@ func NewInterestRepository(db *gorm.DB) InterestRepositoryInterface {
 	}
 }
 
-func (i InterestRepository) GetAllInterest(id *uint, name *string, limit *int, offset int) *[]Interest {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestRepository) GetAllInterest(id *uint, name *string, limit *int, offset int) *[]Interest {
+	var interest *[]Interest
+
+	db := s.db
+
+	if name != nil {
+		db = db.Where("name LIKE ?", *name)
+	}
+
+	if limit != nil {
+		db = db.Limit(*limit)
+	}
+
+	db.Offset(offset).Find(&interest)
+	return interest
 }
 
 func (i InterestRepository) CreateInterest(name string) (*Interest, error) {
