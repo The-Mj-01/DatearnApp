@@ -1,6 +1,7 @@
 package interest
 
 import (
+	"Datearn/pkg/advancedError"
 	"Datearn/pkg/userHandler"
 	"context"
 )
@@ -21,9 +22,12 @@ func NewInterestUseCase(sv InterestServiceInterface, decoderFn func(ctx context.
 	}
 }
 
-func (i InterestUseCase) GetAllInterest(ctx context.Context, token string, request *InterestGetRequest) (*[]Interest, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestUseCase) GetAllInterest(ctx context.Context, token string, request *InterestGetRequest) (*[]Interest, error) {
+	_, err := s.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+	return s.sv.GetAllInterest(request.Id, request.Name, request.Limit, request.Offset)
 }
 
 func (i InterestUseCase) CreateInterest(ctx context.Context, token string, request *InterestCreateRequest) (*Interest, error) {
