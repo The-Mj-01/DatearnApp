@@ -19,9 +19,12 @@ func (s *InterestService) GetAllInterest(id *uint, name *string, limit *int, off
 	return interest, nil
 }
 
-func (i InterestService) CreateInterest(name string) (*Interest, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestService) CreateInterest(name string) (*Interest, error) {
+	if name == "" {
+		return nil, NameNotFound
+	}
+
+	return s.repo.CreateInterest(name)
 }
 
 func (i InterestService) UpdateInterest(id *uint, name string) (*Interest, error) {

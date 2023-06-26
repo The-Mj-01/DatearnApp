@@ -17,6 +17,22 @@ func TestInterestService_GetAllInterest(t *testing.T) {
 	assert.ErrorIs(t, err, InterestNotFound, "Expected interest not found error")
 }
 
+func TestInterestService_CreateInterest(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	sv := createInterestService(db)
+
+	interest := mockInterest()
+
+	createdInterest, err := sv.CreateInterest(interest.Name)
+	defer destructCreatedObjects(db, []Interest{*createdInterest})
+
+	assert.NoError(t, err, "interest service bio creation failed")
+	assert.Equal(t, interest.Name, createdInterest.Name)
+
+}
+
 func createInterestService(db *gorm.DB) InterestServiceInterface {
 	return NewInterestService(NewInterestRepository(db))
 }
