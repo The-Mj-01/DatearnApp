@@ -65,6 +65,26 @@ func TestInterestUseCase_UpdateInterest(t *testing.T) {
 	assert.Equal(t, *mockedEditRequest.Name, editedInterest.Name, "Interest use-case update functionality failed")
 }
 
+func TestInterestUseCase_DeleteInterest(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.Background()
+	randUserId := uint(1)
+	useCase := createInterestUseCase(db, randUserId)
+
+	mockedInterest := mockAndInsertInterest(db, 1)
+	defer destructCreatedObjects(db, mockedInterest)
+
+	mockedDeleteRequest := mockDeleteInterestRequest(&mockedInterest[0].Id)
+
+	deletedInterest, err := useCase.DeleteInterest(ctx, "", mockedDeleteRequest)
+	assert.NoError(t, err, "Deleting user name failed")
+
+	assertInterest(t, mockedInterest, []Interest{*deletedInterest})
+
+}
+
 func createInterestUseCase(db *gorm.DB, userId uint) InterestUseCaseInterface {
 	return NewInterestUseCase(NewInterestService(NewInterestRepository(db)), func(ctx context.Context, token string) (uint, error) {
 		return userId, nil

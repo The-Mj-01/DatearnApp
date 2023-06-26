@@ -48,7 +48,11 @@ func (s *InterestUseCase) UpdateInterest(ctx context.Context, token string, requ
 
 }
 
-func (i InterestUseCase) DeleteInterest(ctx context.Context, token string, request *InterestDeleteRequest) (*Interest, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestUseCase) DeleteInterest(ctx context.Context, token string, request *InterestDeleteRequest) (*Interest, error) {
+	_, err := s.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+
+	return s.sv.DeleteInterest(request.Id)
 }
