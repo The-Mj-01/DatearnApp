@@ -6,14 +6,14 @@ type InterestRepositoryInterface interface {
 	GetAllInterest(id *uint, name *string, limit *int, offset int) *[]Interest
 	CreateInterest(name string) (*Interest, error)
 	UpdateInterest(oldInterest, newInterest *Interest) (*Interest, error)
-	DeleteInterest(socialMedia *Interest) (*Interest, error)
+	DeleteInterest(interest *Interest) (*Interest, error)
 }
 
 type InterestServiceInterface interface {
 	GetAllInterest(id *uint, name *string, limit *int, offset int) (*[]Interest, error)
 	CreateInterest(name string) (*Interest, error)
 	UpdateInterest(id *uint, name string) (*Interest, error)
-	DeleteInterest(socialId *uint) (*Interest, error)
+	DeleteInterest(interestId *uint) (*Interest, error)
 }
 
 type InterestUseCaseInterface interface {
