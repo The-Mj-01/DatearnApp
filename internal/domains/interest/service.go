@@ -27,9 +27,22 @@ func (s *InterestService) CreateInterest(name string) (*Interest, error) {
 	return s.repo.CreateInterest(name)
 }
 
-func (i InterestService) UpdateInterest(id *uint, name string) (*Interest, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestService) UpdateInterest(id *uint, name string) (*Interest, error) {
+	if name == "" {
+		return nil, NameNotFound
+	}
+	newInterest := &Interest{
+		Name: name,
+	}
+
+	interest, err := s.GetAllInterest(id, nil, nil, 0)
+
+	if err != nil {
+		return nil, InterestNotFound
+	}
+
+	return s.repo.UpdateInterest(&(*interest)[0], newInterest)
+
 }
 
 func (i InterestService) DeleteInterest(interestId *uint) (*Interest, error) {

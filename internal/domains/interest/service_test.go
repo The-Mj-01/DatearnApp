@@ -33,6 +33,36 @@ func TestInterestService_CreateInterest(t *testing.T) {
 
 }
 
+func TestInterestService_UpdateInterest(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	sv := createInterestService(db)
+
+	oldInterest := mockAndInsertInterest(db, 1)
+	defer destructCreatedObjects(db, oldInterest)
+
+	newInterest := &Interest{
+		Id:   oldInterest[0].Id,
+		Name: "Twitter",
+	}
+
+	wrongInterest := &Interest{
+		Name: "",
+	}
+
+	_, err = sv.UpdateInterest(&newInterest.Id, wrongInterest.Name)
+	assert.Error(t, err, "Interest service update functionality failed")
+	assert.ErrorIs(t, err, NameNotFound, "Interest service update functionality failed")
+
+	updatedInterest, err := sv.UpdateInterest(&newInterest.Id, newInterest.Name)
+
+	assert.NoError(t, err, "Interest service update user failed")
+	assert.Equal(t, newInterest.Id, updatedInterest.Id, "Interest service update bio failed")
+	assert.Equal(t, newInterest.Name, updatedInterest.Name, "Interest service update bio failed")
+
+}
+
 func createInterestService(db *gorm.DB) InterestServiceInterface {
 	return NewInterestService(NewInterestRepository(db))
 }
