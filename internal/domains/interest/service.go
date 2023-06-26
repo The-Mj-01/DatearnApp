@@ -45,7 +45,15 @@ func (s *InterestService) UpdateInterest(id *uint, name string) (*Interest, erro
 
 }
 
-func (i InterestService) DeleteInterest(interestId *uint) (*Interest, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestService) DeleteInterest(interestId *uint) (*Interest, error) {
+	interest := s.repo.GetAllInterest(interestId, nil, nil, 0)
+	if len(*interest) == 0 {
+		return nil, InterestNotFound
+	}
+
+	deletedInterest, err := s.repo.DeleteInterest(&(*interest)[0])
+	if err != nil {
+		return nil, InterestNotFound
+	}
+	return deletedInterest, nil
 }

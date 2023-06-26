@@ -63,6 +63,24 @@ func TestInterestService_UpdateInterest(t *testing.T) {
 
 }
 
+func TestInterestService_DeleteInterest(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	service := createInterestService(db)
+	interest := mockAndInsertInterest(db, 1)
+	defer destructCreatedObjects(db, interest)
+
+	deletedUser, err := service.DeleteInterest(&interest[0].Id)
+
+	assertInterest(t, []Interest{*deletedUser}, []Interest{interest[0]})
+
+	_, err = service.DeleteInterest(&interest[0].Id)
+	assert.Error(t, err, "Interest service user creation failed")
+	assert.ErrorIs(t, err, InterestNotFound, "Interest service user creation failed")
+
+}
+
 func createInterestService(db *gorm.DB) InterestServiceInterface {
 	return NewInterestService(NewInterestRepository(db))
 }
