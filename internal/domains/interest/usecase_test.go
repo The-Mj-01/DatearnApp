@@ -27,6 +27,24 @@ func TestInterestUseCase_GetAllInterest(t *testing.T) {
 
 }
 
+func TestInterestUseCase_CreateInterest(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.Background()
+	randUserId := uint(1)
+	useCase := createInterestUseCase(db, randUserId)
+
+	interest := mockInterest()
+
+	mockedRequest := mockWriteInterestRequest(interest.Name)
+	result, err := useCase.CreateInterest(ctx, "", mockedRequest)
+	defer destructCreatedObjects(db, []Interest{*result})
+	assert.NoError(t, err, "Interest creation failed in address use-case")
+	assert.Equal(t, result.Name, mockedRequest.Name, "Interest creation failed in bio use-case")
+
+}
+
 func createInterestUseCase(db *gorm.DB, userId uint) InterestUseCaseInterface {
 	return NewInterestUseCase(NewInterestService(NewInterestRepository(db)), func(ctx context.Context, token string) (uint, error) {
 		return userId, nil

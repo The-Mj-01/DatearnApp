@@ -30,9 +30,12 @@ func (s *InterestUseCase) GetAllInterest(ctx context.Context, token string, requ
 	return s.sv.GetAllInterest(request.Id, request.Name, request.Limit, request.Offset)
 }
 
-func (i InterestUseCase) CreateInterest(ctx context.Context, token string, request *InterestCreateRequest) (*Interest, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestUseCase) CreateInterest(ctx context.Context, token string, request *InterestCreateRequest) (*Interest, error) {
+	_, err := s.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+	return s.sv.CreateInterest(request.Name)
 }
 
 func (i InterestUseCase) UpdateInterest(ctx context.Context, token string, request *InterestUpdateRequest) (*Interest, error) {
