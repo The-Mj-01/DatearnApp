@@ -13,8 +13,12 @@ func NewSwipeRepository(db *gorm.DB) SwipeRepositoryInterface {
 }
 
 func (s SwipeRepository) Like(likerId, likedId uint) (*Like, error) {
-	//TODO implement me
-	panic("implement me")
+	like := &Like{
+		LikerId: likerId,
+		LikedId: likedId,
+	}
+	result := s.db.Create(like)
+	return like, result.Error
 }
 
 func (s SwipeRepository) DisableLike(likerId, likedId uint) (*Like, error) {

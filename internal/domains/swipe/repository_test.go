@@ -4,8 +4,27 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"math/rand"
 	"testing"
 )
+
+func TestSwipeRepository_Like(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createSwipeRepo(db)
+
+	randLikerId := uint(rand.Int())
+	randLikedId := uint(rand.Int())
+
+	like := mockLike(randLikerId, randLikedId)
+
+	likedSwipe, err := repo.Like(like.LikerId, like.LikedId)
+	assert.NoError(t, err, "like swipe  operation failed")
+
+	assertLike(t, []Like{*like}, []Like{*likedSwipe})
+
+}
 
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
@@ -23,11 +42,11 @@ func createSwipeRepo(db *gorm.DB) SwipeRepositoryInterface {
 }
 
 // mockAndInsertLike in database for testing purpose
-func mockAndInsertLike(db *gorm.DB, count int) []Like {
+func mockAndInsertLike(db *gorm.DB, likerId, likedId []uint, count int) []Like {
 	interest := make([]Like, 0, count)
 	i := 0
 	for {
-		tmpLike := mockLike()
+		tmpLike := mockLike(likerId[i], likedId[i])
 
 		res := db.Create(tmpLike)
 		if res.Error != nil {
@@ -45,8 +64,11 @@ func mockAndInsertLike(db *gorm.DB, count int) []Like {
 }
 
 // mockLike object and return it
-func mockLike() *Like {
-	return &Like{}
+func mockLike(likerId, likedId uint) *Like {
+	return &Like{
+		LikerId: likerId,
+		LikedId: likedId,
+	}
 }
 
 // mockAndInsertDisLike in database for testing purpose
