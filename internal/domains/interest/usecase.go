@@ -38,9 +38,14 @@ func (s *InterestUseCase) CreateInterest(ctx context.Context, token string, requ
 	return s.sv.CreateInterest(request.Name)
 }
 
-func (i InterestUseCase) UpdateInterest(ctx context.Context, token string, request *InterestUpdateRequest) (*Interest, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestUseCase) UpdateInterest(ctx context.Context, token string, request *InterestUpdateRequest) (*Interest, error) {
+	_, err := s.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+
+	return s.sv.UpdateInterest(request.Id, *request.Name)
+
 }
 
 func (i InterestUseCase) DeleteInterest(ctx context.Context, token string, request *InterestDeleteRequest) (*Interest, error) {

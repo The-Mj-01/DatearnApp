@@ -45,6 +45,26 @@ func TestInterestUseCase_CreateInterest(t *testing.T) {
 
 }
 
+func TestInterestUseCase_UpdateInterest(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.Background()
+	randUserId := uint(1)
+	useCase := createInterestUseCase(db, randUserId)
+
+	oldInterest := mockAndInsertInterest(db, 1)
+	defer destructCreatedObjects(db, oldInterest)
+
+	newName := "Twitter"
+	mockedEditRequest := mockEditInterestRequest(&oldInterest[0].Id, &newName)
+	editedInterest, err := useCase.UpdateInterest(ctx, "", mockedEditRequest)
+	defer destructCreatedObjects(db, []Interest{*editedInterest})
+	assert.NoError(t, err, "Interest use-case update functionality failed")
+
+	assert.Equal(t, *mockedEditRequest.Name, editedInterest.Name, "Interest use-case update functionality failed")
+}
+
 func createInterestUseCase(db *gorm.DB, userId uint) InterestUseCaseInterface {
 	return NewInterestUseCase(NewInterestService(NewInterestRepository(db)), func(ctx context.Context, token string) (uint, error) {
 		return userId, nil
