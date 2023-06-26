@@ -54,6 +54,30 @@ func TestInterestRepository_CreateInterest(t *testing.T) {
 
 }
 
+func TestInterestRepository_UpdateInterest(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createInterestRepo(db)
+
+	oldMockedInterest := mockAndInsertInterest(db, 1)
+	defer destructCreatedObjects(db, oldMockedInterest)
+
+	newInterest := &Interest{
+		Id:   oldMockedInterest[0].Id,
+		Name: "Twitter",
+	}
+
+	_, err = repo.UpdateInterest(&oldMockedInterest[0], newInterest)
+	assert.NoError(t, err, "Interest Update operation failed")
+
+	fetchInterest := new(Interest)
+	db.Where("id = ?", oldMockedInterest[0].Id).First(fetchInterest)
+
+	assert.Equal(t, oldMockedInterest[0].Id, fetchInterest.Id, "Interest Update operation failed")
+	assert.Equal(t, newInterest.Name, fetchInterest.Name, "Interest Update operation failed")
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})

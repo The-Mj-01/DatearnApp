@@ -37,9 +37,14 @@ func (s *InterestRepository) CreateInterest(name string) (*Interest, error) {
 	return interest, result.Error
 }
 
-func (i InterestRepository) UpdateInterest(oldInterest, newInterest *Interest) (*Interest, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *InterestRepository) UpdateInterest(oldInterest, newInterest *Interest) (*Interest, error) {
+	if newInterest.Name != "" {
+		oldInterest.Name = newInterest.Name
+	}
+
+	result := s.db.Save(oldInterest)
+
+	return oldInterest, result.Error
 }
 
 func (i InterestRepository) DeleteInterest(interest *Interest) (*Interest, error) {
