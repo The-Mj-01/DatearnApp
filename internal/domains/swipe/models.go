@@ -4,7 +4,7 @@ import "time"
 
 type Like struct {
 	LikerId   uint      `json:"liker_id,omitempty"`
-	LikedId   string    `json:"liked_id,omitempty"`
+	LikedId   uint      `json:"liked_id,omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `json:"deleted_at"`
@@ -12,7 +12,7 @@ type Like struct {
 
 type DisLike struct {
 	DisLikerId uint      `json:"dis_liker_id,omitempty"`
-	DisLikedId string    `json:"dis_liked_id,omitempty"`
+	DisLikedId uint      `json:"dis_liked_id,omitempty"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 	DeletedAt  time.Time `json:"deleted_at"`
