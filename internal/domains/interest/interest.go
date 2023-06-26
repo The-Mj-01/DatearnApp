@@ -5,7 +5,7 @@ import "context"
 type InterestRepositoryInterface interface {
 	GetAllInterest(id *uint, name *string, limit *int, offset int) *[]Interest
 	CreateInterest(name string) (*Interest, error)
-	UpdateInterest(oldSocial, newSocial *Interest) (*Interest, error)
+	UpdateInterest(oldInterest, newInterest *Interest) (*Interest, error)
 	DeleteInterest(socialMedia *Interest) (*Interest, error)
 }
 
