@@ -30,6 +30,7 @@ func TestSwipeService_DisableLike(t *testing.T) {
 	randLikerId := uint(rand.Int())
 	randLikedId := uint(rand.Int())
 	mockedLike := mockAndInsertLike(db, []uint{randLikerId}, []uint{randLikedId}, 1)
+	defer destructCreatedObjects(db, mockedLike)
 
 	disableLike, err := sv.DisableLike(mockedLike[0].LikerId, mockedLike[0].LikedId)
 	assert.NoError(t, err, "Disabale like failed")
@@ -59,10 +60,31 @@ func TestSwipeService_DisableDisLike(t *testing.T) {
 	randDisLikerId := uint(rand.Int())
 	randDisLikedId := uint(rand.Int())
 	mockedDisLike := mockAndInsertDisLike(db, []uint{randDisLikerId}, []uint{randDisLikedId}, 1)
+	defer destructCreatedObjects(db, mockedDisLike)
 
 	disableDisLike, err := sv.DisableDisLike(mockedDisLike[0].DisLikerId, mockedDisLike[0].DisLikedId)
 	assert.NoError(t, err, "Disabale like failed")
 	assertDisLike(t, mockedDisLike, []DisLike{*disableDisLike})
+}
+
+func TestSwipeService_GetAllLikes(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	sv := createSwipeService(db)
+
+	randn := uint(rand.Int())
+	randLikerId := []uint{uint(rand.Int()), uint(rand.Int())}
+	randLikedId := []uint{randn, randn}
+	mockedLike := mockAndInsertLike(db, randLikerId, randLikedId, 2)
+	defer destructCreatedObjects(db, mockedLike)
+
+	fetchedLike, err := sv.GetAllLikes(&randn, nil, 0)
+
+	assert.NoError(t, err, "Get all likes fetch query failed")
+
+	assertLike(t, mockedLike, *fetchedLike)
+
 }
 
 func createSwipeService(db *gorm.DB) SwipeServiceInterface {

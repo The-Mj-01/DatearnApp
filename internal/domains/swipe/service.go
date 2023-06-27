@@ -38,7 +38,10 @@ func (s *SwipeService) DisableDisLike(disLikerId, disLikedId uint) (*DisLike, er
 	return s.repo.DisableDisLike(disLike)
 }
 
-func (s *SwipeService) GetAllLikes(likedId uint, limit *int, offset int) (*[]Like, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *SwipeService) GetAllLikes(likedId *uint, limit *int, offset int) (*[]Like, error) {
+	likes := s.repo.GetAllLikes(likedId, limit, offset)
+	if len(*likes) == 0 {
+		return nil, LikeNotFound
+	}
+	return likes, nil
 }
