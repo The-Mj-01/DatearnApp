@@ -8,7 +8,7 @@ type SwipeRepositoryInterface interface {
 	DisLike(likerId, likedId uint) (*DisLike, error)
 	DisableDisLike(disLike *DisLike) (*DisLike, error)
 
-	GetAllLikes(likedId uint, limit *int, offset int) *[]Like
+	GetAllLikes(likedId *uint, limit *int, offset int) *[]Like
 	//GetAllDisLikes(likedId uint, limit *int, offset int) (*[]DisLike)
 
 }
