@@ -4,9 +4,9 @@ import "context"
 
 type SwipeRepositoryInterface interface {
 	Like(likerId, likedId uint) (*Like, error)
-	DisableLike(likerId, likedId uint) (*Like, error)
+	DisableLike(like *Like) (*Like, error)
 	DisLike(likerId, likedId uint) (*DisLike, error)
-	DisableDisLike(likerId, likedId uint) (*DisLike, error)
+	DisableDisLike(disLike *DisLike) (*DisLike, error)
 
 	GetAllLikes(likedId uint, limit *int, offset int) *[]Like
 	//GetAllDisLikes(likedId uint, limit *int, offset int) (*[]DisLike)
