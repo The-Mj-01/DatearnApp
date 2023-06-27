@@ -24,9 +24,8 @@ func (s *SwipeService) DisableLike(likerId, likedId uint) (*Like, error) {
 	return s.repo.DisableLike(like)
 }
 
-func (s *SwipeService) DisLike(likerId, likedId uint) (*DisLike, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *SwipeService) DisLike(disLikerId, disLikedId uint) (*DisLike, error) {
+	return s.repo.DisLike(disLikerId, disLikedId)
 }
 
 func (s *SwipeService) DisableDisLike(likerId, likedId uint) (*DisLike, error) {

@@ -9,18 +9,18 @@ type SwipeRepositoryInterface interface {
 	DisableDisLike(disLike *DisLike) (*DisLike, error)
 
 	GetAllLikes(likedId *uint, limit *int, offset int) *[]Like
-	//GetAllDisLikes(likedId uint, limit *int, offset int) (*[]DisLike)
+	//GetAllDisLikes(disLikedId uint, limit *int, offset int) (*[]DisLike)
 
 }
 
 type SwipeServiceInterface interface {
 	Like(likerId, likedId uint) (*Like, error)
 	DisableLike(likerId, likedId uint) (*Like, error)
-	DisLike(likerId, likedId uint) (*DisLike, error)
-	DisableDisLike(likerId, likedId uint) (*DisLike, error)
+	DisLike(disLikerId, disLikedId uint) (*DisLike, error)
+	DisableDisLike(disLikerId, disLikedId uint) (*DisLike, error)
 
 	GetAllLikes(likedId uint, limit *int, offset int) (*[]Like, error)
-	//GetAllDisLikes(likedId uint, limit *int, offset int) (*[]DisLike, error)
+	//GetAllDisLikes(disLikedId uint, limit *int, offset int) (*[]DisLike, error)
 
 }
 

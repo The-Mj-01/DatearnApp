@@ -36,6 +36,20 @@ func TestSwipeService_DisableLike(t *testing.T) {
 	assertLike(t, mockedLike, []Like{*disableLike})
 }
 
+func TestSwipeService_DisLike(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	sv := createSwipeService(db)
+	randDisLikerId := uint(rand.Int())
+	randDisLikedId := uint(rand.Int())
+	disLike := mockDisLike(randDisLikerId, randDisLikedId)
+
+	createdDisLike, err := sv.DisLike(disLike.DisLikerId, disLike.DisLikedId)
+	assert.NoError(t, err, "swipe service disLike creation failed")
+	assertDisLike(t, []DisLike{*disLike}, []DisLike{*createdDisLike})
+}
+
 func createSwipeService(db *gorm.DB) SwipeServiceInterface {
 	return NewSwipeService(NewSwipeRepository(db))
 }
