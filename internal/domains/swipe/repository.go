@@ -1,6 +1,8 @@
 package swipe
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type SwipeRepository struct {
 	db *gorm.DB
@@ -12,7 +14,7 @@ func NewSwipeRepository(db *gorm.DB) SwipeRepositoryInterface {
 	}
 }
 
-func (s SwipeRepository) Like(likerId, likedId uint) (*Like, error) {
+func (s *SwipeRepository) Like(likerId, likedId uint) (*Like, error) {
 	like := &Like{
 		LikerId: likerId,
 		LikedId: likedId,
@@ -21,12 +23,12 @@ func (s SwipeRepository) Like(likerId, likedId uint) (*Like, error) {
 	return like, result.Error
 }
 
-func (s SwipeRepository) DisableLike(likerId, likedId uint) (*Like, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *SwipeRepository) DisableLike(like *Like) (*Like, error) {
+	result := s.db.Delete(like)
+	return like, result.Error
 }
 
-func (s SwipeRepository) DisLike(disLikerId, disLikedId uint) (*DisLike, error) {
+func (s *SwipeRepository) DisLike(disLikerId, disLikedId uint) (*DisLike, error) {
 	disLike := &DisLike{
 		DisLikerId: disLikerId,
 		DisLikedId: disLikedId,
@@ -35,12 +37,12 @@ func (s SwipeRepository) DisLike(disLikerId, disLikedId uint) (*DisLike, error) 
 	return disLike, result.Error
 }
 
-func (s SwipeRepository) DisableDisLike(likerId, likedId uint) (*DisLike, error) {
+func (s *SwipeRepository) DisableDisLike(like *DisLike) (*DisLike, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SwipeRepository) GetAllLikes(likedId uint, limit *int, offset int) *[]Like {
+func (s *SwipeRepository) GetAllLikes(likedId uint, limit *int, offset int) *[]Like {
 	//TODO implement me
 	panic("implement me")
 }

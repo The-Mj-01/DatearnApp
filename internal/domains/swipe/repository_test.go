@@ -20,9 +20,32 @@ func TestSwipeRepository_Like(t *testing.T) {
 	like := mockLike(randLikerId, randLikedId)
 
 	likedSwipe, err := repo.Like(like.LikerId, like.LikedId)
-	assert.NoError(t, err, "like swipe  operation failed")
+	assert.NoError(t, err, "like swipe operation failed")
 
 	assertLike(t, []Like{*like}, []Like{*likedSwipe})
+
+}
+
+func TestSwipeRepository_DisableLike(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createSwipeRepo(db)
+
+	randLikerId := []uint{uint(rand.Int())}
+	randLikedId := []uint{uint(rand.Int())}
+
+	like := mockAndInsertLike(db, randLikerId, randLikedId, 1)
+
+	disableLikedSwipe, err := repo.DisableLike(&like[0])
+	assert.NoError(t, err, "like swipe operation failed")
+
+	assertLike(t, like, []Like{*disableLikedSwipe})
+
+	//fetchUser := new(Like)
+	//result := db.Where("liker_id = ?", like[0].LikerId).Where("liked_id = ?", like[0].LikedId).First(fetchUser)
+	//
+	//assert.Error(t, result.Error, "Interest Delete operation failed")
 
 }
 
