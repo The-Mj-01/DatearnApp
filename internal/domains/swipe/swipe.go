@@ -19,7 +19,7 @@ type SwipeServiceInterface interface {
 	DisLike(disLikerId, disLikedId uint) (*DisLike, error)
 	DisableDisLike(disLikerId, disLikedId uint) (*DisLike, error)
 
-	GetAllLikes(likedId uint, limit *int, offset int) (*[]Like, error)
+	GetAllLikes(likedId *uint, limit *int, offset int) (*[]Like, error)
 	//GetAllDisLikes(disLikedId uint, limit *int, offset int) (*[]DisLike, error)
 
 }

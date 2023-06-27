@@ -84,7 +84,7 @@ func TestSwipeRepository_DisableDisLike(t *testing.T) {
 	assertDisLike(t, disLike, []DisLike{*disableDisLikedSwipe})
 
 	fetchUser := new(DisLike)
-	result := db.Where("disLiker_id = ?", disLike[0].DisLikerId).Where("disLiked_id = ?", disLike[0].DisLikedId).First(fetchUser)
+	result := db.Where("dis_liker_id = ?", disLike[0].DisLikerId).Where("dis_liked_id = ?", disLike[0].DisLikedId).First(fetchUser)
 
 	assert.Error(t, result.Error, "DisLike Delete operation failed")
 }
@@ -185,7 +185,6 @@ func assertLike(t *testing.T, createdLike, fetchedLike []Like) {
 	for index := range createdLike {
 		assert.Equal(t, createdLike[index].LikerId, fetchedLike[index].LikerId, "Like Repository test: Ids are not equal")
 		assert.Equal(t, createdLike[index].LikedId, fetchedLike[index].LikedId, "Like Repository test: titles are not equal")
-
 	}
 }
 

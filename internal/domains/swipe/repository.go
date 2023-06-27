@@ -48,7 +48,7 @@ func (s *SwipeRepository) GetAllLikes(likedId *uint, limit *int, offset int) *[]
 	db := s.db
 
 	if likedId != nil {
-		db = db.Where("liker_id LIKE ?", *likedId)
+		db = db.Where("liked_id LIKE ?", *likedId)
 	}
 
 	if limit != nil {
