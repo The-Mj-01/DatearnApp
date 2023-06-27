@@ -42,10 +42,10 @@ func TestSwipeRepository_DisableLike(t *testing.T) {
 
 	assertLike(t, like, []Like{*disableLikedSwipe})
 
-	//fetchUser := new(Like)
-	//result := db.Where("liker_id = ?", like[0].LikerId).Where("liked_id = ?", like[0].LikedId).First(fetchUser)
-	//
-	//assert.Error(t, result.Error, "Interest Delete operation failed")
+	fetchUser := new(Like)
+	result := db.Where("liker_id = ?", like[0].LikerId).Where("liked_id = ?", like[0].LikedId).First(fetchUser)
+
+	assert.Error(t, result.Error, "Interest Delete operation failed")
 
 }
 
