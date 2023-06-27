@@ -45,7 +45,7 @@ func TestSwipeRepository_DisableLike(t *testing.T) {
 	fetchUser := new(Like)
 	result := db.Where("liker_id = ?", like[0].LikerId).Where("liked_id = ?", like[0].LikedId).First(fetchUser)
 
-	assert.Error(t, result.Error, "Interest Delete operation failed")
+	assert.Error(t, result.Error, "Like Delete operation failed")
 
 }
 
@@ -64,6 +64,29 @@ func TestSwipeRepository_DisLike(t *testing.T) {
 	assert.NoError(t, err, "disLike swipe  operation failed")
 
 	assertDisLike(t, []DisLike{*disLike}, []DisLike{*disLikedSwipe})
+}
+
+func TestSwipeRepository_DisableDisLike(t *testing.T) {
+
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createSwipeRepo(db)
+
+	randDisLikerId := []uint{uint(rand.Int())}
+	randDisLikedId := []uint{uint(rand.Int())}
+
+	disLike := mockAndInsertDisLike(db, randDisLikerId, randDisLikedId, 1)
+
+	disableDisLikedSwipe, err := repo.DisableDisLike(&disLike[0])
+	assert.NoError(t, err, "disLike swipe operation failed")
+
+	assertDisLike(t, disLike, []DisLike{*disableDisLikedSwipe})
+
+	fetchUser := new(DisLike)
+	result := db.Where("disLiker_id = ?", disLike[0].DisLikerId).Where("disLiked_id = ?", disLike[0].DisLikedId).First(fetchUser)
+
+	assert.Error(t, result.Error, "DisLike Delete operation failed")
 }
 
 // setupDbConnection and run migration

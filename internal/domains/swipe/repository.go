@@ -37,9 +37,9 @@ func (s *SwipeRepository) DisLike(disLikerId, disLikedId uint) (*DisLike, error)
 	return disLike, result.Error
 }
 
-func (s *SwipeRepository) DisableDisLike(like *DisLike) (*DisLike, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *SwipeRepository) DisableDisLike(disLike *DisLike) (*DisLike, error) {
+	result := s.db.Delete(disLike)
+	return disLike, result.Error
 }
 
 func (s *SwipeRepository) GetAllLikes(likedId uint, limit *int, offset int) *[]Like {
