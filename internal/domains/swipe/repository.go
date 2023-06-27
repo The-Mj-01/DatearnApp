@@ -42,7 +42,19 @@ func (s *SwipeRepository) DisableDisLike(disLike *DisLike) (*DisLike, error) {
 	return disLike, result.Error
 }
 
-func (s *SwipeRepository) GetAllLikes(likedId uint, limit *int, offset int) *[]Like {
-	//TODO implement me
-	panic("implement me")
+func (s *SwipeRepository) GetAllLikes(likedId *uint, limit *int, offset int) *[]Like {
+	var like *[]Like
+
+	db := s.db
+
+	if likedId != nil {
+		db = db.Where("liker_id LIKE ?", *likedId)
+	}
+
+	if limit != nil {
+		db = db.Limit(*limit)
+	}
+
+	db.Offset(offset).Find(&like)
+	return like
 }

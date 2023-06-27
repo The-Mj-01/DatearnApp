@@ -89,6 +89,22 @@ func TestSwipeRepository_DisableDisLike(t *testing.T) {
 	assert.Error(t, result.Error, "DisLike Delete operation failed")
 }
 
+func TestSwipeRepository_GetAllLikes(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createSwipeRepo(db)
+
+	randLikerId := []uint{uint(rand.Int())}
+	randLikedId := []uint{uint(rand.Int())}
+
+	mockedLike := mockAndInsertLike(db, randLikerId, randLikedId, 1)
+	defer destructCreatedObjects(db, mockedLike)
+
+	repo.GetAllLikes(&mockedLike[0].LikedId, nil, 0)
+
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
