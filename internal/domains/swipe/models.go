@@ -33,6 +33,8 @@ type DisLikeRequest struct {
 // GetLikeRequest defines a struct for user creation operation
 type GetLikeRequest struct {
 	LikedId uint `json:"liked_id,omitempty" validate:"omitempty, numeric, min=1"`
+	Limit   *int `json:"limit" validate:"required,gte=1"`
+	Offset  int  `json:"offset" validate:"omitempty,min=0"`
 }
 
 // GetLikeRequest defines a struct for user creation operation
