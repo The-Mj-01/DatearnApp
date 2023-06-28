@@ -31,8 +31,11 @@ func (s SwipeUseCase) Like(ctx context.Context, token string, request *LikeReque
 }
 
 func (s SwipeUseCase) DisableLike(ctx context.Context, token string, request *LikeRequest) (*Like, error) {
-	//TODO implement me
-	panic("implement me")
+	_, err := s.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+	return s.sv.DisableLike(request.LikerId, request.LikedId)
 }
 
 func (s SwipeUseCase) DisLike(ctx context.Context, token string, request *DisLikeRequest) (*DisLike, error) {

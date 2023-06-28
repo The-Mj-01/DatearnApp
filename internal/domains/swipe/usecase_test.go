@@ -27,6 +27,27 @@ func TestSwipeUseCase_Like(t *testing.T) {
 
 }
 
+func TestSwipeUseCase_DisableLike(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.Background()
+	randUserId := uint(1)
+	useCase := createSwipeUseCase(db, randUserId)
+
+	randLikerId := []uint{uint(rand.Int())}
+	randLikedId := []uint{uint(rand.Int())}
+	mockedLike := mockAndInsertLike(db, randLikerId, randLikedId, 1)
+
+	mockedDisableLikeRequest := mockDisableLikeSwipeRequest(mockedLike[0].LikerId, mockedLike[0].LikedId)
+
+	disableLike, err := useCase.DisableLike(ctx, "", mockedDisableLikeRequest)
+	assert.NoError(t, err, "like creation failed in Swipe use-case")
+
+	assertLike(t, mockedLike, []Like{*disableLike})
+
+}
+
 func createSwipeUseCase(db *gorm.DB, userId uint) SwipeUseCaseInterface {
 
 	return NewSwipeUseCase(NewSwipeService(NewSwipeRepository(db)), func(ctx context.Context, token string) (uint, error) {
