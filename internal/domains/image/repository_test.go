@@ -1,16 +1,58 @@
 package image
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"image"
 	"image/color"
 	"image/jpeg"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 )
+
+const imagePath = "../../../static/images/"
+
+func TestImageRepository_GetAllImage(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createImageRepo(db)
+
+	width := []int{200, 200, 200, 200, 200}
+	height := []int{200, 200, 200, 200, 200}
+	randImageableId := []uint{uint(rand.Int()), uint(rand.Int()), uint(rand.Int()), uint(rand.Int()), uint(rand.Int())}
+	randImageableType := []string{"Bio", "Bio", "Bio", "Bio", "Bio"}
+	randImageName := []string{"img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg", "img5.jpg"}
+
+	img := mockAndInsertImage(db, width, height, randImageableId, randImageableType, randImageName, 5)
+	defer destructCreatedObjects(db, img)
+
+	fetchedImage := repo.GetAllImage(nil, nil, nil, nil, nil, 10)
+	assert.Equal(t, len(*fetchedImage), 0, "Fetched image  are not equal")
+
+	limit := 1
+	fetchedImage = repo.GetAllImage(nil, nil, nil, nil, &limit, 0)
+	assert.Equal(t, len(*fetchedImage), limit, "one image must be fetched")
+
+	falseType := "WrongType"
+	fetchedImage = repo.GetAllImage(nil, nil, nil, &falseType, nil, 0)
+	assert.Equal(t, len(*fetchedImage), 0, "zero image must be fetched")
+
+	fetchedImage = repo.GetAllImage(nil, nil, &img[0].Name, nil, nil, 0)
+	assert.NotZero(t, len(*fetchedImage), "Zero image  fetched")
+	assertImage(t, img, *fetchedImage)
+
+	fetchedImage = repo.GetAllImage(nil, nil, nil, nil, nil, 0)
+	assert.NotZero(t, len(*fetchedImage), "Zero image  fetched")
+	assert.Equal(t, len(*fetchedImage), 5, "Fetched img  are not equal")
+	assertImage(t, img, *fetchedImage)
+
+}
 
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
@@ -28,11 +70,11 @@ func createImageRepo(db *gorm.DB) ImageRepositoryInterface {
 }
 
 // mockAndInsertImage in database for testing purpose
-func mockAndInsertImage(db *gorm.DB, width, height []int, count int, imageableId []uint, imageableType []string) []Image {
+func mockAndInsertImage(db *gorm.DB, width, height []int, imageableId []uint, imageableType, name []string, count int) []Image {
 	img := make([]Image, 0, count)
 	i := 0
 	for {
-		tmpImage := mockImage(width[i], height[i], imageableId[i], imageableType[i])
+		tmpImage := mockImage(width[i], height[i], imageableId[i], imageableType[i], name[i])
 
 		res := db.Create(tmpImage)
 		if res.Error != nil {
@@ -50,8 +92,8 @@ func mockAndInsertImage(db *gorm.DB, width, height []int, count int, imageableId
 }
 
 // mockImage object and return it
-func mockImage(width, height int, imageableId uint, imageableType string) *Image {
-	filename, path := mockCreateImageFile(width, height)
+func mockImage(width, height int, imageableId uint, imageableType, name string) *Image {
+	filename, path := mockCreateImageFile(width, height, name)
 	return &Image{
 		Name:          filename,
 		Path:          path,
@@ -60,7 +102,7 @@ func mockImage(width, height int, imageableId uint, imageableType string) *Image
 	}
 }
 
-func mockCreateImageFile(width, height int) (string, string) {
+func mockCreateImageFile(width, height int, name string) (string, string) {
 	// Create a new image with the given width and height.
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 
@@ -74,8 +116,15 @@ func mockCreateImageFile(width, height int) (string, string) {
 		}
 	}
 
+	pathDir, err := createDirectoryFromDate()
+
+	if err != nil {
+		panic(err)
+	}
+
 	// Create a file to save the image to.
-	file, err := os.Create("img.jpg")
+	fmt.Println(imagePath + pathDir + name)
+	file, err := os.Create(imagePath + pathDir + name)
 	if err != nil {
 		panic(err)
 	}
@@ -87,12 +136,35 @@ func mockCreateImageFile(width, height int) (string, string) {
 		panic(err)
 	}
 
-	return file.Name(), filepath.Join(".", file.Name())
+	return file.Name(), filepath.Join("../../static/images/", file.Name())
+}
+
+func createDirectoryFromDate() (string, error) {
+	// Get the current date.
+	t := time.Now()
+
+	// Format the date as year/month/day.
+	date := t.Format("2006/01/02")
+
+	// Print the date.
+	fmt.Println(date)
+
+	// Create the directories with the date as the path.
+	err := os.MkdirAll(imagePath+date, 0755)
+	if err != nil {
+		// Print the error if any.
+		fmt.Println(err)
+		return "", err
+	}
+
+	// Print a success message.
+	fmt.Println("Directories have been created successfully!")
+	return date + "/", nil
 }
 
 // assertImage check whether they are equal or not
 func assertImage(t *testing.T, createdImage, fetchedImage []Image) {
-	for index := range createdImage {
+	for index := range fetchedImage {
 		assert.Equal(t, createdImage[index].Id, fetchedImage[index].Id, "Image Repository test: Ids are not equal")
 		assert.Equal(t, createdImage[index].Name, fetchedImage[index].Name, "Image Repository test: titles are not equal")
 
