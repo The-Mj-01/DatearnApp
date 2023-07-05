@@ -32,6 +32,7 @@ func TestImageRepository_GetAllImage(t *testing.T) {
 
 	img := mockAndInsertImage(db, width, height, randImageableId, randImageableType, randImageName, 5)
 	defer destructCreatedObjects(db, img)
+	defer removeCreatedImageFile(img)
 
 	fetchedImage := repo.GetAllImage(nil, nil, nil, nil, nil, 10)
 	assert.Equal(t, len(*fetchedImage), 0, "Fetched image  are not equal")
@@ -71,9 +72,48 @@ func TestImageRepository_CreateImage(t *testing.T) {
 
 	createdImage, err := repo.CreateImage(img.ImageableId, img.Name, img.Path, img.ImageableType)
 	defer destructCreatedObjects(db, []Image{*createdImage})
+	defer removeCreatedImageFile([]Image{*createdImage})
 
 	assert.NoError(t, err, "Image creation in repository failed")
 	assert.Equal(t, img.Name, createdImage.Name, "Image Repository test: titles are not equal")
+}
+
+func TestImageRepository_UpdateImage(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createImageRepo(db)
+
+	width := []int{200, 400}
+	height := []int{200, 400}
+	randImageableId := []uint{uint(rand.Int()), uint(rand.Int())}
+	randImageableType := []string{"Bio", "User"}
+	randImageName := []string{"img1.jpg", "img2.jpg"}
+
+	oldImage := mockAndInsertImage(db, width, height, randImageableId, randImageableType, randImageName, 2)
+	defer destructCreatedObjects(db, oldImage)
+
+	newImage := &Image{
+		Id:            oldImage[0].Id,
+		Name:          oldImage[1].Name,
+		Path:          oldImage[1].Path,
+		ImageableId:   oldImage[1].ImageableId,
+		ImageableType: oldImage[1].ImageableType,
+	}
+	defer removeCreatedImageFile([]Image{oldImage[0], *newImage})
+
+	_, err = repo.UpdateImage(&oldImage[0], newImage)
+	assert.NoError(t, err, "Image Update operation failed")
+
+	fetchImage := new(Image)
+	db.Where("id = ?", oldImage[0].Id).First(fetchImage)
+
+	assert.Equal(t, newImage.Id, fetchImage.Id, "Image Update operation failed")
+	assert.Equal(t, newImage.Name, fetchImage.Name, "Image Update operation failed")
+	assert.Equal(t, newImage.Path, fetchImage.Path, "Image Update operation failed")
+	assert.Equal(t, newImage.ImageableId, fetchImage.ImageableId, "Image Update operation failed")
+	assert.Equal(t, newImage.ImageableType, fetchImage.ImageableType, "Image Update operation failed")
+
 }
 
 // setupDbConnection and run migration
@@ -195,10 +235,15 @@ func assertImage(t *testing.T, createdImage, fetchedImage []Image) {
 // destructCreatedObjects that are created for testing purpose
 func destructCreatedObjects(db *gorm.DB, records []Image) {
 	for _, record := range records {
-		err := os.Remove(record.Path)
+		db.Unscoped().Delete(record)
+	}
+}
+
+func removeCreatedImageFile(imgs []Image) {
+	for _, img := range imgs {
+		err := os.Remove(img.Path)
 		if err != nil {
 			log.Fatal(err)
 		}
-		db.Unscoped().Delete(record)
 	}
 }

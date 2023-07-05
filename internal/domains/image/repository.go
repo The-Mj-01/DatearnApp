@@ -22,11 +22,11 @@ func (i *ImageRepository) GetAllImage(id, imageableId *uint, name, imageableType
 	}
 
 	if imageableType != nil {
-		db = db.Where("imageableType = ?", *imageableType)
+		db = db.Where("imageable_type = ?", *imageableType)
 	}
 
 	if imageableId != nil {
-		db = db.Where("imageableId = ?", *imageableId)
+		db = db.Where("imageable_id = ?", *imageableId)
 	}
 
 	if id != nil {
@@ -53,8 +53,22 @@ func (i *ImageRepository) CreateImage(imageableId uint, name, path, imageableTyp
 }
 
 func (i *ImageRepository) UpdateImage(oldImage, newImage *Image) (*Image, error) {
-	//TODO implement me
-	panic("implement me")
+	if newImage.Name != "" {
+		oldImage.Name = newImage.Name
+	}
+	if newImage.Path != "" {
+		oldImage.Path = newImage.Path
+	}
+	if newImage.ImageableId != 0 {
+		oldImage.ImageableId = newImage.ImageableId
+	}
+	if newImage.ImageableType != "" {
+		oldImage.ImageableType = newImage.ImageableType
+	}
+
+	result := i.db.Save(oldImage)
+
+	return oldImage, result.Error
 }
 
 func (i *ImageRepository) DeleteImage(image *Image) (*Image, error) {
