@@ -8,6 +8,7 @@ import (
 	"image"
 	"image/color"
 	"image/jpeg"
+	"log"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -172,8 +173,12 @@ func assertImage(t *testing.T, createdImage, fetchedImage []Image) {
 }
 
 // destructCreatedObjects that are created for testing purpose
-func destructCreatedObjects[T Image](db *gorm.DB, records []T) {
+func destructCreatedObjects(db *gorm.DB, records []Image) {
 	for _, record := range records {
+		err := os.Remove(record.Path)
+		if err != nil {
+			log.Fatal(err)
+		}
 		db.Unscoped().Delete(record)
 	}
 }
