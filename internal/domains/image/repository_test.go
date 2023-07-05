@@ -55,6 +55,27 @@ func TestImageRepository_GetAllImage(t *testing.T) {
 
 }
 
+func TestImageRepository_CreateImage(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createImageRepo(db)
+
+	width := 200
+	height := 200
+	randImageableId := uint(rand.Int())
+	randImageableType := "Bio"
+	randImageName := "img1.jpg"
+
+	img := mockImage(width, height, randImageableId, randImageableType, randImageName)
+
+	createdImage, err := repo.CreateImage(img.ImageableId, img.Name, img.Path, img.ImageableType)
+	defer destructCreatedObjects(db, []Image{*createdImage})
+
+	assert.NoError(t, err, "Image creation in repository failed")
+	assert.Equal(t, img.Name, createdImage.Name, "Image Repository test: titles are not equal")
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
@@ -124,7 +145,6 @@ func mockCreateImageFile(width, height int, name string) (string, string) {
 	}
 
 	// Create a file to save the image to.
-	fmt.Println(imagePath + pathDir + name)
 	file, err := os.Create(imagePath + pathDir + name)
 	if err != nil {
 		panic(err)
@@ -148,7 +168,7 @@ func createDirectoryFromDate() (string, error) {
 	date := t.Format("2006/01/02")
 
 	// Print the date.
-	fmt.Println(date)
+	//fmt.Println(date)
 
 	// Create the directories with the date as the path.
 	err := os.MkdirAll(imagePath+date, 0755)
@@ -159,7 +179,7 @@ func createDirectoryFromDate() (string, error) {
 	}
 
 	// Print a success message.
-	fmt.Println("Directories have been created successfully!")
+	//fmt.Println("Directories have been created successfully!")
 	return date + "/", nil
 }
 

@@ -42,8 +42,14 @@ func (i *ImageRepository) GetAllImage(id, imageableId *uint, name, imageableType
 }
 
 func (i *ImageRepository) CreateImage(imageableId uint, name, path, imageableType string) (*Image, error) {
-	//TODO implement me
-	panic("implement me")
+	img := &Image{
+		Name:          name,
+		ImageableId:   imageableId,
+		ImageableType: imageableType,
+		Path:          path,
+	}
+	result := i.db.Create(img)
+	return img, result.Error
 }
 
 func (i *ImageRepository) UpdateImage(oldImage, newImage *Image) (*Image, error) {
