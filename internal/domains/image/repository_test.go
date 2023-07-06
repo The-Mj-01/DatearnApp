@@ -116,6 +116,30 @@ func TestImageRepository_UpdateImage(t *testing.T) {
 
 }
 
+func TestImageRepository_DeleteImage(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	repo := createImageRepo(db)
+
+	width := []int{200, 200, 200, 200, 200}
+	height := []int{200, 200, 200, 200, 200}
+	randImageableId := []uint{uint(rand.Int()), uint(rand.Int()), uint(rand.Int()), uint(rand.Int()), uint(rand.Int())}
+	randImageableType := []string{"Bio", "Bio", "Bio", "Bio", "Bio"}
+	randImageName := []string{"img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg", "img5.jpg"}
+
+	img := mockAndInsertImage(db, width, height, randImageableId, randImageableType, randImageName, 5)
+	defer destructCreatedObjects(db, img)
+	defer removeCreatedImageFile(img)
+
+	deletedImage, err := repo.DeleteImage(&img[0])
+	assertImage(t, []Image{*deletedImage}, []Image{img[0]})
+	fetchUser := new(Image)
+	result := db.Where("id = ?", img[0].Id).First(fetchUser)
+
+	assert.Error(t, result.Error, "Image Delete operation failed")
+}
+
 // setupDbConnection and run migration
 func setupDbConnection() (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})

@@ -72,6 +72,7 @@ func (i *ImageRepository) UpdateImage(oldImage, newImage *Image) (*Image, error)
 }
 
 func (i *ImageRepository) DeleteImage(image *Image) (*Image, error) {
-	//TODO implement me
-	panic("implement me")
+	result := i.db.Delete(image)
+
+	return image, result.Error
 }
