@@ -96,6 +96,31 @@ func TestImageService_UpdateImage(t *testing.T) {
 
 }
 
+func TestImageService_DeleteImage(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	service := createImageService(db)
+
+	width := []int{200, 200, 200, 200, 200}
+	height := []int{200, 200, 200, 200, 200}
+	randImageableId := []uint{uint(rand.Int()), uint(rand.Int()), uint(rand.Int()), uint(rand.Int()), uint(rand.Int())}
+	randImageableType := []string{"Bio", "Bio", "Bio", "Bio", "Bio"}
+	randImageName := []string{"img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg", "img5.jpg"}
+
+	interest := mockAndInsertImage(db, width, height, randImageableId, randImageableType, randImageName, 1)
+	defer destructCreatedObjects(db, interest)
+
+	deletedUser, err := service.DeleteImage(&interest[0].Id)
+
+	assertImage(t, []Image{*deletedUser}, []Image{interest[0]})
+
+	_, err = service.DeleteImage(&interest[0].Id)
+	assert.Error(t, err, "Image service user creation failed")
+	assert.ErrorIs(t, err, ImageNotFound, "Image service user creation failed")
+
+}
+
 func createImageService(db *gorm.DB) ImageServiceInterface {
 	return NewImageService(NewImageRepository(db))
 }

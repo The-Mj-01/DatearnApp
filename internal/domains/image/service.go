@@ -60,6 +60,14 @@ func (i *ImageService) UpdateImage(id uint, name, path *string) (*Image, error) 
 }
 
 func (i *ImageService) DeleteImage(imageId *uint) (*Image, error) {
-	//TODO implement me
-	panic("implement me")
+	img := i.repo.GetAllImage(imageId, nil, nil, nil, nil, 0)
+	if len(*img) == 0 {
+		return nil, ImageNotFound
+	}
+
+	deletedImage, err := i.repo.DeleteImage(&(*img)[0])
+	if err != nil {
+		return nil, ImageNotFound
+	}
+	return deletedImage, nil
 }
