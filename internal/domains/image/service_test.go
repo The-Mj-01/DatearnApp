@@ -16,6 +16,21 @@ func TestImageService_GetAllImage(t *testing.T) {
 	_, err = sv.GetAllImage(nil, nil, nil, nil, nil, 0)
 	assert.Error(t, err, "Expected interest not found error")
 	assert.ErrorIs(t, err, ImageNotFound, "Expected interest not found error")
+
+	width := []int{200, 200, 200, 200, 200}
+	height := []int{200, 200, 200, 200, 200}
+	randImageableId := []uint{uint(rand.Int()), uint(rand.Int()), uint(rand.Int()), uint(rand.Int()), uint(rand.Int())}
+	randImageableType := []string{"Bio", "Bio", "Bio", "Bio", "Bio"}
+	randImageName := []string{"img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg", "img5.jpg"}
+
+	mockedImage := mockAndInsertImage(db, width, height, randImageableId, randImageableType, randImageName, 5)
+	defer destructCreatedObjects(db, mockedImage)
+
+	fetchedImage, err := sv.GetAllImage(&mockedImage[0].Id, &mockedImage[0].ImageableId, &mockedImage[0].Name, &mockedImage[0].ImageableType, nil, 0)
+
+	assert.NoError(t, err, "Get all Images fetch query failed")
+
+	assertImage(t, mockedImage, *fetchedImage)
 }
 
 func TestImageService_CreateImage(t *testing.T) {
@@ -33,6 +48,7 @@ func TestImageService_CreateImage(t *testing.T) {
 
 	createdImage, err := sv.CreateImage(img.ImageableId, img.Name, img.Path, img.ImageableType)
 	defer destructCreatedObjects(db, []Image{*createdImage})
+	defer removeCreatedImageFile([]Image{*img})
 
 	assert.NoError(t, err, "image service bio creation failed")
 	assert.Equal(t, img.Name, createdImage.Name)
