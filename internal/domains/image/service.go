@@ -11,8 +11,12 @@ func NewImageService(repo ImageRepositoryInterface) ImageServiceInterface {
 }
 
 func (i ImageService) GetAllImage(id, imageableId *uint, name, imageableType *string, limit *int, offset int) (*[]Image, error) {
-	//TODO implement me
-	panic("implement me")
+	img := i.repo.GetAllImage(id, imageableId, name, imageableType, limit, offset)
+
+	if len(*img) == 0 {
+		return nil, ImageNotFound
+	}
+	return img, nil
 }
 
 func (i ImageService) CreateImage(imageableId uint, name, path, imageableType string) (*Image, error) {
