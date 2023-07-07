@@ -55,6 +55,47 @@ func TestImageService_CreateImage(t *testing.T) {
 	assert.Equal(t, img.Name, createdImage.Name)
 }
 
+func TestImageService_UpdateImage(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	sv := createImageService(db)
+
+	width := []int{200, 400}
+	height := []int{200, 400}
+	randImageableId := []uint{uint(rand.Int()), uint(rand.Int())}
+	randImageableType := []string{"Bio", "User"}
+	randImageName := []string{"img1.jpg", "img2.jpg"}
+
+	oldImage := mockAndInsertImage(db, width, height, randImageableId, randImageableType, randImageName, 2)
+	defer destructCreatedObjects(db, oldImage)
+
+	newImage := &Image{
+		Id:            oldImage[0].Id,
+		Name:          oldImage[1].Name,
+		Path:          oldImage[1].Path,
+		ImageableId:   oldImage[1].ImageableId,
+		ImageableType: oldImage[1].ImageableType,
+	}
+	defer removeCreatedImageFile([]Image{oldImage[0], *newImage})
+
+	wrongImage := &Image{
+		Name: "",
+		Path: "",
+	}
+
+	_, err = sv.UpdateImage(newImage.Id, &wrongImage.Name, &wrongImage.Path)
+	assert.Error(t, err, "Image service update functionality failed")
+	assert.ErrorIs(t, err, NameNotFound, "Image service update functionality failed")
+
+	updatedImage, err := sv.UpdateImage(newImage.Id, &newImage.Name, &newImage.Path)
+
+	assert.NoError(t, err, "Image service update user failed")
+	assert.Equal(t, newImage.Id, updatedImage.Id, "Image service update bio failed")
+	assert.Equal(t, newImage.Name, updatedImage.Name, "Image service update bio failed")
+
+}
+
 func createImageService(db *gorm.DB) ImageServiceInterface {
 	return NewImageService(NewImageRepository(db))
 }

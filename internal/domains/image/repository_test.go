@@ -221,7 +221,7 @@ func mockCreateImageFile(width, height int, name string) (string, string) {
 		panic(err)
 	}
 
-	return file.Name(), filepath.Join("../../static/images/", file.Name())
+	return filepath.Base(file.Name()), filepath.Join("../../static/images/", file.Name())
 }
 
 func createDirectoryFromDate() (string, error) {

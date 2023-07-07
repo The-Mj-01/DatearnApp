@@ -36,9 +36,27 @@ func (i *ImageService) CreateImage(imageableId uint, name, path, imageableType s
 	return i.repo.CreateImage(imageableId, name, path, imageableType)
 }
 
-func (i *ImageService) UpdateImage(id *uint, name string) (*Image, error) {
-	//TODO implement me
-	panic("implement me")
+func (i *ImageService) UpdateImage(id uint, name, path *string) (*Image, error) {
+
+	if name == nil || *name == "" {
+		return nil, NameNotFound
+	}
+	if path == nil || *path == "" {
+		return nil, PathNotFound
+	}
+
+	newImage := &Image{
+		Name: *name,
+		Path: *path,
+	}
+
+	img, err := i.GetAllImage(&id, nil, nil, nil, nil, 0)
+
+	if err != nil {
+		return nil, ImageNotFound
+	}
+
+	return i.repo.UpdateImage(&(*img)[0], newImage)
 }
 
 func (i *ImageService) DeleteImage(imageId *uint) (*Image, error) {

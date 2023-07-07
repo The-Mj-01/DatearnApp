@@ -12,7 +12,7 @@ type ImageRepositoryInterface interface {
 type ImageServiceInterface interface {
 	GetAllImage(id, imageableId *uint, name, imageableType *string, limit *int, offset int) (*[]Image, error)
 	CreateImage(imageableId uint, name, path, imageableType string) (*Image, error)
-	UpdateImage(id *uint, name string) (*Image, error)
+	UpdateImage(id uint, name, path *string) (*Image, error)
 	DeleteImage(imageId *uint) (*Image, error)
 }
 
