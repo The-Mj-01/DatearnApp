@@ -25,6 +25,7 @@ func TestImageService_GetAllImage(t *testing.T) {
 
 	mockedImage := mockAndInsertImage(db, width, height, randImageableId, randImageableType, randImageName, 5)
 	defer destructCreatedObjects(db, mockedImage)
+	defer removeCreatedImageFile(mockedImage)
 
 	fetchedImage, err := sv.GetAllImage(&mockedImage[0].Id, &mockedImage[0].ImageableId, &mockedImage[0].Name, &mockedImage[0].ImageableType, nil, 0)
 
