@@ -10,7 +10,7 @@ func NewImageService(repo ImageRepositoryInterface) ImageServiceInterface {
 	}
 }
 
-func (i ImageService) GetAllImage(id, imageableId *uint, name, imageableType *string, limit *int, offset int) (*[]Image, error) {
+func (i *ImageService) GetAllImage(id, imageableId *uint, name, imageableType *string, limit *int, offset int) (*[]Image, error) {
 	img := i.repo.GetAllImage(id, imageableId, name, imageableType, limit, offset)
 
 	if len(*img) == 0 {
@@ -19,17 +19,29 @@ func (i ImageService) GetAllImage(id, imageableId *uint, name, imageableType *st
 	return img, nil
 }
 
-func (i ImageService) CreateImage(imageableId uint, name, path, imageableType string) (*Image, error) {
+func (i *ImageService) CreateImage(imageableId uint, name, path, imageableType string) (*Image, error) {
+	if imageableId == 0 {
+		return nil, ImageableIdNotFound
+	}
+	if name == "" {
+		return nil, NameNotFound
+	}
+	if imageableType == "" {
+		return nil, ImageableTypeNotFound
+	}
+	if path == "" {
+		return nil, PathNotFound
+	}
+
+	return i.repo.CreateImage(imageableId, name, path, imageableType)
+}
+
+func (i *ImageService) UpdateImage(id *uint, name string) (*Image, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (i ImageService) UpdateImage(id *uint, name string) (*Image, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (i ImageService) DeleteImage(imageId *uint) (*Image, error) {
+func (i *ImageService) DeleteImage(imageId *uint) (*Image, error) {
 	//TODO implement me
 	panic("implement me")
 }
