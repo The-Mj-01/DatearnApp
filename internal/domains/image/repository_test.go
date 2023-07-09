@@ -1,22 +1,16 @@
 package image
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"image"
 	"image/color"
-	"image/jpeg"
 	"log"
 	"math/rand"
 	"os"
-	"path/filepath"
 	"testing"
-	"time"
 )
-
-const imagePath = "../../../static/images/"
 
 func TestImageRepository_GetAllImage(t *testing.T) {
 	db, err := setupDbConnection()
@@ -189,6 +183,12 @@ func mockImage(width, height int, imageableId uint, imageableType, name string) 
 }
 
 func mockCreateImageFile(width, height int, name string) (string, string) {
+	img := createImage(width, height)
+
+	return createFile(name, img)
+}
+
+func createImage(width, height int) *image.RGBA {
 	// Create a new image with the given width and height.
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 
@@ -201,50 +201,7 @@ func mockCreateImageFile(width, height int, name string) (string, string) {
 			img.Set(x, y, blue)
 		}
 	}
-
-	pathDir, err := createDirectoryFromDate()
-
-	if err != nil {
-		panic(err)
-	}
-
-	// Create a file to save the image to.
-	file, err := os.Create(imagePath + pathDir + name)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	// Encode the image as jpeg and write it to the file.
-	err = jpeg.Encode(file, img, nil)
-	if err != nil {
-		panic(err)
-	}
-
-	return filepath.Base(file.Name()), filepath.Join("../../static/images/", file.Name())
-}
-
-func createDirectoryFromDate() (string, error) {
-	// Get the current date.
-	t := time.Now()
-
-	// Format the date as year/month/day.
-	date := t.Format("2006/01/02")
-
-	// Print the date.
-	//fmt.Println(date)
-
-	// Create the directories with the date as the path.
-	err := os.MkdirAll(imagePath+date, 0755)
-	if err != nil {
-		// Print the error if any.
-		fmt.Println(err)
-		return "", err
-	}
-
-	// Print a success message.
-	//fmt.Println("Directories have been created successfully!")
-	return date + "/", nil
+	return img
 }
 
 // assertImage check whether they are equal or not
