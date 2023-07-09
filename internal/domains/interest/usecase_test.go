@@ -113,7 +113,7 @@ func mockEditInterestRequest(id *uint, name *string) *InterestUpdateRequest {
 	}
 }
 
-func mockDeleteInterestRequest(id *uint) *InterestDeleteRequest {
+func mockDeleteInterestRequest(id *uint) *InterestDeleteRequest { //Todo: *uint --> uint
 	return &InterestDeleteRequest{
 		Id: id,
 	}
