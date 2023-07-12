@@ -65,6 +65,32 @@ func createImageUseCase(db *gorm.DB, userId uint) ImageUseCaseInterface {
 	})
 }
 
+func TestImageUseCase_DeleteImage(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.Background()
+	randUserId := uint(1)
+	useCase := createImageUseCase(db, randUserId)
+
+	width := []int{200}
+	height := []int{200}
+	randImageableId := []uint{uint(rand.Int())}
+	randImageableType := []string{"Bio"}
+	randImageName := []string{"img1.jpg"}
+
+	mockedImage := mockAndInsertImage(db, width, height, randImageableId, randImageableType, randImageName, 1)
+	defer destructCreatedObjects(db, mockedImage)
+
+	mockedDeleteRequest := mockDeleteImageRequest(mockedImage[0].Id)
+
+	deletedImage, err := useCase.DeleteImage(ctx, "", mockedDeleteRequest)
+	assert.NoError(t, err, "Deleting user name failed")
+
+	assertImage(t, mockedImage, []Image{*deletedImage})
+
+}
+
 func mockGetImageRequest(id, imageableId *uint, name, imageableType *string, limit *int, offset int) *ImageGetRequest {
 	return &ImageGetRequest{
 		Id:            id,

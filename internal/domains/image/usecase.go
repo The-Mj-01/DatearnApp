@@ -58,8 +58,12 @@ func (i *ImageUseCase) UpdateImage(ctx context.Context, token string, request *I
 }
 
 func (i *ImageUseCase) DeleteImage(ctx context.Context, token string, request *ImageDeleteRequest) (*Image, error) {
-	//TODO implement me
-	panic("implement me")
+	_, err := i.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+
+	return i.sv.DeleteImage(&request.Id)
 }
 
 func createFile(name string, img *image.RGBA) (string, string) {
