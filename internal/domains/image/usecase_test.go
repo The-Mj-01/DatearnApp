@@ -59,10 +59,52 @@ func TestImageUseCase_CreateImage(t *testing.T) {
 	assert.Equal(t, result.Name, mockedRequest.Name, "Image creation failed in bio use-case")
 }
 
-func createImageUseCase(db *gorm.DB, userId uint) ImageUseCaseInterface {
-	return NewImageUseCase(NewImageService(NewImageRepository(db)), func(ctx context.Context, token string) (uint, error) {
-		return userId, nil
-	})
+func TestImageUseCase_UpdateImage(t *testing.T) {
+	db, err := setupDbConnection()
+	assert.NoError(t, err, "Setup database connection failed")
+
+	ctx := context.Background()
+	randUserId := uint(1)
+	useCase := createImageUseCase(db, randUserId)
+
+	width := []int{200, 400}
+	height := []int{200, 400}
+	randImageableId := []uint{uint(rand.Int()), uint(rand.Int())}
+	randImageableType := []string{"Bio", "User"}
+	randImageName := []string{"img1.jpg"}
+
+	oldImage := mockAndInsertImage(db, width, height, randImageableId, randImageableType, randImageName, 1)
+	defer destructCreatedObjects(db, oldImage)
+
+	width2 := 200
+	height2 := 200
+	randImageableId2 := uint(rand.Int())
+	randImageableType2 := "User"
+	randImageName2 := "img2.jpg"
+	newimg := mockImage(width2, height2, randImageableId2, randImageableType2, randImageName2)
+
+	newImage := &Image{
+		Id:            oldImage[0].Id,
+		Name:          newimg.Name,
+		Path:          newimg.Path,
+		ImageableId:   newimg.ImageableId,
+		ImageableType: newimg.ImageableType,
+	}
+	defer removeCreatedImageFile([]Image{oldImage[0], *newImage})
+
+	//wrongImage := &Image{
+	//	Name: "",
+	//	Path: "",
+	//}
+
+	img := createImage(width2, height2)
+	mockedEditRequest := mockEditImageRequest(&newImage.Id, &newImage.ImageableId, &newImage.Name, &newImage.ImageableType, img)
+	editedImage, err := useCase.UpdateImage(ctx, "", mockedEditRequest)
+
+	defer destructCreatedObjects(db, []Image{*editedImage})
+	assert.NoError(t, err, "Image use-case update functionality failed")
+
+	assert.Equal(t, *mockedEditRequest.Name, editedImage.Name, "Image use-case update functionality failed")
 }
 
 func TestImageUseCase_DeleteImage(t *testing.T) {
@@ -91,6 +133,12 @@ func TestImageUseCase_DeleteImage(t *testing.T) {
 
 }
 
+func createImageUseCase(db *gorm.DB, userId uint) ImageUseCaseInterface {
+	return NewImageUseCase(NewImageService(NewImageRepository(db)), func(ctx context.Context, token string) (uint, error) {
+		return userId, nil
+	})
+}
+
 func mockGetImageRequest(id, imageableId *uint, name, imageableType *string, limit *int, offset int) *ImageGetRequest {
 	return &ImageGetRequest{
 		Id:            id,
@@ -111,12 +159,13 @@ func mockWriteImageRequest(name, imageableType string, imageableId uint, img *im
 	}
 }
 
-func mockEditImageRequest(id, imageableId *uint, name, imageableType *string) *ImageUpdateRequest {
+func mockEditImageRequest(id, imageableId *uint, name, imageableType *string, img *image.RGBA) *ImageUpdateRequest {
 	return &ImageUpdateRequest{
 		Id:            id,
 		Name:          name,
 		ImageableId:   imageableId,
 		ImageableType: imageableType,
+		Img:           img,
 	}
 }
 

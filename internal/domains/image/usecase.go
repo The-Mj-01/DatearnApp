@@ -53,8 +53,21 @@ func (i *ImageUseCase) CreateImage(ctx context.Context, token string, request *I
 }
 
 func (i *ImageUseCase) UpdateImage(ctx context.Context, token string, request *ImageUpdateRequest) (*Image, error) {
-	//TODO implement me
-	panic("implement me")
+	_, err := i.decoderFn(ctx, token)
+	if err != nil {
+		return nil, advancedError.New(err, "Decoding token failed")
+	}
+
+	createRequest := &ImageCreateRequest{
+		Name:          *request.Name,
+		ImageableId:   *request.ImageableId,
+		ImageableType: *request.ImageableType,
+		Img:           request.Img,
+	}
+
+	img, err := i.CreateImage(ctx, token, createRequest)
+	//_, path := createFile(*request.Name, request.Img)
+	return i.sv.UpdateImage(*request.Id, request.Name, &img.Path)
 }
 
 func (i *ImageUseCase) DeleteImage(ctx context.Context, token string, request *ImageDeleteRequest) (*Image, error) {

@@ -36,10 +36,11 @@ type ImageGetRequest struct {
 
 // ImageUpdateRequest defines a struct for user creation operation
 type ImageUpdateRequest struct {
-	Id            *uint   `json:"id,omitempty" validate:"omitempty, numeric, min=1"`
-	Name          *string `json:"name,omitempty" validate:"omitempty,min=1, max=256"`
-	ImageableId   *uint   `json:"imageable_id,omitempty" validate:"omitempty, min=1"`
-	ImageableType *string `json:"imageable_type,omitempty" validate:"omitempty, min=3, max= 256"`
+	Id            *uint       `json:"id,omitempty" validate:"omitempty, numeric, min=1"`
+	Name          *string     `json:"name,omitempty" validate:"omitempty,min=1, max=256"`
+	ImageableId   *uint       `json:"imageable_id,omitempty" validate:"omitempty, min=1"`
+	ImageableType *string     `json:"imageable_type,omitempty" validate:"omitempty, min=3, max= 256"`
+	Img           *image.RGBA `json:"image,omitempty" validate:"omitempty"`
 }
 
 type ImageDeleteRequest struct {
