@@ -30,7 +30,10 @@ func AttachSwipeToItsDomain(engine *echo.Echo, db *gorm.DB) {
 func setupSwipeRoutes(engine *echo.Echo, handler *swipeEchoHandler) {
 	router := engine.Group("swipe")
 	router.POST("/like", handler.Like)
+	router.POST("/disable_like", handler.DisableLike)
 	router.POST("/dislike", handler.Dislike)
+	router.POST("/disable_dislike", handler.DisableDisLike)
+	router.POST("/get_all", handler.GetAllLikes)
 }
 
 // Like product for user
