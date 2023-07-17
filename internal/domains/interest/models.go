@@ -25,10 +25,10 @@ type InterestGetRequest struct {
 
 // InterestUpdateRequest defines a struct for user creation operation
 type InterestUpdateRequest struct {
-	Id   *uint   `json:"id,omitempty" validate:"omitempty, numeric, min=1"`
+	Id   *uint   `param:"id,omitempty" validate:"omitempty, numeric, min=1"`
 	Name *string `json:"name,omitempty" validate:"omitempty,min=1, max=256"`
 }
 
 type InterestDeleteRequest struct {
-	Id *uint `json:"id,omitempty" validate:"omitempty, numeric, min=1"`
+	Id *uint `param:"id,omitempty" validate:"omitempty, numeric, min=1"`
 }

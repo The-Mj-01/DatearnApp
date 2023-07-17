@@ -27,9 +27,9 @@ func AttachBioToItsDomain(engine *echo.Echo, db *gorm.DB) {
 // setupBioRoutes which are accessible through http URI
 func setupBioRoutes(engine *echo.Echo, handler *bioEchoHandler) {
 	router := engine.Group("bio")
-	router.POST("/get_all", handler.GetBio)
+	router.GET("/get/:id", handler.GetBio)
 	router.POST("/create", handler.WriteBio)
-	router.POST("/update", handler.UpdateBio)
+	router.PUT("/update", handler.UpdateBio)
 }
 
 // WriteBio product for bio

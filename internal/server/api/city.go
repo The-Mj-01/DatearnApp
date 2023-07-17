@@ -26,7 +26,7 @@ func AttachCityToItsDomain(engine *echo.Echo, db *gorm.DB) {
 // setupCityRoutes which are accessible through http URI
 func setupCityRoutes(engine *echo.Echo, handler *cityEchoHandler) {
 	router := engine.Group("swipe")
-	router.POST("/get_all", handler.GetAllCountries)
+	router.GET("/get_all", handler.GetAllCountries)
 
 }
 

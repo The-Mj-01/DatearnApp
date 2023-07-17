@@ -33,7 +33,7 @@ func setupSwipeRoutes(engine *echo.Echo, handler *swipeEchoHandler) {
 	router.POST("/disable_like", handler.DisableLike)
 	router.POST("/dislike", handler.Dislike)
 	router.POST("/disable_dislike", handler.DisableDisLike)
-	router.POST("/get_all", handler.GetAllLikes)
+	router.GET("/get_all", handler.GetAllLikes)
 }
 
 // Like product for user

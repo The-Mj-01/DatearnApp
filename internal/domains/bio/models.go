@@ -66,5 +66,5 @@ type BioUpdateRequest struct {
 }
 
 type BioGetSingleRequest struct {
-	UserId uint `json:"userId,omitempty" validate:"omitempty, numeric, min=1"`
+	UserId uint `param:"userId,omitempty" validate:"omitempty, numeric, min=1"`
 }

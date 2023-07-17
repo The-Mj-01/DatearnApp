@@ -26,10 +26,10 @@ func AttachSocialMediaToItsDomain(engine *echo.Echo, db *gorm.DB) {
 // setupSocialMediaRoutes which are accessible through http URI
 func setupSocialMediaRoutes(engine *echo.Echo, handler *socialMediaEchoHandler) {
 	router := engine.Group("socialMedia")
-	router.POST("/get_all", handler.GetAllSocialMedia)
+	router.GET("/get_all", handler.GetAllSocialMedia)
 	router.POST("/create", handler.CreateSocialMedia)
-	router.POST("/update", handler.UpdateSocialMedia)
-	router.POST("/delete", handler.DeleteSocialMedia)
+	router.PUT("/update/:id", handler.UpdateSocialMedia)
+	router.DELETE("/delete/:id", handler.DeleteSocialMedia)
 }
 
 // GetAllSocialMedia product for user

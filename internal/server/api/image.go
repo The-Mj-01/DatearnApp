@@ -28,8 +28,8 @@ func setupImageRoutes(engine *echo.Echo, handler *imageEchoHandler) {
 	router := engine.Group("image")
 	router.GET("/get_all", handler.GetAllImage)
 	router.POST("/create", handler.CreateImage)
-	router.PUT("/update", handler.UpdateImage)
-	router.DELETE("/delete", handler.DeleteImage)
+	router.PUT("/update/:id", handler.UpdateImage)
+	router.DELETE("/delete/:id", handler.DeleteImage)
 }
 
 // GetAllImage product for user

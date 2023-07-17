@@ -26,7 +26,7 @@ func AttachCountryToItsDomain(engine *echo.Echo, db *gorm.DB) {
 // setupCountryRoutes which are accessible through http URI
 func setupCountryRoutes(engine *echo.Echo, handler *countryEchoHandler) {
 	router := engine.Group("swipe")
-	router.POST("/get_all", handler.GetAllCountries)
+	router.GET("/get_all", handler.GetAllCountries)
 
 }
 
