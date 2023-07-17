@@ -2,6 +2,7 @@ package api
 
 import (
 	"Datearn/internal/domains/location"
+	"Datearn/internal/middleware/auth"
 	"Datearn/pkg/reqTokenHandler"
 	"Datearn/pkg/validation"
 	"context"
@@ -25,7 +26,9 @@ func AttachCityToItsDomain(engine *echo.Echo, db *gorm.DB) {
 
 // setupCityRoutes which are accessible through http URI
 func setupCityRoutes(engine *echo.Echo, handler *cityEchoHandler) {
-	router := engine.Group("swipe")
+	router := engine.Group("city")
+
+	router.Use(auth.ValidateJWT)
 	router.GET("/get_all", handler.GetAllCountries)
 
 }

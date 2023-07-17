@@ -2,6 +2,7 @@ package api
 
 import (
 	"Datearn/internal/domains/interest"
+	"Datearn/internal/middleware/auth"
 	"Datearn/pkg/reqTokenHandler"
 	"Datearn/pkg/validation"
 	"context"
@@ -26,6 +27,7 @@ func AttachInterestToItsDomain(engine *echo.Echo, db *gorm.DB) {
 // setupInterestRoutes which are accessible through http URI
 func setupInterestRoutes(engine *echo.Echo, handler *interestEchoHandler) {
 	router := engine.Group("interest")
+	router.Use(auth.ValidateJWT)
 	router.GET("/get_all", handler.GetAllInterest)
 	router.POST("/create", handler.CreateInterest)
 	router.PUT("/update/:id", handler.UpdateInterest)

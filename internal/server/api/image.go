@@ -2,6 +2,7 @@ package api
 
 import (
 	"Datearn/internal/domains/image"
+	"Datearn/internal/middleware/auth"
 	"Datearn/pkg/reqTokenHandler"
 	"Datearn/pkg/validation"
 	"context"
@@ -26,6 +27,7 @@ func AttachImageToItsDomain(engine *echo.Echo, db *gorm.DB) {
 // setupImageRoutes which are accessible through http URI
 func setupImageRoutes(engine *echo.Echo, handler *imageEchoHandler) {
 	router := engine.Group("image")
+	router.Use(auth.ValidateJWT)
 	router.GET("/get_all", handler.GetAllImage)
 	router.POST("/create", handler.CreateImage)
 	router.PUT("/update/:id", handler.UpdateImage)

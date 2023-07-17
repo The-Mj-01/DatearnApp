@@ -2,6 +2,7 @@ package api
 
 import (
 	"Datearn/internal/domains/bio"
+	"Datearn/internal/middleware/auth"
 	"Datearn/pkg/reqTokenHandler"
 	"Datearn/pkg/validation"
 	"context"
@@ -27,6 +28,7 @@ func AttachBioToItsDomain(engine *echo.Echo, db *gorm.DB) {
 // setupBioRoutes which are accessible through http URI
 func setupBioRoutes(engine *echo.Echo, handler *bioEchoHandler) {
 	router := engine.Group("bio")
+	router.Use(auth.ValidateJWT)
 	router.GET("/get/:id", handler.GetBio)
 	router.POST("/create", handler.WriteBio)
 	router.PUT("/update", handler.UpdateBio)
