@@ -7,6 +7,7 @@
 ├─ cmd
 │  └─ server
 │     └─ main.go
+├─ docker-compose.yaml
 ├─ go.mod
 ├─ go.sum
 ├─ internal
@@ -91,10 +92,20 @@
 │  │     └─ auth.go
 │  └─ server
 │     ├─ api
-│     │  └─ api.go
+│     │  ├─ api.go
+│     │  ├─ bio.go
+│     │  ├─ city.go
+│     │  ├─ country.go
+│     │  ├─ image.go
+│     │  ├─ interest.go
+│     │  ├─ socialMedia.go
+│     │  ├─ swipe.go
+│     │  └─ user.go
 │     └─ http
 │        └─ server.go
 ├─ pkg
+│  ├─ IP
+│  │  └─ ip.go
 │  ├─ advancedError
 │  │  ├─ errors.go
 │  │  ├─ observer.go
@@ -117,6 +128,8 @@
 │  │  │  └─ syslog
 │  │  │     └─ sys_logger.go
 │  │  └─ logger.go
+│  ├─ reqTokenHandler
+│  │  └─ reqTokenHandler.go
 │  ├─ tokenizer
 │  │  ├─ auth.go
 │  │  ├─ internal
