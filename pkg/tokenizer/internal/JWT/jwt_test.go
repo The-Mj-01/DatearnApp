@@ -7,16 +7,16 @@ import (
 )
 
 const (
-	tokeKeyName string = "token"
-	refTokenKey string = "refresh_token"
-	ipString    string = "192.168.1.1"
+	tokenKeyName string = "token"
+	refTokenKey  string = "refresh_token"
+	ipString     string = "192.168.1.1"
 )
 
 // TestToken_New for testing creating jwt token
 func TestToken_New(t *testing.T) {
 	_, testTk := createToken(t)
 
-	_, exists := testTk[tokeKeyName]
+	_, exists := testTk[tokenKeyName]
 	if !exists {
 		t.Error("Test getting JWT token but it doesnt exists")
 	}
@@ -35,7 +35,7 @@ func TestToken_Decrypt(t *testing.T) {
 		Ctx: context.Background(),
 	}
 
-	err := decryptor.Decrypt(testTk[tokeKeyName])
+	err := decryptor.Decrypt(testTk[tokenKeyName])
 	if err != nil {
 		t.Errorf("%s %s", "Testing JWT decryption, expected decryption but got", err)
 	}
@@ -53,7 +53,7 @@ func TestToken_Decrypt(t *testing.T) {
 func TestToken_IsActive(t *testing.T) {
 	tkObj, testTk := createToken(t)
 
-	if !tkObj.IsActive(testTk[tokeKeyName], ipString) {
+	if !tkObj.IsActive(testTk[tokenKeyName], ipString) {
 		t.Error("Newly generated token is expected to be active but it's not")
 	}
 
@@ -71,7 +71,7 @@ func TestToken_Refresh(t *testing.T) {
 		t.Errorf("%s: %s", "Expected To do refresh operation but got", err)
 	}
 
-	if refTkString != testTk[tokeKeyName] {
+	if refTkString != testTk[tokenKeyName] {
 		t.Error("Expected That newly generated token not be the same with old token")
 	}
 }
