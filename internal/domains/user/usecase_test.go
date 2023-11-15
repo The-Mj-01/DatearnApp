@@ -23,6 +23,7 @@ func TestUserUseCase_Register(t *testing.T) {
 	assert.NotNil(t, result.Tokens, "register failed in user use-case")
 	assert.NotNil(t, result.User, "register failed in user use-case")
 	assert.Equal(t, *result.User.Username, *registerReq.Username, "register failed in user use-case")
+	assert.Equal(t, result.User.Email, registerReq.Email, "register failed in user use-case")
 }
 
 func TestUserUseCase_Login(t *testing.T) {

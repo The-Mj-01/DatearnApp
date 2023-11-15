@@ -23,7 +23,7 @@ type User struct {
 
 // UserRegisterRequest defines a struct for user creation operation
 type UserRegisterRequest struct {
-	Email           string  `json:"email" validate:"required"`
+	Email           string  `json:"email" validate:"required,email"`
 	Username        *string `json:"username,omitempty" validate:"required,omitempty,min:3,max=255"`
 	Password        string  `json:"password,omitempty" validate:"required,omitempty, min=8, max=255"`
 	PasswordConfirm string  `json:"password_confirm,omitempty" validate:"required,omitempty, min=8, max=255, eqfield=Password"`
@@ -31,7 +31,7 @@ type UserRegisterRequest struct {
 
 // UserLoginRequest defines a fields for login operation and appropriate validation rules for that too
 type UserLoginRequest struct {
-	Email    string `json:"email" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required, min=8, max=255"`
 }
 
