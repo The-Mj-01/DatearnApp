@@ -39,8 +39,8 @@ services:
       ENV_DIR: "/app/.env"
     networks:
       - fire_network
-    depends_on:F
-    - mysql
+    depends_on:
+      - mysql
 networks:
   fire_network:
     driver: bridge

@@ -14,7 +14,7 @@ type User struct {
 	Country     uint       `json:"country"`
 	City        uint       `json:"city"`
 	Sex         uint       `json:"sex"`
-	Password    string     `json:"password,omitempty"`
+	Password    string     `json:"-"`
 	LastLoginAt *time.Time `json:"last_login_at,omitempty"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`

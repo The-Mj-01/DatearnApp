@@ -3,6 +3,7 @@ package api
 import (
 	"Datearn/internal/domains/user"
 	"Datearn/internal/middleware/auth"
+	"Datearn/pkg/IP"
 	"Datearn/pkg/reqTokenHandler"
 	"Datearn/pkg/validation"
 	"context"
@@ -49,6 +50,7 @@ func (uH *userEchoHandler) Register(e echo.Context) error {
 	}
 
 	ctx := context.Background()
+	ctx = context.WithValue(ctx, user.ContextValueIpKey, IP.ExtractFromEcho(e))
 
 	registerResp, err := uH.uC.Register(ctx, request)
 	if err != nil {
@@ -71,6 +73,7 @@ func (uH *userEchoHandler) Login(e echo.Context) error {
 	}
 
 	ctx := context.Background()
+	ctx = context.WithValue(ctx, user.ContextValueIpKey, IP.ExtractFromEcho(e))
 
 	loginResp, err := uH.uC.Login(ctx, request)
 	if err != nil {
