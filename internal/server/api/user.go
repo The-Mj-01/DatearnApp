@@ -29,7 +29,7 @@ func AttachUserHandlerToUserDomain(engine *echo.Echo, db *gorm.DB) {
 func setupUserRoutes(engine *echo.Echo, handler *userEchoHandler) {
 	userRouter := engine.Group("/users")
 
-	userRouter.POST("", handler.Register)
+	userRouter.POST("register", handler.Register)
 	userRouter.POST("/login", handler.Login)
 
 	userRouter.Use(auth.ValidateJWT)
