@@ -33,8 +33,8 @@ func setupUserRoutes(engine *echo.Echo, handler *userEchoHandler) {
 	userRouter.POST("/login", handler.Login)
 
 	userRouter.Use(auth.ValidateJWT)
-	userRouter.PUT("/profile/username", handler.UpdateUserName)
-	userRouter.PUT("/profile/pass", handler.UpdateUserPass)
+	userRouter.PATCH("/profile/username", handler.UpdateUserName)
+	userRouter.PATCH("/profile/pass", handler.UpdateUserPass)
 }
 
 // Register user in system
