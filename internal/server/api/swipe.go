@@ -29,7 +29,7 @@ func AttachSwipeToItsDomain(engine *echo.Echo, db *gorm.DB) {
 
 // setupSwipeRoutes which are accessible through http URI
 func setupSwipeRoutes(engine *echo.Echo, handler *swipeEchoHandler) {
-	router := engine.Group("swipe")
+	router := engine.Group("/swipe")
 	router.Use(auth.ValidateJWT)
 	router.POST("/like", handler.Like)
 	router.POST("/disable_like", handler.DisableLike)

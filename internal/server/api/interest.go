@@ -26,7 +26,7 @@ func AttachInterestToItsDomain(engine *echo.Echo, db *gorm.DB) {
 
 // setupInterestRoutes which are accessible through http URI
 func setupInterestRoutes(engine *echo.Echo, handler *interestEchoHandler) {
-	router := engine.Group("interest")
+	router := engine.Group("/interest")
 	router.Use(auth.ValidateJWT)
 	router.GET("/get_all", handler.GetAllInterest)
 	router.POST("/create", handler.CreateInterest)

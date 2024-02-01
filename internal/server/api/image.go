@@ -26,7 +26,7 @@ func AttachImageToItsDomain(engine *echo.Echo, db *gorm.DB) {
 
 // setupImageRoutes which are accessible through http URI
 func setupImageRoutes(engine *echo.Echo, handler *imageEchoHandler) {
-	router := engine.Group("image")
+	router := engine.Group("/image")
 	router.Use(auth.ValidateJWT)
 	router.GET("/get_all", handler.GetAllImage)
 	router.POST("/create", handler.CreateImage)
