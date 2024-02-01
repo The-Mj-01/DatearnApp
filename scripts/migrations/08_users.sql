@@ -15,7 +15,7 @@ CREATE TABLE `users`
     `last_login_at` TIMESTAMP,
     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `delete_at` TIMESTAMP,
+    `deleted_at` TIMESTAMP,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`city`) REFERENCES `cities` (`id`),
     FOREIGN KEY (`country`) REFERENCES `countries` (`id`),

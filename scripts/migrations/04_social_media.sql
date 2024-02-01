@@ -6,6 +6,6 @@ CREATE TABLE `social_media`
     `tiktok`                VARCHAR(255),
     `created_at`            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`            TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `delete_at`             TIMESTAMP,
+    `deleted_at`             TIMESTAMP,
     PRIMARY KEY (`id`),
 );

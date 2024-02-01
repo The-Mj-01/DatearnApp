@@ -6,7 +6,7 @@ CREATE TABLE `likes`
     `count`         INTEGER UNSIGNED NOT NULL,
     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `delete_at` TIMESTAMP,
+    `deleted_at` TIMESTAMP,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`disliker`) REFERENCES `users` (`id`),
     FOREIGN KEY (`disliked`) REFERENCES `users` (`id`),

@@ -8,7 +8,7 @@ CREATE TABLE `bio`
     `primary_photos`        INTEGER UNSIGNED NOT NULL,
     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `delete_at` TIMESTAMP,
+    `deleted_at` TIMESTAMP,
     PRIMARY KEY (`id`),
     FOREIGN KEY (`social_media`) REFERENCES `social_media` (`id`),
     FOREIGN KEY (`photos`) REFERENCES `images` (`id`),
