@@ -2,6 +2,7 @@ package auth
 
 import (
 	"Datearn/pkg/IP"
+	"Datearn/pkg/reqTokenHandler"
 	"Datearn/pkg/tokenizer"
 	"context"
 	"github.com/labstack/echo/v4"
@@ -21,6 +22,8 @@ func ValidateJWT(next echo.HandlerFunc) echo.HandlerFunc {
 		if bearerToken == "" {
 			return c.JSON(http.StatusUnauthorized, unAuthorizedMsg)
 		}
+
+		bearerToken = reqTokenHandler.ClearTokenString(bearerToken)
 
 		ip := IP.ExtractFromEcho(c)
 		isAllowed := handleJwtValidation(bearerToken, ip)

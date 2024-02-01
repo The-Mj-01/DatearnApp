@@ -27,3 +27,11 @@ func ExtractBearerToken(req *http.Request) (string, error) {
 EndLine:
 	return bearerToken, nil
 }
+
+// ClearTokenString and return it in order to make it use-able
+func ClearTokenString(token string) string {
+	token = strings.Replace(token, "Bearer", "", 1)
+	token = strings.Replace(token, "bearer", "", 1)
+	token = strings.Trim(token, " ")
+	return token
+}
