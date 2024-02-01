@@ -1,24 +1,27 @@
 package user
 
-import "time"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 // User struct defines user entity which is used in database
 type User struct {
-	Id          uint       `json:"-" gorm:"primaryKey"`
-	UUID        string     `json:"uuid" gorm:"uniqueIndex, not null"`
-	Username    *string    `json:"username" gorm:"uniqueIndex, not null"`
-	Email       string     `json:"email" gorm:"uniqueIndex, not null"`
-	FirstName   string     `json:"first_name,omitempty"`
-	LastName    string     `json:"last_name,omitempty"`
-	Born        time.Time  `json:"born,omitempty"`
-	Country     uint       `json:"country"`
-	City        uint       `json:"city"`
-	Sex         uint       `json:"sex"`
-	Password    string     `json:"-"`
-	LastLoginAt *time.Time `json:"last_login_at,omitempty"`
-	CreatedAt   time.Time  `json:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"`
-	DeletedAt   time.Time  `json:"deleted_at"`
+	Id          uint           `json:"-" gorm:"primaryKey"`
+	UUID        string         `json:"uuid" gorm:"uniqueIndex, not null"`
+	Username    *string        `json:"username" gorm:"uniqueIndex, not null"`
+	Email       string         `json:"email" gorm:"uniqueIndex, not null"`
+	FirstName   string         `json:"first_name,omitempty"`
+	LastName    string         `json:"last_name,omitempty"`
+	Born        time.Time      `json:"born,omitempty"`
+	Country     uint           `json:"country"`
+	City        uint           `json:"city"`
+	Sex         uint           `json:"sex"`
+	Password    string         `json:"-"`
+	LastLoginAt *time.Time     `json:"last_login_at,omitempty"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	DeletedAt   gorm.DeletedAt `json:"deleted_at"`
 }
 
 // UserRegisterRequest defines a struct for user creation operation

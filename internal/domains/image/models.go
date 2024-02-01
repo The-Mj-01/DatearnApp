@@ -1,19 +1,20 @@
 package image
 
 import (
+	"gorm.io/gorm"
 	"image"
 	"time"
 )
 
 type Image struct {
-	Id            uint      `json:"id" gorm:"primaryKey"`
-	Name          string    `json:"name,omitempty" gorm:"not null"`
-	Path          string    `json:"path,omitempty" gorm:"not null"`
-	ImageableId   uint      `json:"imageable_id,omitempty" gorm:"not null"`
-	ImageableType string    `json:"imageable_type,omitempty" gorm:"not null"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
-	DeletedAt     time.Time `json:"deleted_at"`
+	Id            uint           `json:"id" gorm:"primaryKey"`
+	Name          string         `json:"name,omitempty" gorm:"not null"`
+	Path          string         `json:"path,omitempty" gorm:"not null"`
+	ImageableId   uint           `json:"imageable_id,omitempty" gorm:"not null"`
+	ImageableType string         `json:"imageable_type,omitempty" gorm:"not null"`
+	CreatedAt     time.Time      `json:"created_at"`
+	UpdatedAt     time.Time      `json:"updated_at"`
+	DeletedAt     gorm.DeletedAt `json:"deleted_at"`
 }
 
 // ImageCreateRequest defines a struct for user creation operation

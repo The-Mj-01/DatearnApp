@@ -1,13 +1,16 @@
 package interest
 
-import "time"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 type Interest struct {
-	Id        uint      `json:"id" gorm:"primaryKey"`
-	Name      string    `json:"name,omitempty" gorm:"uniqueIndex, not null"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	DeletedAt time.Time `json:"deleted_at"`
+	Id        uint           `json:"id" gorm:"primaryKey"`
+	Name      string         `json:"name,omitempty" gorm:"uniqueIndex, not null"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
 
 // InterestCreateRequest defines a struct for user creation operation
