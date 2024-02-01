@@ -85,7 +85,7 @@ func (uH *userEchoHandler) Login(e echo.Context) error {
 
 // UpdateUserPass in system
 func (uH *userEchoHandler) UpdateUserPass(e echo.Context) error {
-	request := new(user.UpdateUserRequest)
+	request := new(user.UpdateUserPasswordRequest)
 
 	if err := e.Bind(request); err != nil {
 		return e.JSON(http.StatusBadRequest, generateResponse(nil, err))

@@ -70,13 +70,13 @@ func (u *UserUseCase) Login(ctx context.Context, request *UserLoginRequest) (*Au
 }
 
 // UpdateUserPass for a user that is already exists
-func (u *UserUseCase) UpdateUserPass(ctx context.Context, token string, request *UpdateUserRequest) (*User, error) {
+func (u *UserUseCase) UpdateUserPass(ctx context.Context, token string, request *UpdateUserPasswordRequest) (*User, error) {
 	userId, err := u.getUserID(ctx, token)
 	if err != nil {
 		return nil, AuthSomethingWrong
 	}
 
-	user, err := u.sv.UpdateUser(userId, nil, request.Password)
+	user, err := u.sv.UpdateUser(userId, nil, &request.Password)
 	if err != nil {
 		return nil, err
 	}

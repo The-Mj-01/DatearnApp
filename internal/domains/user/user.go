@@ -27,7 +27,7 @@ type UserServiceInterface interface {
 type UserUseCaseInterface interface {
 	Register(ctx context.Context, request *UserRegisterRequest) (*AuthResponse, error)
 	Login(ctx context.Context, request *UserLoginRequest) (*AuthResponse, error)
-	UpdateUserPass(ctx context.Context, token string, request *UpdateUserRequest) (*User, error)
+	UpdateUserPass(ctx context.Context, token string, request *UpdateUserPasswordRequest) (*User, error)
 	UpdateUserName(ctx context.Context, token string, request *UpdateUserRequest) (*User, error)
 	DeleteUser(ctx context.Context, token string, request *DeleteUserRequest) (*User, error)
 }

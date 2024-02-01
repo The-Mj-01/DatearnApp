@@ -37,9 +37,13 @@ type UserLoginRequest struct {
 
 // UpdateUserRequest defines a struct which contains necessary fields and data for updating user operation
 type UpdateUserRequest struct {
-	Username        *string `json:"username,omitempty" validate:"required,omitempty,min:3,max=255"`
-	Password        *string `json:"password,omitempty" validate:"required,omitempty,min:8,max:255"`
-	PasswordConfirm *string `json:"password_confirm,omitempty" validate:"required,omitempty,min=8,max=255,eqfield=Password"`
+	Username *string `json:"username,omitempty" validate:"required,omitempty,min:3,max=255"`
+}
+
+// UpdateUserPasswordRequest defines a struct which contains necessary fields and data for updating user operation
+type UpdateUserPasswordRequest struct {
+	Password        string `json:"password,omitempty" validate:"required,omitempty,min:8,max:255"`
+	PasswordConfirm string `json:"password_confirm,omitempty" validate:"required,omitempty,min=8,max=255,eqfield=Password"`
 }
 
 // DeleteUserRequest defines a struct which contains necessary fields and data for updating user operation
